@@ -1,0 +1,49 @@
+package wasi:io;
+
+interface poll {
+    resource pollable {
+        block: func();
+        ready: func() -> bool;
+    }
+    poll: func(in: list<borrow<pollable>>) -> list<u32>;
+}
+
+interface streams {
+    resource error {
+        to-debug-string: func() -> string;
+    }
+    resource input-stream {
+        blocking-read: func(len: u64) -> result<list<u8>, stream-error>;
+        blocking-skip: func(len: u64) -> result<u64, stream-error>;
+        read: func(len: u64) -> result<list<u8>, stream-error>;
+        skip: func(len: u64) -> result<u64, stream-error>;
+        subscribe: func() -> own<pollable>;
+    }
+    resource output-stream {
+        blocking-flush: func() -> result<_, stream-error>;
+        blocking-splice: func(src: borrow<input-stream>, len: u64) -> result<u64, stream-error>;
+        blocking-write-and-flush: func(contents: list<u8>) -> result<_, stream-error>;
+        blocking-write-zeroes-and-flush: func(len: u64) -> result<_, stream-error>;
+        check-write: func() -> result<u64, stream-error>;
+        flush: func() -> result<_, stream-error>;
+        splice: func(src: borrow<input-stream>, len: u64) -> result<u64, stream-error>;
+        subscribe: func() -> own<pollable>;
+        write: func(contents: list<u8>) -> result<_, stream-error>;
+        write-zeroes: func(len: u64) -> result<_, stream-error>;
+    }
+    use poll.{pollable};
+    variant stream-error {
+        last-operation-failed(own<error>),
+        closed
+    }
+}
+
+world imports {
+    import poll;
+    import streams;
+}
+
+world exports {
+    export poll;
+    export streams;
+}

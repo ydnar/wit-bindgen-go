@@ -1,0 +1,15 @@
+package wasi:clocks;
+
+interface wall-clock {
+    record datetime {
+        seconds: u64,
+        nanoseconds: u32
+    }
+    now: func() -> datetime;
+    resolution: func() -> datetime;
+}
+
+world import-and-export {
+    import wall-clock;
+    export wall-clock;
+}

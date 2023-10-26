@@ -1,0 +1,82 @@
+{
+  "worlds": [
+    {
+      "name": "import-and-export",
+      "imports": {
+        "interface-0": {
+          "interface": 0
+        }
+      },
+      "exports": {
+        "interface-0": {
+          "interface": 0
+        }
+      },
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "wall-clock",
+      "types": {
+        "datetime": 0
+      },
+      "functions": {
+        "now": {
+          "name": "now",
+          "kind": "freestanding",
+          "params": [],
+          "results": [
+            {
+              "type": 0
+            }
+          ]
+        },
+        "resolution": {
+          "name": "resolution",
+          "kind": "freestanding",
+          "params": [],
+          "results": [
+            {
+              "type": 0
+            }
+          ]
+        }
+      },
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "datetime",
+      "kind": {
+        "record": {
+          "fields": [
+            {
+              "name": "seconds",
+              "type": "u64"
+            },
+            {
+              "name": "nanoseconds",
+              "type": "u32"
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 0
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "wasi:clocks",
+      "interfaces": {
+        "wall-clock": 0
+      },
+      "worlds": {
+        "import-and-export": 0
+      }
+    }
+  ]
+}
