@@ -1,0 +1,596 @@
+{
+  "worlds": [
+    {
+      "name": "imports",
+      "imports": {
+        "interface-0": {
+          "interface": 0
+        },
+        "interface-1": {
+          "interface": 1
+        }
+      },
+      "exports": {},
+      "package": 0
+    },
+    {
+      "name": "exports",
+      "imports": {},
+      "exports": {
+        "interface-0": {
+          "interface": 0
+        },
+        "interface-1": {
+          "interface": 1
+        }
+      },
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "poll",
+      "types": {
+        "pollable": 0
+      },
+      "functions": {
+        "[method]pollable.block": {
+          "name": "[method]pollable.block",
+          "kind": {
+            "method": 0
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 1
+            }
+          ],
+          "results": []
+        },
+        "[method]pollable.ready": {
+          "name": "[method]pollable.ready",
+          "kind": {
+            "method": 0
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 1
+            }
+          ],
+          "results": [
+            {
+              "type": "bool"
+            }
+          ]
+        },
+        "poll": {
+          "name": "poll",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "in",
+              "type": 2
+            }
+          ],
+          "results": [
+            {
+              "type": 3
+            }
+          ]
+        }
+      },
+      "package": 0
+    },
+    {
+      "name": "streams",
+      "types": {
+        "pollable": 4,
+        "error": 5,
+        "input-stream": 6,
+        "output-stream": 7,
+        "stream-error": 9
+      },
+      "functions": {
+        "[method]error.to-debug-string": {
+          "name": "[method]error.to-debug-string",
+          "kind": {
+            "method": 5
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 10
+            }
+          ],
+          "results": [
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "[method]input-stream.blocking-read": {
+          "name": "[method]input-stream.blocking-read",
+          "kind": {
+            "method": 6
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 11
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 13
+            }
+          ]
+        },
+        "[method]input-stream.blocking-skip": {
+          "name": "[method]input-stream.blocking-skip",
+          "kind": {
+            "method": 6
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 11
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 14
+            }
+          ]
+        },
+        "[method]input-stream.read": {
+          "name": "[method]input-stream.read",
+          "kind": {
+            "method": 6
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 11
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 13
+            }
+          ]
+        },
+        "[method]input-stream.skip": {
+          "name": "[method]input-stream.skip",
+          "kind": {
+            "method": 6
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 11
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 14
+            }
+          ]
+        },
+        "[method]input-stream.subscribe": {
+          "name": "[method]input-stream.subscribe",
+          "kind": {
+            "method": 6
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 11
+            }
+          ],
+          "results": [
+            {
+              "type": 17
+            }
+          ]
+        },
+        "[method]output-stream.blocking-flush": {
+          "name": "[method]output-stream.blocking-flush",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            }
+          ],
+          "results": [
+            {
+              "type": 16
+            }
+          ]
+        },
+        "[method]output-stream.blocking-splice": {
+          "name": "[method]output-stream.blocking-splice",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            },
+            {
+              "name": "src",
+              "type": 11
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 14
+            }
+          ]
+        },
+        "[method]output-stream.blocking-write-and-flush": {
+          "name": "[method]output-stream.blocking-write-and-flush",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            },
+            {
+              "name": "contents",
+              "type": 12
+            }
+          ],
+          "results": [
+            {
+              "type": 16
+            }
+          ]
+        },
+        "[method]output-stream.blocking-write-zeroes-and-flush": {
+          "name": "[method]output-stream.blocking-write-zeroes-and-flush",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 16
+            }
+          ]
+        },
+        "[method]output-stream.check-write": {
+          "name": "[method]output-stream.check-write",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            }
+          ],
+          "results": [
+            {
+              "type": 14
+            }
+          ]
+        },
+        "[method]output-stream.flush": {
+          "name": "[method]output-stream.flush",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            }
+          ],
+          "results": [
+            {
+              "type": 16
+            }
+          ]
+        },
+        "[method]output-stream.splice": {
+          "name": "[method]output-stream.splice",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            },
+            {
+              "name": "src",
+              "type": 11
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 14
+            }
+          ]
+        },
+        "[method]output-stream.subscribe": {
+          "name": "[method]output-stream.subscribe",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            }
+          ],
+          "results": [
+            {
+              "type": 17
+            }
+          ]
+        },
+        "[method]output-stream.write": {
+          "name": "[method]output-stream.write",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            },
+            {
+              "name": "contents",
+              "type": 12
+            }
+          ],
+          "results": [
+            {
+              "type": 16
+            }
+          ]
+        },
+        "[method]output-stream.write-zeroes": {
+          "name": "[method]output-stream.write-zeroes",
+          "kind": {
+            "method": 7
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 15
+            },
+            {
+              "name": "len",
+              "type": "u64"
+            }
+          ],
+          "results": [
+            {
+              "type": 16
+            }
+          ]
+        }
+      },
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "pollable",
+      "kind": "resource",
+      "owner": {
+        "interface": 0
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "borrow": 0
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "list": 1
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "list": "u32"
+      },
+      "owner": null
+    },
+    {
+      "name": "pollable",
+      "kind": {
+        "type": 0
+      },
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": "error",
+      "kind": "resource",
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": "input-stream",
+      "kind": "resource",
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": "output-stream",
+      "kind": "resource",
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "own": 5
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": "stream-error",
+      "kind": {
+        "variant": {
+          "cases": [
+            {
+              "name": "last-operation-failed",
+              "type": 8
+            },
+            {
+              "name": "closed",
+              "type": null
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "borrow": 5
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "borrow": 6
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "list": "u8"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "result": {
+          "ok": 12,
+          "err": 9
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "result": {
+          "ok": "u64",
+          "err": 9
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "borrow": 7
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "result": {
+          "ok": null,
+          "err": 9
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "own": 4
+        }
+      },
+      "owner": null
+    }
+  ],
+  "packages": [
+    {
+      "name": "wasi:io",
+      "interfaces": {
+        "poll": 0,
+        "streams": 1
+      },
+      "worlds": {
+        "imports": 0,
+        "exports": 1
+      }
+    }
+  ]
+}

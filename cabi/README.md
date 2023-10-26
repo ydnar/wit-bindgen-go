@@ -1,6 +1,12 @@
-### Usage
+# Canonical ABI
 
-The `cabi` package contains a single exported WebAssembly function `cabi_realloc` ([Canonical ABI] realloc). To use, import this package with `_`:
+## Types
+
+Package `cabi` declares a number of types, including [Component Model](https://component-model.bytecodealliance.org/) [primitive types](https://component-model.bytecodealliance.org/design/wit.html#primitive-types), along with resource and handle types.
+
+## cabi_realloc
+
+The `cabi` package contains an exported WebAssembly function `cabi_realloc` ([Canonical ABI] realloc). To use, import this package with `_`:
 
 ```
 import _ "github.com/ydnar/wasm-tools-go/cabi"
