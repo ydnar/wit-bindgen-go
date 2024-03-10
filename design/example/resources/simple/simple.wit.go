@@ -153,6 +153,11 @@ type NumberMethods interface {
 }
 
 type NumberRep[T any] interface {
-	~int32 | ~uint32 | ~uintptr | *T
+	Rep | *T
 	NumberMethods
+}
+
+// This should be cm.Rep
+type Rep interface {
+	~int32 | ~uint32 | ~uintptr
 }
