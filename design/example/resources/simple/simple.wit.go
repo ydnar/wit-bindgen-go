@@ -126,12 +126,7 @@ func wasmexport_NumberString(rep uint, result *string) {
 
 // ExportNumber allows the caller to provide a concrete,
 // exported implementation of resource "number".
-func ExportNumber[
-	Exports NumberExports[Rep],
-	Rep interface {
-		~uint | ~uintptr | unsafe.Pointer
-		NumberMethods
-	}](exports Exports) {
+func ExportNumber[T any, Rep NumberRep[T], Exports NumberExports[Rep, T]](exports Exports) {
 	impl_Number = func(rep uint) NumberMethods {
 		return unsafeCast[Rep](rep)
 	}
@@ -147,10 +142,7 @@ func unsafeCast[T, V any](v V) T {
 	return *(*T)(unsafe.Pointer(&v))
 }
 
-type NumberExports[Rep interface {
-	~uint | ~uintptr | unsafe.Pointer
-	NumberMethods
-}] interface {
+type NumberExports[Rep NumberRep[T], T any] interface {
 	Constructor(value int32) Rep
 	Merge(a Rep, b Rep) Rep
 }
@@ -158,4 +150,9 @@ type NumberExports[Rep interface {
 type NumberMethods interface {
 	Value() int32
 	String() string
+}
+
+type NumberRep[T any] interface {
+	~int32 | ~uint32 | ~uintptr | *T
+	NumberMethods
 }
