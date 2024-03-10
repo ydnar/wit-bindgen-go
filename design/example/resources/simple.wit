@@ -1,12 +1,12 @@
 package example:resources;
 
 interface simple {
-    resource number {
-	constructor(value: s32);
-	merge: static func(a: borrow<number>, b: borrow<number>) -> number;
-	value: func() -> s32;
-        %string: func() -> string;
-    }
+	resource number {
+		constructor(value: s32);
+		merge: static func(a: borrow<number>, b: borrow<number>) -> number;
+		value: func() -> s32;
+		%string: func() -> string;
+	}
 }
 
 world exports {
