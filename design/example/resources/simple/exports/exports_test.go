@@ -1,15 +1,15 @@
-package simple_test
+package exports_test
 
 import (
 	"strconv"
 	"testing"
 
-	"github.com/ydnar/wasm-tools-go/design/example/resources/simple"
+	"github.com/ydnar/wasm-tools-go/design/example/resources/simple/exports"
 )
 
 func TestExportNumber(t *testing.T) {
-	simple.ExportNumber[number](numberExports{})
-	simple.ExportNumber[numberStruct](numberStructExports{})
+	exports.ExportNumber[number](numberExports{})
+	exports.ExportNumber[numberStruct](numberStructExports{})
 }
 
 // Value representation

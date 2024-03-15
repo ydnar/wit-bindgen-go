@@ -3,7 +3,8 @@ package example:resources;
 interface simple {
 	resource number {
 		constructor(value: s32);
-		merge: static func(a: borrow<number>, b: borrow<number>) -> number;
+		merge: static func(a: number, b: number) -> number;
+		choose: static func(a: borrow<number>, b: borrow<number>) -> borrow<number>;
 		value: func() -> s32;
 		%string: func() -> string;
 	}

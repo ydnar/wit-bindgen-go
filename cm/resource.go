@@ -12,3 +12,14 @@ type Resource uint32
 //
 // [Canonical ABI runtime state]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#runtime-state
 const ResourceNone = 0
+
+// Rep represents an opaque resource representation, typically a pointer.
+type Rep uint32
+
+// RepTypes is a type constraint for a concrete resource representation,
+// currently represented in the [Canonical ABI] as a 32-bit integer value.
+//
+// [Canonical ABI]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md
+type RepTypes[T any] interface {
+	~int32 | ~uint32 | ~uintptr | *T
+}
