@@ -4,19 +4,26 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/ydnar/wasm-tools-go/design/example/resources/simple/exports"
+	"github.com/ydnar/wasm-tools-go/cm"
 )
 
 func TestExportNumber(t *testing.T) {
-	exports.ExportNumber[number](numberExports{})
-	exports.ExportNumber[numberStruct](numberStructExports{})
+	// exports.ExportNumber[number](numberExports{})
+	// exports.ExportNumber[numberStruct](numberStructExports{})
+}
+
+func TestNumberResourceRep(t *testing.T) {
+	// _ = exports.NumberResourceRep[number, number]
+	// _ = exports.NumberResourceRep[*numberStruct, numberStruct]
 }
 
 // Value representation
 type number int32
 
-func (n number) Value() int32   { return int32(n) }
-func (n number) String() string { return strconv.Itoa(int(n)) }
+func (n number) Value() int32        { return int32(n) }
+func (n number) String() string      { return strconv.Itoa(int(n)) }
+func (n number) ResourceDestructor() {}
+func (n number) ResourceRep() cm.Rep { return 0 /* FIXME */ }
 
 type numberExports struct{}
 
@@ -30,8 +37,10 @@ type numberStruct struct {
 	value int32
 }
 
-func (n *numberStruct) Value() int32   { return n.value }
-func (n *numberStruct) String() string { return strconv.Itoa(int(n.value)) }
+func (n *numberStruct) Value() int32        { return n.value }
+func (n *numberStruct) String() string      { return strconv.Itoa(int(n.value)) }
+func (n *numberStruct) ResourceDestructor() {}
+func (n *numberStruct) ResourceRep() cm.Rep { return 0 /* FIXME */ }
 
 type numberStructExports struct{}
 

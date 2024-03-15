@@ -6,92 +6,72 @@ import (
 	"github.com/ydnar/wasm-tools-go/cm"
 )
 
-type NumberHandle cm.Resource
+// NumberResourceNew represents the imported function "example:resources/simple#[resource-new]number".
+//
+// Create a new Component Model resource handle for [Number].
+func NumberResourceNew(i Number) cm.Own[Number] {
+	return wasmimport_NumberResourceNew(i.ResourceRep())
+}
 
-func (n NumberHandle) ResourceRep() cm.Rep {
-	return wasmimport_NumberResourceRep(n)
+//go:wasmimport [export]example:resources/simple [resource-new]number
+//go:noescape
+func wasmimport_NumberResourceNew(rep cm.Rep) cm.Own[Number]
+
+// NumberResourceRep represents the imported function "example:resources/simple#[resource-rep]number".
+//
+// Return a rep for [Number] from handle.
+// Caller is responsible for converting to a concrete implementation of [Number]
+func NumberResourceRep(handle cm.Own[Number]) cm.Rep {
+	return wasmimport_NumberResourceRep(handle)
 }
 
 //go:wasmimport [export]example:resources/simple [resource-rep]number
 //go:noescape
-func wasmimport_NumberResourceRep(handle NumberHandle) cm.Rep
-
-//go:wasmimport [export]example:resources/simple [resource-new]number
-//go:noescape
-func wasmimport_NumberResourceNew(rep cm.Rep) NumberHandle
-
-// implemented by user code
-var impl_Number func(rep cm.Rep) NumberMethods
+func wasmimport_NumberResourceRep(handle cm.Own[Number]) cm.Rep
 
 //go:wasmexport example:resources/simple#[constructor]number
-func wasmexport_NumberConstructor(value int32) NumberHandle {
-	return impl_NumberConstructor(value)
+func wasmexport_NumberConstructor(value int32) cm.Own[Number] {
+	return impl.Number().Constructor(value)
 }
-
-// implemented by user code
-var impl_NumberConstructor func(value int32) NumberHandle
 
 //go:wasmexport example:resources/simple#[static]number.merge
-func wasmexport_NumberMerge(a NumberHandle, b NumberHandle) NumberHandle {
-	return impl_NumberMerge(a, b)
+func wasmexport_NumberMerge(a cm.Own[Number], b cm.Own[Number]) cm.Own[Number] {
+	return impl.Number().Merge(a, b)
 }
 
-// implemented by user code
-var impl_NumberMerge func(a NumberHandle, b NumberHandle) NumberHandle
+//go:wasmexport example:resources/simple#[static]number.choose
+func wasmexport_NumberChoose(a cm.Rep, b cm.Rep) cm.Own[Number] {
+	return impl.Number().Choose(impl.Number().FromRep(a), impl.Number().FromRep(b))
+}
 
 //go:wasmexport example:resources/simple#[method]number.value
 func wasmexport_NumberValue(rep cm.Rep) int32 {
-	self := impl_Number(rep)
-	return self.Value()
+	return impl.Number().FromRep(rep).Value()
 }
 
 //go:wasmexport example:resources/simple#[method]number.string
 func wasmexport_NumberString(rep cm.Rep, result *string) {
-	self := impl_Number(rep)
-	*result = self.String()
-}
-
-// ExportNumber allows the caller to provide a concrete,
-// exported implementation of resource "number".
-func ExportNumber[T any, Rep NumberRep[T], Exports NumberExports[Rep, T]](exports Exports) {
-	impl_Number = func(rep cm.Rep) NumberMethods {
-		return unsafeCast[Rep](rep)
-	}
-	impl_NumberConstructor = func(value int32) NumberHandle {
-		return exports.Constructor(value)
-	}
-	impl_NumberMerge = func(a NumberHandle, b NumberHandle) NumberHandle {
-		return exports.Merge(a, b)
-	}
+	*result = impl.Number().FromRep(rep).String()
 }
 
 func unsafeCast[T, V any](v V) T {
 	return *(*T)(unsafe.Pointer(&v))
 }
 
-type NumberExports[Rep NumberRep[T], T any] interface {
-	Constructor(value int32) NumberHandle
-	Merge(a NumberHandle, b NumberHandle) NumberHandle
-}
-
-type NumberMethods interface {
+type Number interface {
 	Value() int32
 	String() string
 	ResourceDestructor()
 	ResourceRep() cm.Rep
 }
 
-type NumberRep[T any] interface {
-	cm.RepTypes[T]
-	NumberMethods
+type Interface interface {
+	Number() interface {
+		FromRep(cm.Rep) Number
+		Constructor(value int32) cm.Own[Number]
+		Merge(a cm.Own[Number], b cm.Own[Number]) cm.Own[Number]
+		Choose(a Number, b Number) cm.Own[Number]
+	}
 }
 
-type NumberInterface[Number NumberRep[T], T any] interface {
-	Constructor(value int32) NumberHandle
-	Merge(a NumberHandle, b NumberHandle) Number
-	Choose(a Number, b Number) Number
-}
-
-type Interface[Number NumberRep[T0], T0 any] interface {
-	Number() NumberInterface[Number, T0]
-}
+var impl Interface
