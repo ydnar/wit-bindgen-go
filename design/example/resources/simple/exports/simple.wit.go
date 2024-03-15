@@ -1,77 +1,89 @@
 package exports
 
 import (
-	"unsafe"
-
 	"github.com/ydnar/wasm-tools-go/cm"
 )
 
-// NumberResourceNew represents the imported function "example:resources/simple#[resource-new]number".
+// TODO: make this a cm.Handle[T]
+type NumberHandle cm.Resource
+
+// NumberResourceNew represents the imported function "[export]example:resources/simple#[resource-new]number".
 //
 // Create a new Component Model resource handle for [Number].
-func NumberResourceNew(i Number) cm.Own[Number] {
+//
+//go:nosplit
+func NumberResourceNew(i Number) NumberHandle {
 	return wasmimport_NumberResourceNew(i.ResourceRep())
 }
 
 //go:wasmimport [export]example:resources/simple [resource-new]number
 //go:noescape
-func wasmimport_NumberResourceNew(rep cm.Rep) cm.Own[Number]
+func wasmimport_NumberResourceNew(rep cm.Rep) NumberHandle
 
-// NumberResourceRep represents the imported function "example:resources/simple#[resource-rep]number".
+// ResourceRep represents the the Canonical ABI function "resource-rep".
 //
 // Return a rep for [Number] from handle.
 // Caller is responsible for converting to a concrete implementation of [Number]
-func NumberResourceRep(handle cm.Own[Number]) cm.Rep {
-	return wasmimport_NumberResourceRep(handle)
+//
+//go:nosplit
+func (self NumberHandle) ResourceRep() cm.Rep {
+	return self.wasmimport_ResourceRep()
 }
 
 //go:wasmimport [export]example:resources/simple [resource-rep]number
 //go:noescape
-func wasmimport_NumberResourceRep(handle cm.Own[Number]) cm.Rep
+func (self NumberHandle) wasmimport_ResourceRep() cm.Rep
+
+// ResourceDrop represents represents the Canonical ABI function "resource-drop".
+//
+// Drops a resource handle.
+//
+//go:nosplit
+func (self NumberHandle) ResourceDrop() {
+	self.wasmimport_ResourceDrop()
+}
+
+//go:wasmimport example:resources/simple [resource-drop]number
+//go:noescape
+func (self NumberHandle) wasmimport_ResourceDrop()
 
 //go:wasmexport example:resources/simple#[constructor]number
-func wasmexport_NumberConstructor(value int32) cm.Own[Number] {
-	return impl.Number().Constructor(value)
+func wasmexport_NumberConstructor(value int32) NumberHandle {
+	return impl.NewNumber(value)
 }
 
 //go:wasmexport example:resources/simple#[static]number.merge
-func wasmexport_NumberMerge(a cm.Own[Number], b cm.Own[Number]) cm.Own[Number] {
-	return impl.Number().Merge(a, b)
+func wasmexport_NumberMerge(a NumberHandle, b NumberHandle) NumberHandle {
+	return impl.NumberMerge(a, b)
 }
 
 //go:wasmexport example:resources/simple#[static]number.choose
-func wasmexport_NumberChoose(a cm.Rep, b cm.Rep) cm.Own[Number] {
-	return impl.Number().Choose(impl.Number().FromRep(a), impl.Number().FromRep(b))
+func wasmexport_NumberChoose(a cm.Rep, b cm.Rep) NumberHandle {
+	return impl.NumberChoose(impl.Number(a), impl.Number(b))
 }
 
 //go:wasmexport example:resources/simple#[method]number.value
 func wasmexport_NumberValue(rep cm.Rep) int32 {
-	return impl.Number().FromRep(rep).Value()
+	return impl.Number(rep).Value()
 }
 
 //go:wasmexport example:resources/simple#[method]number.string
 func wasmexport_NumberString(rep cm.Rep, result *string) {
-	*result = impl.Number().FromRep(rep).String()
-}
-
-func unsafeCast[T, V any](v V) T {
-	return *(*T)(unsafe.Pointer(&v))
+	*result = impl.Number(rep).String()
 }
 
 type Number interface {
+	ResourceRep() cm.Rep
+	ResourceDestructor()
 	Value() int32
 	String() string
-	ResourceDestructor()
-	ResourceRep() cm.Rep
 }
 
 type Interface interface {
-	Number() interface {
-		FromRep(cm.Rep) Number
-		Constructor(value int32) cm.Own[Number]
-		Merge(a cm.Own[Number], b cm.Own[Number]) cm.Own[Number]
-		Choose(a Number, b Number) cm.Own[Number]
-	}
+	Number(cm.Rep) Number
+	NewNumber(value int32) NumberHandle
+	NumberMerge(a NumberHandle, b NumberHandle) NumberHandle
+	NumberChoose(a Number, b Number) NumberHandle
 }
 
 var impl Interface
