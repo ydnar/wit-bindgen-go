@@ -51,6 +51,11 @@ func wasmexport_NewNumber(value int32) Number {
 	return impl.NewNumber(value)
 }
 
+//go:wasmexport example:resources/simple#[dtor]number
+func wasmexport_NumberDestructor(rep cm.Rep) {
+	impl.Number(rep).ResourceDestructor()
+}
+
 //go:wasmexport example:resources/simple#[static]number.merge
 func wasmexport_NumberMerge(a Number, b Number) Number {
 	return impl.NumberMerge(a, b)
