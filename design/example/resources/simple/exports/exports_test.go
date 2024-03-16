@@ -51,7 +51,7 @@ func (i interface2) Number(rep cm.Rep) exports.NumberInterface {
 }
 
 func (i interface2) NewNumber(value int32) exports.Number {
-	return exports.NumberResourceNew(number1(value))
+	return exports.NumberResourceNew(&number2{value})
 }
 
 func (i interface2) NumberMerge(a exports.Number, b exports.Number) exports.Number {
