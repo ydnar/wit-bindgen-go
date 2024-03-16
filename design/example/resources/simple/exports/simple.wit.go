@@ -49,27 +49,27 @@ func (self NumberHandle) wasmimport_ResourceDrop()
 
 //go:wasmexport example:resources/simple#[constructor]number
 func wasmexport_NumberConstructor(value int32) NumberHandle {
-	return impl.NewNumber(value)
+	return impl.Number().Constructor(value)
 }
 
 //go:wasmexport example:resources/simple#[static]number.merge
 func wasmexport_NumberMerge(a NumberHandle, b NumberHandle) NumberHandle {
-	return impl.NumberMerge(a, b)
+	return impl.Number().Merge(a, b)
 }
 
 //go:wasmexport example:resources/simple#[static]number.choose
 func wasmexport_NumberChoose(a cm.Rep, b cm.Rep) NumberHandle {
-	return impl.NumberChoose(impl.Number(a), impl.Number(b))
+	return impl.Number().Choose(impl_Number(a), impl_Number(b))
 }
 
 //go:wasmexport example:resources/simple#[method]number.value
 func wasmexport_NumberValue(rep cm.Rep) int32 {
-	return impl.Number(rep).Value()
+	return impl_Number(rep).Value()
 }
 
 //go:wasmexport example:resources/simple#[method]number.string
 func wasmexport_NumberString(rep cm.Rep, result *string) {
-	*result = impl.Number(rep).String()
+	*result = impl_Number(rep).String()
 }
 
 type Number interface {
@@ -80,10 +80,21 @@ type Number interface {
 }
 
 type Interface interface {
-	Number(cm.Rep) Number
-	NewNumber(value int32) NumberHandle
-	NumberMerge(a NumberHandle, b NumberHandle) NumberHandle
-	NumberChoose(a Number, b Number) NumberHandle
+	Number() interface {
+		Constructor(value int32) NumberHandle
+		Merge(a NumberHandle, b NumberHandle) NumberHandle
+		Choose(a Number, b Number) NumberHandle
+	}
 }
 
-var impl Interface
+func Export[T0 Number](i Interface) {
+	impl = i
+	impl_Number = func(rep cm.Rep) Number {
+		return cm.AsRep[T0](rep)
+	}
+}
+
+var (
+	impl        Interface
+	impl_Number func(cm.Rep) Number
+)
