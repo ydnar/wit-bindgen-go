@@ -15,10 +15,12 @@ type Resource uint32
 // [Canonical ABI runtime state]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#runtime-state
 const ResourceNone = 0
 
-// Rep represents an opaque resource representation, typically a pointer.
+// Rep represents an opaque resource representation.
+// It can be any value that fits in 32 bits, but is typically a pointer on wasm32.
 type Rep uint32
 
-func AsRep[T any, Rep RepTypes[T]](rep Rep) T {
+// Into performs an unsafe cast from [Rep] rep into T.
+func Into[T Resourcer](rep Rep) T {
 	return *(*T)(unsafe.Pointer(&rep))
 }
 

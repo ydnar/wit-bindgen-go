@@ -16,7 +16,7 @@ var (
 type interface1 struct{}
 
 func (i interface1) Number(rep cm.Rep) exports.NumberInterface {
-	return cm.AsRep[number1](rep)
+	return cm.Into[number1](rep)
 }
 
 func (i interface1) NewNumber(value int32) exports.Number {
@@ -47,7 +47,7 @@ var (
 type interface2 struct{}
 
 func (i interface2) Number(rep cm.Rep) exports.NumberInterface {
-	return cm.AsRep[*number2](rep)
+	return cm.Into[*number2](rep)
 }
 
 func (i interface2) NewNumber(value int32) exports.Number {
