@@ -24,7 +24,7 @@ func (i interface1) NewNumber(value int32) exports.Number {
 }
 
 func (i interface1) NumberMerge(a exports.Number, b exports.Number) exports.Number {
-	return i.NewNumber(i.Number(a.ResourceRep()).Value() + i.Number(b.ResourceRep()).Value())
+	return i.NewNumber(a.Value() + b.Value())
 }
 
 func (i interface1) NumberChoose(a exports.NumberInterface, b exports.NumberInterface) exports.Number {
@@ -55,7 +55,7 @@ func (i interface2) NewNumber(value int32) exports.Number {
 }
 
 func (i interface2) NumberMerge(a exports.Number, b exports.Number) exports.Number {
-	return i.NewNumber(i.Number(a.ResourceRep()).Value() + i.Number(b.ResourceRep()).Value())
+	return i.NewNumber(a.Value() + b.Value())
 }
 
 func (i interface2) NumberChoose(a exports.NumberInterface, b exports.NumberInterface) exports.Number {

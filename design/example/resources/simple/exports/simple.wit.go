@@ -4,8 +4,33 @@ import (
 	"github.com/ydnar/wasm-tools-go/cm"
 )
 
+// Export exports Component Model [Interface] i.
+func Export(i Interface) {
+	impl = i
+}
+
+var impl Interface
+
+// Interface represents the Component Model interface "example:resources/simple".
+type Interface interface {
+	Number(rep cm.Rep) NumberInterface
+	NewNumber(value int32) Number
+	NumberMerge(a Number, b Number) Number
+	NumberChoose(a NumberInterface, b NumberInterface) Number
+}
+
+// NumberInterface represents the Component Model methods for "example:resources/simple.number".
+type NumberInterface interface {
+	ResourceRep() cm.Rep
+	ResourceDestructor()
+	Value() int32
+	String() string
+}
+
 // TODO: make this a cm.Handle[T]
 type Number cm.Resource
+
+var _ NumberInterface = Number(0)
 
 // NumberResourceNew represents the imported function "[export]example:resources/simple#[resource-new]number".
 //
@@ -46,6 +71,21 @@ func (self Number) ResourceDrop() {
 //go:noescape
 func (self Number) wasmimport_ResourceDrop()
 
+// ResourceDestructor represents the destructor for "example:resources/simple.number".
+func (self Number) ResourceDestructor() {
+	impl.Number(self.ResourceRep()).ResourceDestructor()
+}
+
+// Value represents the method "example:resources/simple.number#value".
+func (self Number) Value() int32 {
+	return impl.Number(self.ResourceRep()).Value()
+}
+
+// String represents the method "example:resources/simple.number#string".
+func (self Number) String() string {
+	return impl.Number(self.ResourceRep()).String()
+}
+
 //go:wasmexport example:resources/simple#[constructor]number
 func wasmexport_NewNumber(value int32) Number {
 	return impl.NewNumber(value)
@@ -75,23 +115,3 @@ func wasmexport_NumberValue(rep cm.Rep) int32 {
 func wasmexport_NumberString(rep cm.Rep, result *string) {
 	*result = impl.Number(rep).String()
 }
-
-type NumberInterface interface {
-	ResourceRep() cm.Rep
-	ResourceDestructor()
-	Value() int32
-	String() string
-}
-
-type Interface interface {
-	Number(rep cm.Rep) NumberInterface
-	NewNumber(value int32) Number
-	NumberMerge(a Number, b Number) Number
-	NumberChoose(a NumberInterface, b NumberInterface) Number
-}
-
-func Export(i Interface) {
-	impl = i
-}
-
-var impl Interface
