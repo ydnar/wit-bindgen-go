@@ -22,11 +22,11 @@ func wasmimport_NumberResourceNew(rep cm.Rep) Number
 
 // ResourceRep represents the the Canonical ABI function "resource-rep".
 //
-// Return a [NumberInterface] from a resource handle.
+// Return a [cm.Rep] from a resource handle, suitable for conversion into [NumberInterface].
 //
 //go:nosplit
-func (self Number) ResourceRep() NumberInterface {
-	return impl.Number(self.wasmimport_ResourceRep())
+func (self Number) ResourceRep() cm.Rep {
+	return self.wasmimport_ResourceRep()
 }
 
 //go:wasmimport [export]example:resources/simple [resource-rep]number
