@@ -2,6 +2,7 @@ package exports_test
 
 import (
 	"strconv"
+	"unsafe"
 
 	"github.com/ydnar/wasm-tools-go/cm"
 	"github.com/ydnar/wasm-tools-go/design/example/resources/simple/exports"
@@ -36,7 +37,7 @@ type number1 int32
 func (n number1) Value() int32        { return int32(n) }
 func (n number1) String() string      { return strconv.Itoa(int(n)) }
 func (n number1) ResourceDestructor() {}
-func (n number1) ResourceRep() cm.Rep { return 0 /* FIXME */ }
+func (n number1) ResourceRep() cm.Rep { return cm.Rep(n) }
 
 // Pointer representation
 var (
@@ -69,4 +70,4 @@ type number2 struct {
 func (n *number2) Value() int32        { return n.value }
 func (n *number2) String() string      { return strconv.Itoa(int(n.value)) }
 func (n *number2) ResourceDestructor() {}
-func (n *number2) ResourceRep() cm.Rep { return 0 /* FIXME */ }
+func (n *number2) ResourceRep() cm.Rep { return cm.Rep(uintptr(unsafe.Pointer(n))) }
