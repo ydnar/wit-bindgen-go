@@ -2,11 +2,23 @@ package exports_test
 
 import (
 	"strconv"
+	"testing"
 	"unsafe"
 
 	"github.com/ydnar/wasm-tools-go/cm"
 	"github.com/ydnar/wasm-tools-go/design/example/resources/simple/exports"
 )
+
+//go:linkname NumberResourceDrop github.com/ydnar/wasm-tools-go/design/example/resources/simple/exports.Number.wasmimport_ResourceDrop
+func NumberResourceDrop(exports.Number) {}
+
+//go:linkname NumberResourceRep github.com/ydnar/wasm-tools-go/design/example/resources/simple/exports.Number.wasmimport_ResourceRep
+func NumberResourceRep(exports.Number) cm.Rep { return 0 }
+
+func TestExport(t *testing.T) {
+	exports.Export(interface1{})
+	exports.Export(interface2{})
+}
 
 // Value representation
 var (
