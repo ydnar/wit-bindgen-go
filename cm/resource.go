@@ -24,6 +24,11 @@ func Into[T Resourcer](rep Rep) T {
 	return *(*T)(unsafe.Pointer(&rep))
 }
 
+// IntoRep performs an unsafe cast from T into Rep.
+func IntoRep[T any, R RepTypes[T]](v R) Rep {
+	return *(*Rep)(unsafe.Pointer(&v))
+}
+
 // RepTypes is a type constraint for a concrete resource representation,
 // currently represented in the [Canonical ABI] as a 32-bit integer value.
 //
