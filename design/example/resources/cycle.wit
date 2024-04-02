@@ -1,0 +1,19 @@
+package example:resources;
+
+interface types {
+	resource str {
+		constructor(v: string);
+		concat: static func(a: borrow<str>, b: borrow<str>) -> str;
+		%string: func() -> string;
+	}
+}
+
+interface functions {
+	use types.{str};
+	print: func(s: borrow<str>);
+}
+
+world cycle {
+    export types;
+	import functions;
+}
