@@ -248,6 +248,14 @@ func (g *generator) defineWorld(w *wit.World) error {
 		file.PackageDocs = b.String()
 	}
 
+	if w.Package.Name.Version != nil {
+		var b bytes.Buffer
+		v := file.DeclareName("Version")
+		stringio.Write(&b, "// ", v, " represents the version of WIT package \"", w.Package.Name.String(), "\".\n")
+		stringio.Write(&b, "const ", v, " = \"", w.Package.Name.Version.String(), "\"\n\n")
+		file.Write(b.Bytes())
+	}
+
 	for _, name := range codec.SortedKeys(w.Imports) {
 		var err error
 		switch v := w.Imports[name].(type) {
@@ -290,6 +298,14 @@ func (g *generator) defineInterface(i *wit.Interface, name string) error {
 			b.WriteString(i.Docs.Contents)
 		}
 		file.PackageDocs = b.String()
+	}
+
+	if i.Package.Name.Version != nil {
+		var b bytes.Buffer
+		v := file.DeclareName("Version")
+		stringio.Write(&b, "// ", v, " represents the version of WIT package \"", i.Package.Name.String(), "\".\n")
+		stringio.Write(&b, "const ", v, " = \"", i.Package.Name.Version.String(), "\"\n\n")
+		file.Write(b.Bytes())
 	}
 
 	// Define types
