@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
         with:
           submodules: recursive
 
@@ -36,7 +36,7 @@ jobs:
         go-version: ["1.22"]
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
         with:
           submodules: recursive
 
@@ -75,7 +75,7 @@ jobs:
         go-version: ["1.22"]
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
         with:
           submodules: recursive
 
@@ -112,7 +112,7 @@ jobs:
         go-version: ["1.22"] # WASI Preview 1 only available in Go 1.21 or later
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
         with:
           submodules: recursive
 
