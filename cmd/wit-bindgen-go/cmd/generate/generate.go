@@ -60,6 +60,14 @@ var Command = &cli.Command{
 			Name:  "dry-run",
 			Usage: "do not write files; print to stdout",
 		},
+		&cli.StringFlag{
+			Name:     "target",
+			Aliases:  []string{"t"},
+			Value:    "wasip2",
+			OnlyOnce: true,
+			Config:   cli.StringConfig{TrimSpace: true},
+			Usage:    "sets the Go build tag for the generated WIT bindings",
+		},
 	},
 	Action: action,
 }
@@ -98,6 +106,7 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		bindgen.PackageRoot(pkgRoot),
 		bindgen.Versioned(cmd.Bool("versioned")),
 		bindgen.CMPackage(cmd.String("cm")),
+		bindgen.Target(cmd.String("target")),
 	)
 	if err != nil {
 		return err

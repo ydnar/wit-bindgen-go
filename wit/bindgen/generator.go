@@ -172,6 +172,11 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 	if g.opts.cmPackage == "" {
 		g.opts.cmPackage = cmPackage
 	}
+
+	if g.opts.target == "" {
+		g.opts.target = BuildDefault
+	}
+
 	g.res = res
 	return g, nil
 }
@@ -2110,7 +2115,7 @@ func (g *generator) ensureEmptyAsm(pkg *gen.Package) error {
 func (g *generator) abiFile(pkg *gen.Package) *gen.File {
 	file := pkg.File("abi.go")
 	file.GeneratedBy = g.opts.generatedBy
-	file.Build = BuildDefault
+	file.Build = g.opts.target
 	return file
 }
 
@@ -2118,7 +2123,7 @@ func (g *generator) fileFor(id wit.Ident) *gen.File {
 	pkg := g.packageFor(id)
 	file := pkg.File(id.Extension + ".wit.go")
 	file.GeneratedBy = g.opts.generatedBy
-	file.Build = BuildDefault
+	file.Build = g.opts.target
 	return file
 }
 
@@ -2126,7 +2131,7 @@ func (g *generator) exportsFileFor(id wit.Ident) *gen.File {
 	pkg := g.packageFor(id)
 	file := pkg.File(id.Extension + ".exports.go")
 	file.GeneratedBy = g.opts.generatedBy
-	file.Build = BuildDefault
+	file.Build = g.opts.target
 	if len(file.Header) == 0 {
 		exports := file.GetName("Exports")
 		var b strings.Builder

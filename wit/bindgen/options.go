@@ -1,5 +1,10 @@
 package bindgen
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Option represents a single configuration option for this package.
 type Option interface {
 	applyOption(*options) error
@@ -28,6 +33,9 @@ type options struct {
 
 	// versioned determines if Go packages are generated with version numbers.
 	versioned bool
+
+	// target determines the golang build tags that should be added to the generated wit bindings
+	target string
 }
 
 func (opts *options) apply(o ...Option) error {
@@ -79,6 +87,23 @@ func CMPackage(path string) Option {
 func Versioned(versioned bool) Option {
 	return optionFunc(func(opts *options) error {
 		opts.versioned = versioned
+		return nil
+	})
+}
+
+// Target returns an [Option] that specifices that all generated bindings include a build tag allowing
+// the target suppilied.
+func Target(target string) Option {
+	return optionFunc(func(opts *options) error {
+		switch strings.ToLower(target) {
+		case "wasip1":
+			fmt.Println("setting target")
+			opts.target = target
+		case "wasip2":
+			opts.target = BuildDefault
+		default:
+			return fmt.Errorf("target: %s not supported", target)
+		}
 		return nil
 	})
 }
