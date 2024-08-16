@@ -95,9 +95,9 @@ func Versioned(versioned bool) Option {
 // the target suppilied.
 func Target(target string) Option {
 	return optionFunc(func(opts *options) error {
-		switch strings.ToLower(target) {
+		target = strings.ToLower(target)
+		switch target {
 		case "wasip1":
-			fmt.Println("setting target")
 			opts.target = target
 		case "wasip2":
 			opts.target = BuildDefault
