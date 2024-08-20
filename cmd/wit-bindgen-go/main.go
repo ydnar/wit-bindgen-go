@@ -9,6 +9,7 @@ import (
 
 	"github.com/ydnar/wasm-tools-go/cmd/wit-bindgen-go/cmd/generate"
 	"github.com/ydnar/wasm-tools-go/cmd/wit-bindgen-go/cmd/wit"
+	"github.com/ydnar/wasm-tools-go/version"
 )
 
 func main() {
@@ -25,6 +26,7 @@ func main() {
 				Usage: "force loading WIT via wasm-tools",
 			},
 		},
+		Version: fmt.Sprintf("%v (%v)", version.Version, version.Revision),
 	}
 
 	err := cmd.Run(context.Background(), os.Args)
