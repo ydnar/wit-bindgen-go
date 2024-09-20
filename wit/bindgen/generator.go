@@ -555,6 +555,22 @@ func ownerIdent(owner wit.TypeOwner) wit.Ident {
 	return id
 }
 
+func linkerPrefix(owner wit.TypeOwner) string {
+	switch owner := owner.(type) {
+	case *wit.World:
+		return ""
+	case *wit.Interface:
+		if owner.Name == nil {
+			return owner.InterfaceName()
+		}
+		id := owner.Package.Name
+		id.Extension = *owner.Name
+		return id.String()
+	default:
+		panic(fmt.Sprintf("BUG: unknown wit.TypeOwner %T", owner)) // should never reach here
+	}
+}
+
 func declareDirectedName(scope gen.Scope, dir wit.Direction, name string) string {
 	if dir == wit.Exported && scope.HasName(name) {
 		if token.IsExported(name) {
@@ -1537,27 +1553,40 @@ func (g *generator) goParams(scope gen.Scope, dir wit.Direction, params []wit.Pa
 func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *wit.Function) (*funcDecl, error) {
 	// Setup
 	ownerID := ownerIdent(owner)
+	pfx := linkerPrefix(owner)
 	file := g.fileFor(ownerID)
 
 	var scope gen.Scope = file
 	wasm := f.CoreFunction(dir)
 	tdir := dir
-	var pfx, linkerName string
+	var goPrefix, linkerName string
 	switch dir {
 	case wit.Imported:
-		pfx = "wasmimport_"
-		linkerName = ownerID.String() + " " + f.Name
+		goPrefix = "wasmimport_"
+		if pfx == "" {
+			linkerName = f.Name
+		} else {
+			linkerName = pfx + " " + f.Name
+		}
 
 	case wit.Exported:
 		scope = g.exportScopes[ownerID.String()]
-		pfx = "wasmexport_"
-		linkerName = ownerID.String() + "#" + f.Name
+		goPrefix = "wasmexport_"
+		if pfx == "" {
+			linkerName = f.Name
+		} else {
+			linkerName = pfx + "#" + f.Name
+		}
 
 	case importedWithExportedTypes:
 		dir = wit.Imported  // Imported function...
 		tdir = wit.Exported // ...with exported types
-		pfx = "wasmimport_"
-		linkerName = "[export]" + ownerID.String() + " " + f.Name
+		goPrefix = "wasmimport_"
+		if pfx == "" {
+			linkerName = "[export]" + f.Name // this should never happen, as worlds cannot export types
+		} else {
+			linkerName = "[export]" + pfx + " " + f.Name
+		}
 
 	default:
 		return nil, errors.New("BUG: unknown direction " + dir.String())
@@ -1577,7 +1606,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 	case *wit.Freestanding:
 		baseName := GoName(f.BaseName(), true)
 		funcName = declareDirectedName(scope, dir, baseName)
-		wasmName = file.DeclareName(pfx + baseName)
+		wasmName = file.DeclareName(goPrefix + baseName)
 
 	case *wit.Constructor:
 		t := f.Type().(*wit.TypeDef)
@@ -1587,7 +1616,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 			baseName = GoName(f.BaseName(), true)
 		}
 		funcName = declareDirectedName(scope, dir, baseName)
-		wasmName = file.DeclareName(pfx + baseName)
+		wasmName = file.DeclareName(goPrefix + baseName)
 
 	case *wit.Static:
 		t := f.Type().(*wit.TypeDef)
@@ -1597,7 +1626,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 			baseName = GoName(f.BaseName(), true)
 		}
 		funcName = declareDirectedName(scope, dir, baseName)
-		wasmName = file.DeclareName(pfx + baseName)
+		wasmName = file.DeclareName(goPrefix + baseName)
 
 	case *wit.Method:
 		t := f.Type().(*wit.TypeDef)
@@ -1609,16 +1638,16 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 		case wit.Imported:
 			funcName = td.scope.DeclareName(GoName(f.BaseName(), true))
 			if wasm.IsMethod() {
-				wasmName = td.scope.DeclareName(pfx + funcName)
+				wasmName = td.scope.DeclareName(goPrefix + funcName)
 			} else {
-				wasmName = file.DeclareName(pfx + td.name + funcName)
+				wasmName = file.DeclareName(goPrefix + td.name + funcName)
 			}
 		case wit.Exported:
 			// baseName := td.name + GoName(f.BaseName(), true)
 			// funcName = g.declareDirectedName(file, dir, baseName)
 			// wasmName = file.DeclareName(pfx + baseName)
 			funcName = td.scope.DeclareName(GoName(f.BaseName(), true))
-			wasmName = file.DeclareName(pfx + GoName(*t.Name, true) + GoName(f.BaseName(), true))
+			wasmName = file.DeclareName(goPrefix + GoName(*t.Name, true) + GoName(f.BaseName(), true))
 		}
 	}
 
