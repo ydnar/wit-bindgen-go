@@ -1,0 +1,157 @@
+{
+  "worlds": [
+    {
+      "name": "w",
+      "imports": {},
+      "exports": {
+        "f2": {
+          "function": {
+            "name": "f2",
+            "kind": "freestanding",
+            "params": [],
+            "results": [
+              {
+                "type": "s64"
+              }
+            ]
+          }
+        },
+        "example": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": null,
+      "types": {
+        "r": 0
+      },
+      "functions": {
+        "f1": {
+          "name": "f1",
+          "kind": "freestanding",
+          "params": [],
+          "results": [
+            {
+              "type": "s32"
+            }
+          ]
+        },
+        "[constructor]r": {
+          "name": "[constructor]r",
+          "kind": {
+            "constructor": 0
+          },
+          "params": [
+            {
+              "name": "a",
+              "type": "f64"
+            }
+          ],
+          "results": [
+            {
+              "type": 2
+            }
+          ]
+        },
+        "[method]r.get-a": {
+          "name": "[method]r.get-a",
+          "kind": {
+            "method": 0
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 1
+            }
+          ],
+          "results": [
+            {
+              "type": "f64"
+            }
+          ]
+        },
+        "[method]r.set-a": {
+          "name": "[method]r.set-a",
+          "kind": {
+            "method": 0
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 1
+            },
+            {
+              "name": "a",
+              "type": "f64"
+            }
+          ],
+          "results": []
+        },
+        "[static]r.add": {
+          "name": "[static]r.add",
+          "kind": {
+            "static": 0
+          },
+          "params": [
+            {
+              "name": "r",
+              "type": 2
+            },
+            {
+              "name": "a",
+              "type": "f64"
+            }
+          ],
+          "results": [
+            {
+              "type": 2
+            }
+          ]
+        }
+      },
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "r",
+      "kind": "resource",
+      "owner": {
+        "interface": 0
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "borrow": 0
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "own": 0
+        }
+      },
+      "owner": null
+    }
+  ],
+  "packages": [
+    {
+      "name": "issues:issue175",
+      "interfaces": {},
+      "worlds": {
+        "w": 0
+      }
+    }
+  ]
+}
