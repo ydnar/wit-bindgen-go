@@ -1645,9 +1645,9 @@ func (g *generator) defineFunction(owner wit.TypeOwner, dir wit.Direction, f *wi
 
 	switch dir {
 	case wit.Imported, importedWithExportedTypes:
-		return g.defineImportedFunction(owner, f, decl)
+		return g.defineImportedFunction(decl)
 	case wit.Exported:
-		err := g.defineExportedFunction(owner, f, decl)
+		err := g.defineExportedFunction(decl)
 		if err != nil {
 			return err
 		}
@@ -1665,9 +1665,9 @@ func (g *generator) defineFunction(owner wit.TypeOwner, dir wit.Direction, f *wi
 	return nil
 }
 
-func (g *generator) defineImportedFunction(_ wit.TypeOwner, f *wit.Function, decl *funcDecl) error {
+func (g *generator) defineImportedFunction(decl *funcDecl) error {
 	dir := wit.Imported
-	if !g.define(dir, f) {
+	if !g.define(dir, decl.f) {
 		return nil
 	}
 
@@ -1713,7 +1713,7 @@ func (g *generator) defineImportedFunction(_ wit.TypeOwner, f *wit.Function, dec
 	var b bytes.Buffer
 
 	// Emit docs
-	b.WriteString(g.functionDocs(dir, f, decl.goFunc.name))
+	b.WriteString(g.functionDocs(dir, decl.f, decl.goFunc.name))
 
 	// Emit Go function
 	b.WriteString("//go:nosplit\n")
@@ -1843,13 +1843,13 @@ func (g *generator) defineImportedFunction(_ wit.TypeOwner, f *wit.Function, dec
 	return g.ensureEmptyAsm(file.Package)
 }
 
-func (g *generator) defineExportedFunction(owner wit.TypeOwner, f *wit.Function, decl *funcDecl) error {
+func (g *generator) defineExportedFunction(decl *funcDecl) error {
 	dir := wit.Exported
-	if !g.define(dir, f) {
+	if !g.define(dir, decl.f) {
 		return nil
 	}
 	file := decl.goFunc.file
-	ownerID := ownerIdent(owner)
+	ownerID := ownerIdent(decl.owner)
 	scope := g.exportScopes[ownerID.String()]
 
 	// Bridging between wasm and Go function
@@ -1887,7 +1887,7 @@ func (g *generator) defineExportedFunction(owner wit.TypeOwner, f *wit.Function,
 	// Emit exports declaration in exports file
 	{
 		xfile := g.exportsFileFor(ownerID)
-		stringio.Write(xfile, "\n", g.functionDocs(dir, f, decl.goFunc.name))
+		stringio.Write(xfile, "\n", g.functionDocs(dir, decl.f, decl.goFunc.name))
 		stringio.Write(xfile, decl.goFunc.name, " func", g.functionSignature(xfile, decl.goFunc), "\n")
 	}
 
@@ -1943,7 +1943,7 @@ func (g *generator) defineExportedFunction(owner wit.TypeOwner, f *wit.Function,
 
 	// Emit caller-defined function name
 	fqName := file.GetName("Exports") + "." + decl.goFunc.name
-	if t := f.Type(); t != nil {
+	if t := decl.f.Type(); t != nil {
 		fqName = file.GetName("Exports") + "." + scope.GetName(GoName(t.TypeName(), true)) + "." + decl.goFunc.name
 	}
 	stringio.Write(&b, fqName, "(")
@@ -2002,7 +2002,7 @@ func (g *generator) defineExportedFunction(owner wit.TypeOwner, f *wit.Function,
 	b.WriteString("}\n\n")
 
 	// Emit default function body
-	if strings.HasPrefix(f.Name, "[dtor]") || strings.HasPrefix(f.Name, "cabi_post_") {
+	if strings.HasPrefix(decl.f.Name, "[dtor]") || strings.HasPrefix(decl.f.Name, "cabi_post_") {
 		stringio.Write(&b, "func init() {")
 		stringio.Write(&b, fqName, " = func", g.functionSignature(file, decl.goFunc), " {}\n")
 		b.WriteString("}\n\n")
