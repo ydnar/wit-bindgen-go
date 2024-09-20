@@ -47,6 +47,9 @@ type typeDecl struct {
 }
 
 type funcDecl struct {
+	owner      wit.TypeOwner
+	dir        wit.Direction
+	f          *wit.Function
 	goFunc     function // The Go function
 	wasmFunc   function // The wasmimport or wasmexport function
 	linkerName string   // The wasmimport or wasmexport mangled linker name
@@ -1620,6 +1623,9 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 	}
 
 	fdecl := funcDecl{
+		owner:      owner,
+		dir:        dir,
+		f:          f,
 		goFunc:     g.goFunction(file, tdir, dir, f, funcName),
 		wasmFunc:   g.goFunction(file, tdir, dir, wasm, wasmName),
 		linkerName: linkerName,
