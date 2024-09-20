@@ -1601,8 +1601,8 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 
 	case *wit.Method:
 		t := f.Type().(*wit.TypeDef)
-		if t.Package().Name.Package != ownerID.Package {
-			return nil, fmt.Errorf("cannot emit functions in package %s to type %s", ownerID.Package, t.Package().Name.String())
+		if t.Owner != owner {
+			return nil, fmt.Errorf("cannot emit methods in package %s on type %s", ownerID.Package, t.TypeName())
 		}
 		td, _ := g.typeDecl(tdir, t)
 		switch dir {

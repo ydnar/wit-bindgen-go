@@ -363,7 +363,7 @@ func (t *TypeDef) WIT(ctx Node, name string) string {
 		if t.Owner == ctx.Owner && t.Name != nil {
 			return "type " + escape(name) + " = " + escape(*t.Name)
 		}
-		ownerName := relativeName(t.Owner, ctx.Package())
+		ownerName := relativeName(t.Owner, ctx.Owner.WITPackage())
 		if t.Name != nil && *t.Name != name {
 			return fmt.Sprintf("use %s.{%s as %s};", ownerName, escape(*t.Name), escape(name))
 		}

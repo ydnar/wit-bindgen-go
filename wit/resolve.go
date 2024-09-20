@@ -62,6 +62,11 @@ type World struct {
 	Docs      Docs
 }
 
+// WITPackage returns the [Package] this [World] belongs to.
+func (w *World) WITPackage() *Package {
+	return w.Package
+}
+
 // AllFunctions returns a [sequence] that yields each [Function] in a [World].
 // The sequence stops if yield returns false.
 //
@@ -125,6 +130,11 @@ type Interface struct {
 	Package   *Package  // the Package this Interface belongs to
 	Stability Stability // WIT @since or @unstable (nil if unknown)
 	Docs      Docs
+}
+
+// WITPackage returns the [Package] this [Interface] belongs to.
+func (i *Interface) WITPackage() *Package {
+	return i.Package
 }
 
 // InterfaceName performs a best-effort guess at the [Interface] name,
@@ -214,17 +224,6 @@ func (t *TypeDef) Root() *TypeDef {
 			return t
 		}
 	}
-}
-
-// Package returns the [Package] that t is associated with, if any.
-func (t *TypeDef) Package() *Package {
-	switch owner := t.Owner.(type) {
-	case *Interface:
-		return owner.Package
-	case *World:
-		return owner.Package
-	}
-	return nil
 }
 
 // Constructor returns the constructor for [TypeDef] t, or nil if none.
@@ -1042,6 +1041,7 @@ func (s *Stream) hasResource() bool { return HasResource(s.Element) || HasResour
 type TypeOwner interface {
 	Node
 	AllFunctions() iterate.Seq[*Function]
+	WITPackage() *Package
 	isTypeOwner()
 }
 
