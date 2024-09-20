@@ -106,7 +106,7 @@ type generator struct {
 
 	// functions map wit.Function to their Go equivalent.
 	// It is indexed on wit.Direction, either Imported or Exported.
-	functions [2]map[*wit.Function]funcDecl
+	functions [2]map[*wit.Function]*funcDecl
 
 	// defined represent whether a world, interface, type, or function has been defined.
 	// It is indexed on wit.Direction, either Imported or Exported.
@@ -131,7 +131,7 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 	}
 	for i := 0; i < 2; i++ {
 		g.types[i] = make(map[*wit.TypeDef]typeDecl)
-		g.functions[i] = make(map[*wit.Function]funcDecl)
+		g.functions[i] = make(map[*wit.Function]*funcDecl)
 		g.defined[i] = make(map[any]bool)
 	}
 	err := g.opts.apply(opts...)
@@ -1534,7 +1534,7 @@ func (g *generator) goParams(scope gen.Scope, dir wit.Direction, params []wit.Pa
 	return out
 }
 
-func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *wit.Function) (funcDecl, error) {
+func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *wit.Function) (*funcDecl, error) {
 	// Setup
 	ownerID := ownerIdent(owner)
 	file := g.fileFor(ownerID)
@@ -1560,7 +1560,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 		linkerName = "[export]" + ownerID.String() + " " + f.Name
 
 	default:
-		return funcDecl{}, errors.New("BUG: unknown direction " + dir.String())
+		return nil, errors.New("BUG: unknown direction " + dir.String())
 	}
 
 	if fdecl, ok := g.functions[dir][f]; ok {
@@ -1602,7 +1602,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 	case *wit.Method:
 		t := f.Type().(*wit.TypeDef)
 		if t.Package().Name.Package != ownerID.Package {
-			return funcDecl{}, fmt.Errorf("cannot emit functions in package %s to type %s", ownerID.Package, t.Package().Name.String())
+			return nil, fmt.Errorf("cannot emit functions in package %s to type %s", ownerID.Package, t.Package().Name.String())
 		}
 		td, _ := g.typeDecl(tdir, t)
 		switch dir {
@@ -1622,7 +1622,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 		}
 	}
 
-	fdecl := funcDecl{
+	fdecl := &funcDecl{
 		owner:      owner,
 		dir:        dir,
 		f:          f,
@@ -1665,7 +1665,7 @@ func (g *generator) defineFunction(owner wit.TypeOwner, dir wit.Direction, f *wi
 	return nil
 }
 
-func (g *generator) defineImportedFunction(_ wit.TypeOwner, f *wit.Function, decl funcDecl) error {
+func (g *generator) defineImportedFunction(_ wit.TypeOwner, f *wit.Function, decl *funcDecl) error {
 	dir := wit.Imported
 	if !g.define(dir, f) {
 		return nil
@@ -1843,7 +1843,7 @@ func (g *generator) defineImportedFunction(_ wit.TypeOwner, f *wit.Function, dec
 	return g.ensureEmptyAsm(file.Package)
 }
 
-func (g *generator) defineExportedFunction(owner wit.TypeOwner, f *wit.Function, decl funcDecl) error {
+func (g *generator) defineExportedFunction(owner wit.TypeOwner, f *wit.Function, decl *funcDecl) error {
 	dir := wit.Exported
 	if !g.define(dir, f) {
 		return nil
