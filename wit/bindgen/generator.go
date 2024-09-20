@@ -102,7 +102,7 @@ type generator struct {
 
 	// types map wit.TypeDef to their Go equivalent.
 	// It is indexed on wit.Direction, either Imported or Exported.
-	types [2]map[*wit.TypeDef]typeDecl
+	types [2]map[*wit.TypeDef]*typeDecl
 
 	// functions map wit.Function to their Go equivalent.
 	// It is indexed on wit.Direction, either Imported or Exported.
@@ -130,7 +130,7 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 		liftFunctions:  make(map[typeUse]function),
 	}
 	for i := 0; i < 2; i++ {
-		g.types[i] = make(map[*wit.TypeDef]typeDecl)
+		g.types[i] = make(map[*wit.TypeDef]*typeDecl)
 		g.functions[i] = make(map[*wit.Function]*funcDecl)
 		g.defined[i] = make(map[wit.Node]bool)
 	}
@@ -466,14 +466,14 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 	return nil
 }
 
-func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.TypeDef, goName string) (typeDecl, error) {
+func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.TypeDef, goName string) (*typeDecl, error) {
 	decl, ok := g.types[dir][t]
 	if ok {
 		return decl, nil
 	}
 	if goName == "" {
 		if t.Name == nil {
-			return typeDecl{}, errors.New("BUG: cannot declare unnamed wit.TypeDef")
+			return nil, errors.New("BUG: cannot declare unnamed wit.TypeDef")
 		}
 		goName = GoName(*t.Name, true)
 	}
@@ -481,7 +481,7 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 	if file == nil {
 		file = g.fileFor(ownerID)
 	}
-	decl = typeDecl{
+	decl = &typeDecl{
 		file:  file,
 		name:  declareDirectedName(file, dir, goName),
 		scope: gen.NewScope(nil),
@@ -521,7 +521,7 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 					}
 				}
 				if err != nil {
-					return typeDecl{}, err
+					return nil, err
 				}
 				if count >= 2 {
 					break
@@ -567,7 +567,7 @@ func declareDirectedName(scope gen.Scope, dir wit.Direction, name string) string
 }
 
 // typeDecl returns the typeDecl for [wit.Direction] dir and [wit.TypeDef] t, and whether it was declared.
-func (g *generator) typeDecl(dir wit.Direction, t *wit.TypeDef) (decl typeDecl, ok bool) {
+func (g *generator) typeDecl(dir wit.Direction, t *wit.TypeDef) (decl *typeDecl, ok bool) {
 	if decl, ok = g.types[dir][t]; ok {
 		return decl, true
 	}
