@@ -110,7 +110,7 @@ type generator struct {
 
 	// defined represent whether a world, interface, type, or function has been defined.
 	// It is indexed on wit.Direction, either Imported or Exported.
-	defined [2]map[any]bool
+	defined [2]map[wit.Node]bool
 
 	// ABI shapes for any type, use for variant and result Shape type parameters.
 	shapes map[typeUse]string
@@ -132,7 +132,7 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 	for i := 0; i < 2; i++ {
 		g.types[i] = make(map[*wit.TypeDef]typeDecl)
 		g.functions[i] = make(map[*wit.Function]*funcDecl)
-		g.defined[i] = make(map[any]bool)
+		g.defined[i] = make(map[wit.Node]bool)
 	}
 	err := g.opts.apply(opts...)
 	if err != nil {
@@ -186,7 +186,7 @@ func (g *generator) detectVersionedPackages() {
 
 // define marks a world, interface, type, or function as defined.
 // It returns true if was newly defined.
-func (g *generator) define(dir wit.Direction, v any) (defined bool) {
+func (g *generator) define(dir wit.Direction, v wit.Node) (defined bool) {
 	if g.defined[dir][v] {
 		return false
 	}
