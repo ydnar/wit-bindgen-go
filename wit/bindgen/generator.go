@@ -558,7 +558,7 @@ func (g *generator) ownerIdent(owner wit.TypeOwner) wit.Ident {
 func moduleName(owner wit.TypeOwner) string {
 	switch owner := owner.(type) {
 	case *wit.World:
-		return ""
+		return "$root"
 	case *wit.Interface:
 		if owner.Name == nil {
 			return owner.InterfaceName()
@@ -1562,16 +1562,12 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 	switch dir {
 	case wit.Imported:
 		goPrefix = "wasmimport_"
-		if module == "" {
-			linkerName = "$root" + " " + f.Name
-		} else {
-			linkerName = module + " " + f.Name
-		}
+		linkerName = module + " " + f.Name
 
 	case wit.Exported:
 		scope = g.exportScopes[owner]
 		goPrefix = "wasmexport_"
-		if module == "" {
+		if module == "$root" {
 			linkerName = f.Name
 		} else {
 			linkerName = module + "#" + f.Name
@@ -1581,11 +1577,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 		dir = wit.Imported  // Imported function...
 		tdir = wit.Exported // ...with exported types
 		goPrefix = "wasmimport_"
-		if module == "" {
-			linkerName = "[export]" + f.Name // this should never happen, as worlds cannot export types
-		} else {
-			linkerName = "[export]" + module + " " + f.Name
-		}
+		linkerName = "[export]" + module + " " + f.Name
 
 	default:
 		return nil, errors.New("BUG: unknown direction " + dir.String())
