@@ -101,9 +101,6 @@ type generator struct {
 	// exportScopes map WIT identifier paths to export scopes.
 	exportScopes map[wit.TypeOwner]gen.Scope
 
-	// interfaceIDs map wit.Interface to a qualified identifier.
-	interfaceIDs map[*wit.Interface]wit.Ident
-
 	// types map wit.TypeDef to their Go equivalent.
 	// It is indexed on wit.Direction, either Imported or Exported.
 	types [2]map[*wit.TypeDef]*typeDecl
@@ -129,7 +126,6 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 		packages:       make(map[string]*gen.Package),
 		witPackages:    make(map[wit.TypeOwner]*gen.Package),
 		exportScopes:   make(map[wit.TypeOwner]gen.Scope),
-		interfaceIDs:   make(map[*wit.Interface]wit.Ident),
 		shapes:         make(map[typeUse]string),
 		lowerFunctions: make(map[typeUse]function),
 		liftFunctions:  make(map[typeUse]function),
@@ -295,7 +291,6 @@ func (g *generator) defineInterface(w *wit.World, dir wit.Direction, i *wit.Inte
 		name = *i.Name
 	}
 	id.Extension = name
-	g.interfaceIDs[i] = id
 
 	pkg, err := g.newPackage(w, i, name)
 	if err != nil {
@@ -548,18 +543,6 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 	}
 
 	return decl, nil
-}
-
-func (g *generator) ownerIdent(owner wit.TypeOwner) wit.Ident {
-	var id wit.Ident
-	switch owner := owner.(type) {
-	case *wit.World:
-		id = owner.Package.Name
-		id.Extension = owner.Name
-	case *wit.Interface:
-		return g.interfaceIDs[owner]
-	}
-	return id
 }
 
 func moduleName(owner wit.TypeOwner) string {
