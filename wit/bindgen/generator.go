@@ -231,11 +231,16 @@ func (g *generator) defineWorld(w *wit.World) error {
 	}
 	id := w.Package.Name
 	id.Extension = w.Name
+
+	pkg, err := g.newPackage(w, nil, "")
+	if err != nil {
+		return err
+	}
 	file := g.fileFor(w)
 
 	{
 		var b strings.Builder
-		stringio.Write(&b, "Package ", file.Package.Name, " represents the ", w.WITKind(), " \"", id.String(), "\".\n")
+		stringio.Write(&b, "Package ", pkg.Name, " represents the ", w.WITKind(), " \"", id.String(), "\".\n")
 		if w.Docs.Contents != "" {
 			b.WriteString("\n")
 			b.WriteString(w.Docs.Contents)
@@ -243,7 +248,6 @@ func (g *generator) defineWorld(w *wit.World) error {
 		file.PackageDocs = b.String()
 	}
 
-	var err error
 	w.Imports.All()(func(name string, v wit.WorldItem) bool {
 		switch v := v.(type) {
 		case *wit.InterfaceRef:
@@ -293,11 +297,15 @@ func (g *generator) defineInterface(w *wit.World, dir wit.Direction, i *wit.Inte
 	id.Extension = name
 	g.interfaceIDs[i] = id
 
+	pkg, err := g.newPackage(w, i, name)
+	if err != nil {
+		return err
+	}
 	file := g.fileFor(i)
 
 	{
 		var b strings.Builder
-		stringio.Write(&b, "Package ", file.Package.Name, " represents the ", dir.String(), " ", i.WITKind(), " \"", id.String(), "\".\n")
+		stringio.Write(&b, "Package ", pkg.Name, " represents the ", dir.String(), " ", i.WITKind(), " \"", id.String(), "\".\n")
 		if i.Docs.Contents != "" {
 			b.WriteString("\n")
 			b.WriteString(i.Docs.Contents)
@@ -2203,13 +2211,32 @@ func (g *generator) exportsFileFor(owner wit.TypeOwner) *gen.File {
 }
 
 func (g *generator) packageFor(owner wit.TypeOwner) *gen.Package {
-	// Find existing
-	pkg := g.witPackages[owner]
-	if pkg != nil {
-		return pkg
+	return g.witPackages[owner]
+}
+
+func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*gen.Package, error) {
+	var owner wit.TypeOwner = w
+	id := w.Package.Name
+	id.Extension = w.Name
+
+	if i == nil {
+		name = id.Extension
+	} else {
+		if i.Package != w.Package {
+			return nil, fmt.Errorf("BUG: world package %q != interface package %q", w.Package.Name.String(), i.Package.Name.String())
+		}
+		owner = i
+		if i.Name != nil {
+			name = *i.Name
+			id.Extension = name
+		}
 	}
 
-	id := g.ownerIdent(owner)
+	// Don’t create the same package twice
+	pkg := g.witPackages[owner]
+	if pkg != nil {
+		return pkg, nil
+	}
 
 	// Create the package path and name
 	var segments []string
@@ -2221,25 +2248,28 @@ func (g *generator) packageFor(owner wit.TypeOwner) *gen.Package {
 		segments = append(segments, "v"+id.Version.String())
 	}
 	segments = append(segments, id.Extension)
+	if name != id.Extension {
+		segments = append(segments, name) // for anonymous interfaces nested under worlds
+	}
 	path := strings.Join(segments, "/")
 
 	// TODO: write tests for this
-	name := GoPackageName(id.Extension)
+	goName := GoPackageName(name)
 	// Ensure local name doesn’t conflict with Go keywords or predeclared identifiers
-	if gen.UniqueName(name, gen.IsReserved) != name {
+	if gen.UniqueName(goName, gen.IsReserved) != goName {
 		// Try with package prefix, like error -> ioerror
-		name = FlatName(id.Package + name)
-		if gen.UniqueName(name, gen.IsReserved) != name {
+		goName = FlatName(id.Package + goName)
+		if gen.UniqueName(goName, gen.IsReserved) != goName {
 			// Try with namespace prefix, like ioerror -> wasiioerror
-			name = gen.UniqueName(FlatName(id.Namespace+name), gen.IsReserved)
+			goName = gen.UniqueName(FlatName(id.Namespace+goName), gen.IsReserved)
 		}
 	}
 
-	pkg = gen.NewPackage(path + "#" + name)
+	pkg = gen.NewPackage(path + "#" + goName)
 	g.packages[pkg.Path] = pkg
 	g.witPackages[owner] = pkg
 	g.exportScopes[owner] = gen.NewScope(nil)
 	pkg.DeclareName("Exports")
 
-	return pkg
+	return pkg, nil
 }
