@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"go/token"
+	"path"
 	"path/filepath"
 	"runtime"
 	"slices"
@@ -95,10 +96,13 @@ type generator struct {
 	packages map[string]*gen.Package
 
 	// witPackages map WIT identifier paths to Go packages.
-	witPackages map[string]*gen.Package
+	witPackages map[wit.TypeOwner]*gen.Package
 
 	// exportScopes map WIT identifier paths to export scopes.
-	exportScopes map[string]gen.Scope
+	exportScopes map[wit.TypeOwner]gen.Scope
+
+	// interfaceIDs map wit.Interface to a qualified identifier.
+	interfaceIDs map[*wit.Interface]wit.Ident
 
 	// types map wit.TypeDef to their Go equivalent.
 	// It is indexed on wit.Direction, either Imported or Exported.
@@ -123,8 +127,9 @@ type generator struct {
 func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 	g := &generator{
 		packages:       make(map[string]*gen.Package),
-		witPackages:    make(map[string]*gen.Package),
-		exportScopes:   make(map[string]gen.Scope),
+		witPackages:    make(map[wit.TypeOwner]*gen.Package),
+		exportScopes:   make(map[wit.TypeOwner]gen.Scope),
+		interfaceIDs:   make(map[*wit.Interface]wit.Ident),
 		shapes:         make(map[typeUse]string),
 		lowerFunctions: make(map[typeUse]function),
 		liftFunctions:  make(map[typeUse]function),
@@ -226,12 +231,11 @@ func (g *generator) defineWorld(w *wit.World) error {
 	}
 	id := w.Package.Name
 	id.Extension = w.Name
-	pkg := g.packageFor(id)
-	file := g.fileFor(id)
+	file := g.fileFor(w)
 
 	{
 		var b strings.Builder
-		stringio.Write(&b, "Package ", pkg.Name, " represents the ", w.WITKind(), " \"", id.String(), "\".\n")
+		stringio.Write(&b, "Package ", file.Package.Name, " represents the ", w.WITKind(), " \"", id.String(), "\".\n")
 		if w.Docs.Contents != "" {
 			b.WriteString("\n")
 			b.WriteString(w.Docs.Contents)
@@ -244,7 +248,7 @@ func (g *generator) defineWorld(w *wit.World) error {
 		switch v := v.(type) {
 		case *wit.InterfaceRef:
 			// TODO: handle Stability
-			err = g.defineInterface(wit.Imported, v.Interface, name)
+			err = g.defineInterface(w, wit.Imported, v.Interface, name)
 		case *wit.TypeDef:
 			err = g.defineTypeDef(wit.Imported, v, name)
 		case *wit.Function:
@@ -262,7 +266,7 @@ func (g *generator) defineWorld(w *wit.World) error {
 		switch v := v.(type) {
 		case *wit.InterfaceRef:
 			// TODO: handle Stability
-			err = g.defineInterface(wit.Exported, v.Interface, name)
+			err = g.defineInterface(w, wit.Exported, v.Interface, name)
 		case *wit.TypeDef:
 			// WIT does not currently allow worlds to export types.
 			err = errors.New("exported type in world " + w.Name)
@@ -277,21 +281,23 @@ func (g *generator) defineWorld(w *wit.World) error {
 	return err
 }
 
-func (g *generator) defineInterface(dir wit.Direction, i *wit.Interface, name string) error {
+func (g *generator) defineInterface(w *wit.World, dir wit.Direction, i *wit.Interface, name string) error {
 	if !g.define(dir, i) {
 		return nil
 	}
+
+	id := i.Package.Name
 	if i.Name != nil {
 		name = *i.Name
 	}
-	id := i.Package.Name
 	id.Extension = name
-	pkg := g.packageFor(id)
-	file := g.fileFor(id)
+	g.interfaceIDs[i] = id
+
+	file := g.fileFor(i)
 
 	{
 		var b strings.Builder
-		stringio.Write(&b, "Package ", pkg.Name, " represents the ", dir.String(), " ", i.WITKind(), " \"", id.String(), "\".\n")
+		stringio.Write(&b, "Package ", file.Package.Name, " represents the ", dir.String(), " ", i.WITKind(), " \"", id.String(), "\".\n")
 		if i.Docs.Contents != "" {
 			b.WriteString("\n")
 			b.WriteString(i.Docs.Contents)
@@ -345,11 +351,10 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 	if err != nil {
 		return err
 	}
-	ownerID := ownerIdent(t.Owner)
 
 	// If an alias, get root
 	root := t.Root()
-	rootOwnerID := ownerIdent(root.Owner)
+	rootOwnerID := g.ownerIdent(root.Owner)
 	rootName := name
 	if root.Name != nil {
 		rootName = *root.Name
@@ -386,8 +391,8 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 
 	// Emit type namespace in exports file.
 	if dir == wit.Exported {
-		xfile := g.exportsFileFor(ownerID)
-		scope := g.exportScopes[ownerID.String()]
+		xfile := g.exportsFileFor(t.Owner)
+		scope := g.exportScopes[t.Owner]
 		goName := scope.GetName(GoName(*t.Name, true))
 		stringio.Write(xfile, "\n// ", goName, " represents the caller-defined exports for ", root.WITKind(), " \"", rootOwnerID.String(), "#", rootName, "\".\n")
 		stringio.Write(xfile, goName, " struct {")
@@ -459,7 +464,7 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 
 	// End struct definition here.
 	if dir == wit.Exported {
-		xfile := g.exportsFileFor(ownerID)
+		xfile := g.exportsFileFor(t.Owner)
 		stringio.Write(xfile, "\n}\n")
 	}
 
@@ -477,9 +482,8 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 		}
 		goName = GoName(*t.Name, true)
 	}
-	ownerID := ownerIdent(t.Owner)
 	if file == nil {
-		file = g.fileFor(ownerID)
+		file = g.fileFor(t.Owner)
 	}
 	decl = &typeDecl{
 		file:  file,
@@ -489,8 +493,8 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 	g.types[dir][t] = decl
 
 	// Declare the export scope for this type.
-	if dir == wit.Exported && g.exportScopes[ownerID.String()] != nil {
-		g.exportScopes[ownerID.String()].DeclareName(goName)
+	if dir == wit.Exported && g.exportScopes[t.Owner] != nil {
+		g.exportScopes[t.Owner].DeclareName(goName)
 	}
 
 	// If an imported and exported version of a TypeDef are identical, declare the other.
@@ -539,23 +543,19 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 	return decl, nil
 }
 
-func ownerIdent(owner wit.TypeOwner) wit.Ident {
+func (g *generator) ownerIdent(owner wit.TypeOwner) wit.Ident {
 	var id wit.Ident
 	switch owner := owner.(type) {
 	case *wit.World:
 		id = owner.Package.Name
 		id.Extension = owner.Name
 	case *wit.Interface:
-		id = owner.Package.Name
-		id.Extension = owner.InterfaceName()
-		if id.Extension == "" {
-			panic(fmt.Sprintf("BUG: unnamed interface owner of %#v", owner))
-		}
+		return g.interfaceIDs[owner]
 	}
 	return id
 }
 
-func linkerPrefix(owner wit.TypeOwner) string {
+func moduleName(owner wit.TypeOwner) string {
 	switch owner := owner.(type) {
 	case *wit.World:
 		return ""
@@ -1552,40 +1552,39 @@ func (g *generator) goParams(scope gen.Scope, dir wit.Direction, params []wit.Pa
 
 func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *wit.Function) (*funcDecl, error) {
 	// Setup
-	ownerID := ownerIdent(owner)
-	pfx := linkerPrefix(owner)
-	file := g.fileFor(ownerID)
+	file := g.fileFor(owner)
 
 	var scope gen.Scope = file
 	wasm := f.CoreFunction(dir)
 	tdir := dir
+	module := moduleName(owner)
 	var goPrefix, linkerName string
 	switch dir {
 	case wit.Imported:
 		goPrefix = "wasmimport_"
-		if pfx == "" {
-			linkerName = f.Name
+		if module == "" {
+			linkerName = "$root" + " " + f.Name
 		} else {
-			linkerName = pfx + " " + f.Name
+			linkerName = module + " " + f.Name
 		}
 
 	case wit.Exported:
-		scope = g.exportScopes[ownerID.String()]
+		scope = g.exportScopes[owner]
 		goPrefix = "wasmexport_"
-		if pfx == "" {
+		if module == "" {
 			linkerName = f.Name
 		} else {
-			linkerName = pfx + "#" + f.Name
+			linkerName = module + "#" + f.Name
 		}
 
 	case importedWithExportedTypes:
 		dir = wit.Imported  // Imported function...
 		tdir = wit.Exported // ...with exported types
 		goPrefix = "wasmimport_"
-		if pfx == "" {
+		if module == "" {
 			linkerName = "[export]" + f.Name // this should never happen, as worlds cannot export types
 		} else {
-			linkerName = "[export]" + pfx + " " + f.Name
+			linkerName = "[export]" + module + " " + f.Name
 		}
 
 	default:
@@ -1631,7 +1630,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 	case *wit.Method:
 		t := f.Type().(*wit.TypeDef)
 		if t.Owner != owner {
-			return nil, fmt.Errorf("cannot emit methods in package %s on type %s", ownerID.Package, t.TypeName())
+			return nil, fmt.Errorf("cannot emit methods in package %s on type %s", g.ownerIdent(owner), t.TypeName())
 		}
 		td, _ := g.typeDecl(tdir, t)
 		switch dir {
@@ -1878,8 +1877,7 @@ func (g *generator) defineExportedFunction(decl *funcDecl) error {
 		return nil
 	}
 	file := decl.goFunc.file
-	ownerID := ownerIdent(decl.owner)
-	scope := g.exportScopes[ownerID.String()]
+	scope := g.exportScopes[decl.owner]
 
 	// Bridging between wasm and Go function
 	callParams := slices.Clone(decl.goFunc.params)
@@ -1915,7 +1913,7 @@ func (g *generator) defineExportedFunction(decl *funcDecl) error {
 
 	// Emit exports declaration in exports file
 	{
-		xfile := g.exportsFileFor(ownerID)
+		xfile := g.exportsFileFor(decl.owner)
 		stringio.Write(xfile, "\n", g.functionDocs(dir, decl.f, decl.goFunc.name))
 		stringio.Write(xfile, decl.goFunc.name, " func", g.functionSignature(xfile, decl.goFunc), "\n")
 	}
@@ -2189,20 +2187,21 @@ func (g *generator) abiFile(pkg *gen.Package) *gen.File {
 	return file
 }
 
-func (g *generator) fileFor(id wit.Ident) *gen.File {
-	pkg := g.packageFor(id)
-	file := pkg.File(id.Extension + ".wit.go")
+func (g *generator) fileFor(owner wit.TypeOwner) *gen.File {
+	pkg := g.packageFor(owner)
+	file := pkg.File(path.Base(pkg.Path) + ".wit.go")
 	file.GeneratedBy = g.opts.generatedBy
 	return file
 }
 
-func (g *generator) exportsFileFor(id wit.Ident) *gen.File {
-	pkg := g.packageFor(id)
-	file := pkg.File(id.Extension + ".exports.go")
+func (g *generator) exportsFileFor(owner wit.TypeOwner) *gen.File {
+	pkg := g.packageFor(owner)
+	file := pkg.File(path.Base(pkg.Path) + ".exports.go")
 	file.GeneratedBy = g.opts.generatedBy
 	if len(file.Header) == 0 {
 		exports := file.GetName("Exports")
 		var b strings.Builder
+		id := g.ownerIdent(owner)
 		stringio.Write(&b, "// ", exports, " represents the caller-defined exports from \"", id.String(), "\".\n")
 		stringio.Write(&b, "var ", exports, " struct {")
 		file.Header = b.String()
@@ -2211,12 +2210,14 @@ func (g *generator) exportsFileFor(id wit.Ident) *gen.File {
 	return file
 }
 
-func (g *generator) packageFor(id wit.Ident) *gen.Package {
+func (g *generator) packageFor(owner wit.TypeOwner) *gen.Package {
 	// Find existing
-	pkg := g.witPackages[id.String()]
+	pkg := g.witPackages[owner]
 	if pkg != nil {
 		return pkg
 	}
+
+	id := g.ownerIdent(owner)
 
 	// Create the package path and name
 	var segments []string
@@ -2244,8 +2245,8 @@ func (g *generator) packageFor(id wit.Ident) *gen.Package {
 
 	pkg = gen.NewPackage(path + "#" + name)
 	g.packages[pkg.Path] = pkg
-	g.witPackages[id.String()] = pkg
-	g.exportScopes[id.String()] = gen.NewScope(nil)
+	g.witPackages[owner] = pkg
+	g.exportScopes[owner] = gen.NewScope(nil)
 	pkg.DeclareName("Exports")
 
 	return pkg
