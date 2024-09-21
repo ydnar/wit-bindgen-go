@@ -362,7 +362,6 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 
 	// If an alias, get root
 	root := t.Root()
-	rootOwnerID := g.ownerIdent(root.Owner)
 	rootName := name
 	if root.Name != nil {
 		rootName = *root.Name
@@ -374,7 +373,7 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 	if wit.HasResource(t) {
 		stringio.Write(&b, dir.String(), " ")
 	}
-	stringio.Write(&b, root.WITKind(), " \"", rootOwnerID.String(), "#", rootName, "\".\n")
+	stringio.Write(&b, root.WITKind(), " \"", moduleName(root.Owner), "#", rootName, "\".\n")
 	b.WriteString("//\n")
 	if root != t {
 		// Type alias
@@ -402,7 +401,7 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 		xfile := g.exportsFileFor(t.Owner)
 		scope := g.exportScopes[t.Owner]
 		goName := scope.GetName(GoName(*t.Name, true))
-		stringio.Write(xfile, "\n// ", goName, " represents the caller-defined exports for ", root.WITKind(), " \"", rootOwnerID.String(), "#", rootName, "\".\n")
+		stringio.Write(xfile, "\n// ", goName, " represents the caller-defined exports for ", root.WITKind(), " \"", moduleName(root.Owner), "#", rootName, "\".\n")
 		stringio.Write(xfile, goName, " struct {")
 	}
 
@@ -1630,7 +1629,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 	case *wit.Method:
 		t := f.Type().(*wit.TypeDef)
 		if t.Owner != owner {
-			return nil, fmt.Errorf("cannot emit methods in package %s on type %s", g.ownerIdent(owner), t.TypeName())
+			return nil, fmt.Errorf("cannot emit methods in package %s on type %s", moduleName(owner), t.TypeName())
 		}
 		td, _ := g.typeDecl(tdir, t)
 		switch dir {
@@ -2201,8 +2200,7 @@ func (g *generator) exportsFileFor(owner wit.TypeOwner) *gen.File {
 	if len(file.Header) == 0 {
 		exports := file.GetName("Exports")
 		var b strings.Builder
-		id := g.ownerIdent(owner)
-		stringio.Write(&b, "// ", exports, " represents the caller-defined exports from \"", id.String(), "\".\n")
+		stringio.Write(&b, "// ", exports, " represents the caller-defined exports from \"", moduleName(owner), "\".\n")
 		stringio.Write(&b, "var ", exports, " struct {")
 		file.Header = b.String()
 	}
