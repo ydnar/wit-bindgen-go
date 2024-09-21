@@ -2,11 +2,24 @@
   "worlds": [
     {
       "name": "w",
-      "imports": {},
-      "exports": {
+      "imports": {
         "f2": {
           "function": {
             "name": "f2",
+            "kind": "freestanding",
+            "params": [],
+            "results": [
+              {
+                "type": "f32"
+              }
+            ]
+          }
+        }
+      },
+      "exports": {
+        "f3": {
+          "function": {
+            "name": "f3",
             "kind": "freestanding",
             "params": [],
             "results": [

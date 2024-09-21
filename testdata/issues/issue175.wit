@@ -10,5 +10,6 @@ world w {
 			add: static func(r: r, a: f64) -> r;
 		}
 	}
-	export f2: func() -> s64;
+	import f2: func() -> f32;
+	export f3: func() -> s64;
 }

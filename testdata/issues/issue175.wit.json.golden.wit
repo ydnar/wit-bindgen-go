@@ -1,7 +1,8 @@
 package issues:issue175;
 
 world w {
-	export f2: func() -> s64;
+	import f2: func() -> f32;
+	export f3: func() -> s64;
 	export example: interface {
 		resource r {
 			constructor(a: f64);
