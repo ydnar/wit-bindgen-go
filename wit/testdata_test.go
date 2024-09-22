@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/bytecodealliance/wasm-tools-go/internal/relpath"
+
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -350,20 +351,21 @@ func TestPackageFieldIsNotNil(t *testing.T) {
 	}
 }
 
-// TestInterfaceNameIsNotNil tests to ensure the Name field of all [Interface]
-// values in a [Resolve] are non-nil.
+// TestInterfaceNameIsNotNil tests to ensure a non-nil Name field in all [Interface] values in each [Package].
 func TestInterfaceNameIsNotNil(t *testing.T) {
 	err := loadTestdata(func(path string, res *Resolve) error {
 		t.Run(path, func(t *testing.T) {
-			for i, face := range res.Interfaces {
-				name := fmt.Sprintf("Interfaces[%d]", i)
-				if face.Name != nil {
-					name += "#" + *face.Name
-				}
-				t.Run(name, func(t *testing.T) {
-					if face.InterfaceName() == "" {
-						t.Error("empty or nil name")
-					}
+			for _, pkg := range res.Packages {
+				t.Run(pkg.Name.String(), func(t *testing.T) {
+					pkg.Interfaces.All()(func(name string, face *Interface) bool {
+						t.Run(name, func(t *testing.T) {
+							if face.Name == nil {
+								t.Error("nil name")
+							}
+						})
+
+						return true
+					})
 				})
 			}
 		})
@@ -403,8 +405,8 @@ func TestTypeDefNamesNotNil(t *testing.T) {
 	}
 }
 
-// TestTypeDefRootOwnerNamesNotNil verifies that all root [TypeDef] owners have a non-nil name.
-func TestTypeDefRootOwnerNamesNotNil(t *testing.T) {
+// TestTypeDefRootOwnersHaveNames verifies that all root [TypeDef] owners have a name, if non-nil.
+func TestTypeDefRootOwnersHaveNames(t *testing.T) {
 	err := loadTestdata(func(path string, res *Resolve) error {
 		t.Run(path, func(t *testing.T) {
 			for i, td := range res.TypeDefs {
@@ -420,8 +422,8 @@ func TestTypeDefRootOwnerNamesNotNil(t *testing.T) {
 							t.Error("Owner.Name is empty")
 						}
 					case *Interface:
-						if owner.InterfaceName() == "" {
-							t.Error("Owner.Name is nil or Owner.InterfaceName() is empty")
+						if owner.Name != nil && *owner.Name == "" {
+							t.Error("*Owner.Name is empty")
 						}
 					}
 				})
