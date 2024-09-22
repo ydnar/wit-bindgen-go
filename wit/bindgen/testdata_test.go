@@ -216,7 +216,7 @@ func TestGenerateTestdata(t *testing.T) {
 	}
 	err := loadTestdata(func(path string, res *wit.Resolve) error {
 		t.Run(path, func(t *testing.T) {
-			origin := "wit/bindgen/" + strings.TrimSuffix(strings.TrimPrefix(path, testdataPath), ".wit.json")
+			origin := strings.TrimSuffix(strings.TrimPrefix(path, testdataPath), ".wit.json")
 			validateGeneratedGo(t, res, origin)
 		})
 		return nil
