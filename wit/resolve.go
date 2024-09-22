@@ -62,13 +62,6 @@ type World struct {
 	Docs      Docs
 }
 
-// Ident returns a fully-qualified [Ident] for this [World].
-func (w *World) Ident() Ident {
-	id := w.Package.Name
-	id.Extension = w.Name
-	return id
-}
-
 // WITPackage returns the [Package] this [World] belongs to.
 func (w *World) WITPackage() *Package {
 	return w.Package
@@ -137,13 +130,6 @@ type Interface struct {
 	Package   *Package  // the Package this Interface belongs to
 	Stability Stability // WIT @since or @unstable (nil if unknown)
 	Docs      Docs
-}
-
-// Ident returns a fully-qualified [Ident] for this [Interface].
-func (i *Interface) Ident() Ident {
-	id := i.Package.Name
-	id.Extension = i.InterfaceName()
-	return id
 }
 
 // WITPackage returns the [Package] this [Interface] belongs to.
