@@ -95,11 +95,14 @@ type generator struct {
 	// packages are Go packages indexed on Go package paths.
 	packages map[string]*gen.Package
 
-	// witPackages map WIT identifier paths to Go packages.
+	// witPackages map wit.TypeOwner (World, Interface) to Go packages.
 	witPackages map[wit.TypeOwner]*gen.Package
 
-	// exportScopes map WIT identifier paths to export scopes.
+	// exportScopes map wit.TypeOwner to export scopes.
 	exportScopes map[wit.TypeOwner]gen.Scope
+
+	// moduleNames map wit.TypeOwner to the wasmimport/wasmexport module names.
+	moduleNames map[wit.TypeOwner]string
 
 	// types map wit.TypeDef to their Go equivalent.
 	// It is indexed on wit.Direction, either Imported or Exported.
@@ -126,6 +129,7 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 		packages:       make(map[string]*gen.Package),
 		witPackages:    make(map[wit.TypeOwner]*gen.Package),
 		exportScopes:   make(map[wit.TypeOwner]gen.Scope),
+		moduleNames:    make(map[wit.TypeOwner]string),
 		shapes:         make(map[typeUse]string),
 		lowerFunctions: make(map[typeUse]function),
 		liftFunctions:  make(map[typeUse]function),
@@ -228,6 +232,8 @@ func (g *generator) defineWorld(w *wit.World) error {
 	id := w.Package.Name
 	id.Extension = w.Name
 
+	g.moduleNames[w] = id.String()
+
 	pkg, err := g.newPackage(w, nil, "")
 	if err != nil {
 		return err
@@ -236,7 +242,7 @@ func (g *generator) defineWorld(w *wit.World) error {
 
 	{
 		var b strings.Builder
-		stringio.Write(&b, "Package ", pkg.Name, " represents the ", w.WITKind(), " \"", id.String(), "\".\n")
+		stringio.Write(&b, "Package ", pkg.Name, " represents the ", w.WITKind(), " \"", g.moduleNames[w], "\".\n")
 		if w.Docs.Contents != "" {
 			b.WriteString("\n")
 			b.WriteString(w.Docs.Contents)
@@ -286,11 +292,14 @@ func (g *generator) defineInterface(w *wit.World, dir wit.Direction, i *wit.Inte
 		return nil
 	}
 
-	id := i.Package.Name
-	if i.Name != nil {
+	if i.Name == nil {
+		g.moduleNames[i] = name
+	} else {
 		name = *i.Name
+		id := i.Package.Name
+		id.Extension = name
+		g.moduleNames[i] = id.String()
 	}
-	id.Extension = name
 
 	pkg, err := g.newPackage(w, i, name)
 	if err != nil {
@@ -300,7 +309,7 @@ func (g *generator) defineInterface(w *wit.World, dir wit.Direction, i *wit.Inte
 
 	{
 		var b strings.Builder
-		stringio.Write(&b, "Package ", pkg.Name, " represents the ", dir.String(), " ", i.WITKind(), " \"", id.String(), "\".\n")
+		stringio.Write(&b, "Package ", pkg.Name, " represents the ", dir.String(), " ", i.WITKind(), " \"", g.moduleNames[i], "\".\n")
 		if i.Docs.Contents != "" {
 			b.WriteString("\n")
 			b.WriteString(i.Docs.Contents)
@@ -368,7 +377,7 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 	if wit.HasResource(t) {
 		stringio.Write(&b, dir.String(), " ")
 	}
-	stringio.Write(&b, root.WITKind(), " \"", moduleName(root.Owner), "#", rootName, "\".\n")
+	stringio.Write(&b, root.WITKind(), " \"", g.moduleNames[root.Owner], "#", rootName, "\".\n")
 	b.WriteString("//\n")
 	if root != t {
 		// Type alias
@@ -396,7 +405,7 @@ func (g *generator) defineTypeDef(dir wit.Direction, t *wit.TypeDef, name string
 		xfile := g.exportsFileFor(t.Owner)
 		scope := g.exportScopes[t.Owner]
 		goName := scope.GetName(GoName(*t.Name, true))
-		stringio.Write(xfile, "\n// ", goName, " represents the caller-defined exports for ", root.WITKind(), " \"", moduleName(root.Owner), "#", rootName, "\".\n")
+		stringio.Write(xfile, "\n// ", goName, " represents the caller-defined exports for ", root.WITKind(), " \"", g.moduleNames[root.Owner], "#", rootName, "\".\n")
 		stringio.Write(xfile, goName, " struct {")
 	}
 
@@ -543,22 +552,6 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 	}
 
 	return decl, nil
-}
-
-func moduleName(owner wit.TypeOwner) string {
-	switch owner := owner.(type) {
-	case *wit.World:
-		return "$root"
-	case *wit.Interface:
-		if owner.Name == nil {
-			return owner.InterfaceName()
-		}
-		id := owner.Package.Name
-		id.Extension = *owner.Name
-		return id.String()
-	default:
-		panic(fmt.Sprintf("BUG: unknown wit.TypeOwner %T", owner)) // should never reach here
-	}
 }
 
 func declareDirectedName(scope gen.Scope, dir wit.Direction, name string) string {
@@ -1541,14 +1534,16 @@ func (g *generator) goParams(scope gen.Scope, dir wit.Direction, params []wit.Pa
 }
 
 func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *wit.Function) (*funcDecl, error) {
-	// Setup
 	file := g.fileFor(owner)
-
 	var scope gen.Scope = file
 	wasm := f.CoreFunction(dir)
 	tdir := dir
-	module := moduleName(owner)
+	module := g.moduleNames[owner]
+	if _, ok := owner.(*wit.World); ok {
+		module = "$root"
+	}
 	var goPrefix, linkerName string
+
 	switch dir {
 	case wit.Imported:
 		goPrefix = "wasmimport_"
@@ -1612,7 +1607,7 @@ func (g *generator) declareFunction(owner wit.TypeOwner, dir wit.Direction, f *w
 	case *wit.Method:
 		t := f.Type().(*wit.TypeDef)
 		if t.Owner != owner {
-			return nil, fmt.Errorf("cannot emit methods in package %s on type %s", moduleName(owner), t.TypeName())
+			return nil, fmt.Errorf("cannot emit methods in package %s on type %s", owner.WITPackage().Name.String(), t.TypeName())
 		}
 		td, _ := g.typeDecl(tdir, t)
 		switch dir {
@@ -2183,7 +2178,7 @@ func (g *generator) exportsFileFor(owner wit.TypeOwner) *gen.File {
 	if len(file.Header) == 0 {
 		exports := file.GetName("Exports")
 		var b strings.Builder
-		stringio.Write(&b, "// ", exports, " represents the caller-defined exports from \"", moduleName(owner), "\".\n")
+		stringio.Write(&b, "// ", exports, " represents the caller-defined exports from \"", g.moduleNames[owner], "\".\n")
 		stringio.Write(&b, "var ", exports, " struct {")
 		file.Header = b.String()
 	}

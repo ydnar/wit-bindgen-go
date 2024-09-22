@@ -137,44 +137,6 @@ func (i *Interface) WITPackage() *Package {
 	return i.Package
 }
 
-// InterfaceName performs a best-effort guess at the [Interface] name,
-// which may be found by scanning its parent package.
-func (i *Interface) InterfaceName() string {
-	if i.Name != nil {
-		return *i.Name
-	}
-	if i.Package == nil {
-		return ""
-	}
-	var done bool
-	var name string
-	scanWorldItem := func(key string, item WorldItem) bool {
-		if ref, ok := item.(*InterfaceRef); ok && ref.Interface == i && key != "" {
-			name = key
-			done = true
-		}
-		return !done
-	}
-	i.Package.Worlds.All()(func(_ string, w *World) bool {
-		w.Imports.All()(scanWorldItem)
-		if !done {
-			w.Exports.All()(scanWorldItem)
-		}
-		return !done
-	})
-	if done {
-		return name
-	}
-	i.Package.Interfaces.All()(func(key string, face *Interface) bool {
-		if face == i && key != "" {
-			name = key
-			done = true
-		}
-		return !done
-	})
-	return name
-}
-
 // AllFunctions returns a [sequence] that yields each [Function] in an [Interface].
 // The sequence stops if yield returns false.
 //
