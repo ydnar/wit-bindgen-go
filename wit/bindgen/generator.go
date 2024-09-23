@@ -206,7 +206,10 @@ func (g *generator) defineWorlds() error {
 	// fmt.Fprintf(os.Stderr, "Generating Go for %d world(s)\n", len(g.res.Worlds))
 	for i, w := range g.res.Worlds {
 		if matchWorld(w, g.opts.world) || (g.opts.world == "" && i == len(g.res.Worlds)-1) {
-			g.defineWorld(w)
+			err := g.defineWorld(w)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
