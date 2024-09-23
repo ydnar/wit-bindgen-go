@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - [#165](https://github.com/bytecodealliance/wasm-tools-go/issues/165): fixed use of imported types in exported functions.
 - [#167](https://github.com/bytecodealliance/wasm-tools-go/issues/167): fixed a logic flaw in `TestHasBorrow`.
 - [#170](https://github.com/bytecodealliance/wasm-tools-go/issues/170): resolve implied names for interface imports and exports in a world.
+- [#175](https://github.com/bytecodealliance/wasm-tools-go/issues/175): generated correct symbol names for imported and exported functions in worlds (`$root`) or interfaces declared inline in worlds.
 
 ## [v0.2.0] — 2024-09-05
 
