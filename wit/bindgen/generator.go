@@ -2194,19 +2194,28 @@ func (g *generator) packageFor(owner wit.TypeOwner) *gen.Package {
 }
 
 func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*gen.Package, error) {
-	var owner wit.TypeOwner = w
-	id := w.Package.Name
-	id.Extension = w.Name
+	var owner wit.TypeOwner
+	var id wit.Ident
 
 	if i == nil {
+		// Derive Go package from the WIT world
+		owner = w
+		id = w.Package.Name
+		id.Extension = w.Name
 		name = id.Extension
 	} else {
-		if i.Package != w.Package {
-			return nil, fmt.Errorf("BUG: world package %q != interface package %q", w.Package.Name.String(), i.Package.Name.String())
-		}
 		owner = i
-		if i.Name != nil {
+		if i.Name == nil {
+			// Derive Go package from the interface declared in the WIT world
+			if i.Package != w.Package {
+				return nil, fmt.Errorf("BUG: nested interface package %q != world package %q", i.Package.Name.String(), w.Package.Name.String())
+			}
+			id = w.Package.Name
+			id.Extension = w.Name
+		} else {
+			// Derive Go package from package-scoped interface
 			name = *i.Name
+			id = i.Package.Name
 			id.Extension = name
 		}
 	}
