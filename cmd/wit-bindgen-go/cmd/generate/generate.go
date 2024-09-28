@@ -1,15 +1,18 @@
 package generate
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
 	"github.com/bytecodealliance/wasm-tools-go/internal/go/gen"
 	"github.com/bytecodealliance/wasm-tools-go/internal/witcli"
+	"github.com/bytecodealliance/wasm-tools-go/wit"
 	"github.com/bytecodealliance/wasm-tools-go/wit/bindgen"
 	"github.com/urfave/cli/v3"
 )
@@ -99,7 +102,11 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	return writeGoPackages(packages, cfg)
+	if err := writeGoPackages(packages, cfg); err != nil {
+		return err
+	}
+
+	return writeWITPackage(res, cfg)
 }
 
 func parseFlags(cmd *cli.Command) (*config, error) {
@@ -186,6 +193,31 @@ func writeGoPackages(packages []*gen.Package, cfg *config) error {
 				return err
 			}
 		}
+	}
+	return nil
+}
+
+func writeWITPackage(res *wit.Resolve, cfg *config) error {
+	witDir := filepath.Join(cfg.out, "wit")
+	if err := os.MkdirAll(witDir, cfg.outPerm); err != nil {
+		return err
+	}
+	witFilePath := filepath.Join(witDir, "webassembly.wit.wasm")
+	fmt.Fprintf(os.Stderr, "Generated WIT file: %s\n", witFilePath)
+
+	wasmTools, err := exec.LookPath("wasm-tools")
+	if err != nil {
+		return err
+	}
+
+	var stderr bytes.Buffer
+	wasmCmd := exec.Command(wasmTools, "component", "wit", "--wasm", "--all-features", "--output", witFilePath)
+	wasmCmd.Stderr = &stderr
+	wasmCmd.Stdin = bytes.NewReader([]byte(res.WIT(nil, "")))
+
+	if err := wasmCmd.Run(); err != nil {
+		fmt.Fprint(os.Stderr, stderr.String())
+		return err
 	}
 	return nil
 }
