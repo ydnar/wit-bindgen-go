@@ -202,7 +202,8 @@ func writeWITPackage(res *wit.Resolve, cfg *config) error {
 	if err := os.MkdirAll(witDir, cfg.outPerm); err != nil {
 		return err
 	}
-	fmt.Fprintf(os.Stderr, "Generated WIT files to: %s\n", witDir)
+	witFilePath := filepath.Join(witDir, "webassembly.wit")
+	fmt.Fprintf(os.Stderr, "Generated WIT files to: %s\n", witFilePath)
 
 	wasmTools, err := exec.LookPath("wasm-tools")
 	if err != nil {
@@ -210,7 +211,7 @@ func writeWITPackage(res *wit.Resolve, cfg *config) error {
 	}
 
 	var stderr bytes.Buffer
-	wasmCmd := exec.Command(wasmTools, "component", "wit", "--all-features", "--out-dir", witDir)
+	wasmCmd := exec.Command(wasmTools, "component", "wit", "--all-features", "--output", witFilePath)
 	wasmCmd.Stderr = &stderr
 	wasmCmd.Stdin = bytes.NewReader([]byte(res.WIT(nil, "")))
 
