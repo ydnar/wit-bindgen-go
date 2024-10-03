@@ -1,11 +1,9 @@
 package generate
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -198,6 +196,9 @@ func writeGoPackages(packages []*gen.Package, cfg *config) error {
 }
 
 func writeWITPackage(res *wit.Resolve, cfg *config) error {
+	if cfg.dryRun {
+		return nil
+	}
 	witDir := filepath.Join(cfg.out, "wit")
 	if err := os.MkdirAll(witDir, cfg.outPerm); err != nil {
 		return err
@@ -205,18 +206,8 @@ func writeWITPackage(res *wit.Resolve, cfg *config) error {
 	witFilePath := filepath.Join(witDir, "webassembly.wit")
 	fmt.Fprintf(os.Stderr, "Generated WIT files to: %s\n", witFilePath)
 
-	wasmTools, err := exec.LookPath("wasm-tools")
-	if err != nil {
-		return err
-	}
-
-	var stderr bytes.Buffer
-	wasmCmd := exec.Command(wasmTools, "component", "wit", "--all-features", "--output", witFilePath)
-	wasmCmd.Stderr = &stderr
-	wasmCmd.Stdin = bytes.NewReader([]byte(res.WIT(nil, "")))
-
-	if err := wasmCmd.Run(); err != nil {
-		fmt.Fprint(os.Stderr, stderr.String())
+	wit := res.WIT(nil, "")
+	if err := os.WriteFile(witFilePath, []byte(wit), cfg.outPerm); err != nil {
 		return err
 	}
 	return nil
