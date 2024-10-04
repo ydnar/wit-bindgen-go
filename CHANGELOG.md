@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `wit-bindgen-go generate` now accepts a remote registry reference to pull down a WIT package and generate the Go code. Example: `wit-bindgen-go generate ghcr.io/webassembly/wasi/http:0.2.0`.
+- `wit-bindgen-go generate` now writes the WIT next to the generated code.
 
 ### Fixed
 
