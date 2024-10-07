@@ -39,6 +39,9 @@ const (
 
 	// Define Go GC shape types for variant and result storage.
 	experimentCreateShapeTypes = true
+
+	// build tag for '.wasm.go' files
+	wasmBuildTag = "wasm || wasm32 || tinygo.wasm"
 )
 
 type typeDecl struct {
@@ -1834,17 +1837,19 @@ func (g *generator) defineImportedFunction(decl *funcDecl) error {
 	b.WriteString("}\n\n")
 
 	// Emit wasmimport function
-	stringio.Write(&b, "//go:wasmimport ", decl.linkerName, "\n")
-	b.WriteString("//go:noescape\n")
-	b.WriteString("func ")
-	if decl.wasmFunc.isMethod() {
-		stringio.Write(&b, "(", decl.wasmFunc.receiver.name, " ", g.typeRep(file, decl.wasmFunc.receiver.dir, decl.wasmFunc.receiver.typ), ") ", decl.wasmFunc.name)
-	} else {
-		b.WriteString(decl.wasmFunc.name)
-	}
-	b.WriteString(g.functionSignature(file, decl.wasmFunc))
+	wasmFile := g.wasmFileFor(decl.owner)
 
-	b.WriteString("\n\n")
+	stringio.Write(wasmFile, "//go:wasmimport ", decl.linkerName, "\n")
+	wasmFile.WriteString("//go:noescape\n")
+	wasmFile.WriteString("func ")
+	if decl.wasmFunc.isMethod() {
+		stringio.Write(wasmFile, "(", decl.wasmFunc.receiver.name, " ", g.typeRep(wasmFile, decl.wasmFunc.receiver.dir, decl.wasmFunc.receiver.typ), ") ", decl.wasmFunc.name)
+	} else {
+		wasmFile.WriteString(decl.wasmFunc.name)
+	}
+	wasmFile.WriteString(g.functionSignature(wasmFile, decl.wasmFunc))
+
+	wasmFile.WriteString("\n\n")
 
 	// Emit shared types
 	if t, ok := compoundParams.typ.(*wit.TypeDef); ok {
@@ -1914,31 +1919,31 @@ func (g *generator) defineExportedFunction(decl *funcDecl) error {
 		stringio.Write(xfile, decl.goFunc.name, " func", g.functionSignature(xfile, decl.goFunc), "\n")
 	}
 
-	var b bytes.Buffer
+	wasmFile := g.wasmFileFor(decl.owner)
 
 	// Emit wasmexport function
-	stringio.Write(&b, "//go:wasmexport ", decl.linkerName, "\n")
-	stringio.Write(&b, "//export ", decl.linkerName, "\n") // TODO: remove this once TinyGo supports go:wasmexport.
-	stringio.Write(&b, "func ", decl.wasmFunc.name, g.functionSignature(file, decl.wasmFunc))
+	stringio.Write(wasmFile, "//go:wasmexport ", decl.linkerName, "\n")
+	stringio.Write(wasmFile, "//export ", decl.linkerName, "\n") // TODO: remove this once TinyGo supports go:wasmexport.
+	stringio.Write(wasmFile, "func ", decl.wasmFunc.name, g.functionSignature(wasmFile, decl.wasmFunc))
 
 	// Emit function body
-	b.WriteString(" {\n")
+	wasmFile.WriteString(" {\n")
 
 	// Lift arguments
 	if compoundParams.typ == nil {
 		i := 0
 		for _, p := range callParams {
 			if i < len(decl.wasmFunc.params) && p.typ == derefPointer(decl.wasmFunc.params[i].typ) {
-				stringio.Write(&b, p.name, " := *", decl.wasmFunc.params[i].name, "\n")
+				stringio.Write(wasmFile, p.name, " := *", decl.wasmFunc.params[i].name, "\n")
 				i++
 				continue
 			}
 			flat := p.typ.Flat()
 			var input string
 			if len(flat) > 0 && len(decl.wasmFunc.params) > 0 {
-				input = g.liftTypeInput(file, p.dir, p.typ, decl.wasmFunc.params[i:i+len(flat)])
+				input = g.liftTypeInput(wasmFile, p.dir, p.typ, decl.wasmFunc.params[i:i+len(flat)])
 			}
-			stringio.Write(&b, p.name, " := ", g.liftType(file, p.dir, p.typ, input), "\n")
+			stringio.Write(wasmFile, p.name, " := ", g.liftType(wasmFile, p.dir, p.typ, input), "\n")
 			i += len(flat)
 		}
 	}
@@ -1946,22 +1951,22 @@ func (g *generator) defineExportedFunction(decl *funcDecl) error {
 	// Emit call to caller-defined Go function
 	if compoundResults.typ != nil {
 		rec := wit.KindOf[*wit.Record](compoundResults.typ)
-		stringio.Write(&b, compoundResults.name, " = new(", g.typeRep(file, compoundResults.dir, compoundResults.typ), ")\n")
+		stringio.Write(wasmFile, compoundResults.name, " = new(", g.typeRep(wasmFile, compoundResults.dir, compoundResults.typ), ")\n")
 		for i, f := range rec.Fields {
 			if i > 0 {
-				b.WriteString(", ")
+				wasmFile.WriteString(", ")
 			}
-			stringio.Write(&b, compoundResults.name, ".", fieldName(f.Name, false))
+			stringio.Write(wasmFile, compoundResults.name, ".", fieldName(f.Name, false))
 		}
-		b.WriteString(" = ")
+		wasmFile.WriteString(" = ")
 	} else if len(callResults) > 0 {
 		for i, r := range callResults {
 			if i > 0 {
-				b.WriteString(", ")
+				wasmFile.WriteString(", ")
 			}
-			b.WriteString(r.name)
+			wasmFile.WriteString(r.name)
 		}
-		b.WriteString(" := ")
+		wasmFile.WriteString(" := ")
 	}
 
 	// Emit caller-defined function name
@@ -1969,29 +1974,29 @@ func (g *generator) defineExportedFunction(decl *funcDecl) error {
 	if t := decl.f.Type(); t != nil {
 		fqName = file.GetName("Exports") + "." + scope.GetName(GoName(t.TypeName(), true)) + "." + decl.goFunc.name
 	}
-	stringio.Write(&b, fqName, "(")
+	stringio.Write(wasmFile, fqName, "(")
 
 	// Emit call params
 	if compoundParams.typ != nil {
 		rec := wit.KindOf[*wit.Record](compoundParams.typ)
 		for i, f := range rec.Fields {
 			if i > 0 {
-				b.WriteString(", ")
+				wasmFile.WriteString(", ")
 			}
-			stringio.Write(&b, compoundParams.name, ".", fieldName(f.Name, false))
+			stringio.Write(wasmFile, compoundParams.name, ".", fieldName(f.Name, false))
 		}
 	} else {
 		for i, p := range callParams {
 			if i > 0 {
-				b.WriteString(", ")
+				wasmFile.WriteString(", ")
 			}
 			if isPointer(p.typ) {
-				b.WriteRune('*')
+				wasmFile.WriteString("*")
 			}
-			b.WriteString(p.name)
+			wasmFile.WriteString(p.name)
 		}
 	}
-	b.WriteString(")\n")
+	wasmFile.WriteString(")\n")
 
 	// Lower results
 	if len(callResults) > 0 && compoundResults.typ == nil {
@@ -2000,29 +2005,31 @@ func (g *generator) defineExportedFunction(decl *funcDecl) error {
 			if i < len(decl.wasmFunc.results) {
 				wr := decl.wasmFunc.results[i]
 				if r.typ == derefPointer(wr.typ) {
-					stringio.Write(&b, wr.name, " = &", r.name, "\n")
+					stringio.Write(wasmFile, wr.name, " = &", r.name, "\n")
 					i++
 					continue
 				}
 			}
 			flat := r.typ.Flat()
 			if len(flat) == 0 {
-				stringio.Write(&b, "_ = ", r.name, "\n")
+				stringio.Write(wasmFile, "_ = ", r.name, "\n")
 			} else {
 				for j := range flat {
 					if j > 0 {
-						b.WriteString(", ")
+						wasmFile.WriteString(", ")
 					}
-					b.WriteString(decl.wasmFunc.results[i].name)
+					wasmFile.WriteString(decl.wasmFunc.results[i].name)
 					i++
 				}
-				stringio.Write(&b, " = ", g.lowerType(file, dir, r.typ, r.name), "\n")
+				stringio.Write(wasmFile, " = ", g.lowerType(wasmFile, dir, r.typ, r.name), "\n")
 			}
 		}
 	}
 
-	b.WriteString("return\n")
-	b.WriteString("}\n\n")
+	wasmFile.WriteString("return\n")
+	wasmFile.WriteString("}\n\n")
+
+	var b bytes.Buffer
 
 	// Emit default function body
 	if strings.HasPrefix(decl.f.Name, "[dtor]") || strings.HasPrefix(decl.f.Name, "cabi_post_") {
@@ -2202,6 +2209,17 @@ func (g *generator) exportsFileFor(owner wit.TypeOwner) *gen.File {
 		file.Header = b.String()
 	}
 	file.Trailer = "}\n"
+	return file
+}
+
+func (g *generator) wasmFileFor(owner wit.TypeOwner) *gen.File {
+	pkg := g.packageFor(owner)
+	file := pkg.File(pkg.Name + ".wasm.go")
+	file.GeneratedBy = g.opts.generatedBy
+	file.GoBuild = wasmBuildTag
+	if len(file.Header) == 0 {
+		file.Header = fmt.Sprintf("// This file contains wasmimport and wasmexport declarations for \"%s\".\n\n", owner.WITPackage().Name.String())
+	}
 	return file
 }
 
