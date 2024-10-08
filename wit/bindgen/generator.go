@@ -24,7 +24,9 @@ import (
 
 const (
 	cmPackage = "github.com/bytecodealliance/wasm-tools-go/cm"
-	emptyAsm  = `// This file exists for testing this package without WebAssembly,
+	// build tag for '.wasm.go' files
+	wasmBuildTag = "wasm || wasm32 || tinygo.wasm"
+	emptyAsm     = `// This file exists for testing this package without WebAssembly,
 // allowing empty function bodies with a //go:wasmimport directive.
 // See https://pkg.go.dev/cmd/compile for more information.
 `
@@ -39,9 +41,6 @@ const (
 
 	// Define Go GC shape types for variant and result storage.
 	experimentCreateShapeTypes = true
-
-	// build tag for '.wasm.go' files
-	wasmBuildTag = "wasm || wasm32 || tinygo.wasm"
 )
 
 type typeDecl struct {
