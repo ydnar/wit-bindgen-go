@@ -24,9 +24,7 @@ import (
 
 const (
 	cmPackage = "github.com/bytecodealliance/wasm-tools-go/cm"
-	// build tag for '.wasm.go' files
-	wasmBuildTag = "wasm || wasm32 || tinygo.wasm"
-	emptyAsm     = `// This file exists for testing this package without WebAssembly,
+	emptyAsm  = `// This file exists for testing this package without WebAssembly,
 // allowing empty function bodies with a //go:wasmimport directive.
 // See https://pkg.go.dev/cmd/compile for more information.
 `
@@ -2215,7 +2213,6 @@ func (g *generator) wasmFileFor(owner wit.TypeOwner) *gen.File {
 	pkg := g.packageFor(owner)
 	file := pkg.File(pkg.Name + ".wasm.go")
 	file.GeneratedBy = g.opts.generatedBy
-	file.GoBuild = wasmBuildTag
 	if len(file.Header) == 0 {
 		file.Header = fmt.Sprintf("// This file contains wasmimport and wasmexport declarations for \"%s\".\n\n", owner.WITPackage().Name.String())
 	}
