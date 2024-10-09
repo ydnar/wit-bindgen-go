@@ -116,11 +116,10 @@ func validateGeneratedGo(t *testing.T, res *wit.Resolve, origin string) {
 	pkgMap := make(map[string]*gen.Package)
 
 	cfg := &packages.Config{
-		Mode:       packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedImports | packages.NeedTypes | packages.NeedTypesInfo | packages.NeedTypesSizes,
-		Dir:        out,
-		Fset:       token.NewFileSet(),
-		Overlay:    make(map[string][]byte),
-		BuildFlags: []string{"-tags=wasm"},
+		Mode:    packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedImports | packages.NeedTypes | packages.NeedTypesInfo | packages.NeedTypesSizes,
+		Dir:     out,
+		Fset:    token.NewFileSet(),
+		Overlay: make(map[string][]byte),
 	}
 	// cfg.ParseFile = func(fset *token.FileSet, filename string, src []byte) (*ast.File, error) {
 	// 	if _, ok := cfg.Overlay[filename]; !ok && strings.Contains(filename, pkgPath) {
