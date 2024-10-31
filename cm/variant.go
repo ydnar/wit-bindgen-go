@@ -1,6 +1,8 @@
 package cm
 
-import "unsafe"
+import (
+	"unsafe"
+)
 
 // Discriminant is the set of types that can represent the tag or discriminator of a variant.
 // Use bool for 2-case variant types, result<T>, or option<T> types, uint8 where there are 256 or

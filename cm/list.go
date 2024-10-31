@@ -1,12 +1,29 @@
 package cm
 
-import "unsafe"
+import (
+	"encoding/json"
+	"unsafe"
+)
 
 // List represents a Component Model list.
 // The binary representation of list<T> is similar to a Go slice minus the cap field.
 type List[T any] struct {
 	_ HostLayout
 	list[T]
+}
+
+func (l List[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(l.Slice())
+}
+
+func (l *List[T]) UnmarshalJSON(buf []byte) error {
+	var data []T
+	err := json.Unmarshal(buf, &data)
+	if err != nil {
+		return err
+	}
+	*l = ToList(data)
+	return nil
 }
 
 // AnyList is a type constraint for generic functions that accept any [List] type.

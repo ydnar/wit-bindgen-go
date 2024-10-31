@@ -679,13 +679,13 @@ func (g *generator) recordRep(file *gen.File, dir wit.Direction, r *wit.Record, 
 	exported := len(goName) == 0 || token.IsExported(goName)
 	var b strings.Builder
 	b.WriteString("struct {\n")
-	stringio.Write(&b, "_ ", file.Import(g.opts.cmPackage), ".HostLayout")
+	stringio.Write(&b, "_ ", file.Import(g.opts.cmPackage), ".HostLayout", "`json:\"-\"`")
 	for i, f := range r.Fields {
 		if i == 0 || i > 0 && f.Docs.Contents != "" {
 			b.WriteRune('\n')
 		}
 		b.WriteString(formatDocComments(f.Docs.Contents, false))
-		stringio.Write(&b, fieldName(f.Name, exported), " ", g.typeRep(file, dir, f.Type), "\n")
+		stringio.Write(&b, fieldName(f.Name, exported), " ", g.typeRep(file, dir, f.Type), "`json:\"", f.Name, "\"`", "\n")
 	}
 	b.WriteRune('}')
 	return b.String()
@@ -823,10 +823,14 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 
 	decl, _ := g.typeDecl(dir, t)
 	scope := decl.scope
-	scope.DeclareName("String") // For fmt.Stringer
+	scope.DeclareName("String")        // For fmt.Stringer
+	scope.DeclareName("MarshalJSON")   // For encoding/json.Marshaler
+	scope.DeclareName("UnmarshalJSON") // For encoding/json.Unmarshaler
 
 	// Emit type
 	var b strings.Builder
+	var jsonMarshalCases strings.Builder
+	var jsonUnmarshalCases strings.Builder
 	cm := file.Import(g.opts.cmPackage)
 	stringio.Write(&b, cm, ".Variant[", g.typeRep(file, dir, disc), ", ", typeShape, ", ", g.typeRep(file, dir, align), "]\n\n")
 
@@ -867,6 +871,20 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 			stringio.Write(&b, "return ", cm, ".Case[", typeRep, "](self, ", caseNum, ")")
 			b.WriteString("}\n\n")
 		}
+
+		stringio.Write(&jsonMarshalCases, "case ", caseNum, ":\n")
+		stringio.Write(&jsonMarshalCases, "val = v.", caseName, "()\n")
+
+		stringio.Write(&jsonUnmarshalCases, "case \"", c.Name, "\":\n")
+		if c.Type != nil {
+			stringio.Write(&jsonUnmarshalCases, "var tmp ", typeRep, "\n")
+			stringio.Write(&jsonUnmarshalCases, "if err := json.Unmarshal(data, &tmp); err != nil {\n")
+			stringio.Write(&jsonUnmarshalCases, "return err\n")
+			stringio.Write(&jsonUnmarshalCases, "}\n")
+			stringio.Write(&jsonUnmarshalCases, "*v = ", constructorName, "(tmp)\n")
+		} else {
+			stringio.Write(&jsonUnmarshalCases, "*v = ", constructorName, "()\n")
+		}
 	}
 
 	stringsName := file.DeclareName("strings" + GoName(goName, true))
@@ -879,6 +897,39 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 	b.WriteString(formatDocComments("String implements [fmt.Stringer], returning the variant case name of v.", true))
 	stringio.Write(&b, "func (v ", goName, ") String() string {\n")
 	stringio.Write(&b, "return ", stringsName, "[v.Tag()]\n")
+	b.WriteString("}\n\n")
+
+	file.Import("encoding/json")
+	b.WriteString(formatDocComments("MarshalJSON implements [json.Marshaler].", true))
+	stringio.Write(&b, "func (v ", goName, ") MarshalJSON() ([]byte, error) {\n")
+	stringio.Write(&b, "ret := make(map[string]any)\n")
+	stringio.Write(&b, "var val any\n")
+	stringio.Write(&b, "switch v.Tag() {\n")
+	stringio.Write(&b, jsonMarshalCases.String())
+	stringio.Write(&b, "}\n")
+	stringio.Write(&b, "ret[v.String()] = val\n")
+	stringio.Write(&b, "return json.Marshal(ret)\n")
+	b.WriteString("}\n\n")
+
+	b.WriteString(formatDocComments("UnmarshalJSON implements [json.Unmarshaler].", true))
+	stringio.Write(&b, "func (v *", goName, ") UnmarshalJSON(buf []byte) error {\n")
+	stringio.Write(&b, "tagger := make(map[string]json.RawMessage)\n")
+	stringio.Write(&b, "var tag string\n")
+	stringio.Write(&b, "var data json.RawMessage\n")
+	stringio.Write(&b, "if err := json.Unmarshal(buf, &tagger); err != nil {\n")
+	stringio.Write(&b, "return err\n")
+	stringio.Write(&b, "}\n")
+	stringio.Write(&b, "if len(tagger) != 1 {\n")
+	stringio.Write(&b, "return nil\n")
+	stringio.Write(&b, "}\n")
+	stringio.Write(&b, "for tag, data = range tagger {\n")
+	stringio.Write(&b, "break\n")
+	stringio.Write(&b, "}\n")
+
+	stringio.Write(&b, "switch tag {\n")
+	stringio.Write(&b, jsonUnmarshalCases.String())
+	stringio.Write(&b, "}\n")
+	stringio.Write(&b, "return nil\n")
 	b.WriteString("}\n\n")
 
 	return b.String()
