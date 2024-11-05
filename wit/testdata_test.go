@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/relpath"
+	"go.bytecodealliance.org/internal/relpath"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
@@ -495,7 +495,7 @@ func TestHasBorrowOnNamedTypes(t *testing.T) {
 			for _, td := range res.TypeDefs {
 				if td.Name == nil {
 					// Skip anonymous types here. This is tested on `TestHasBorrow`.
-					// https://github.com/bytecodealliance/wasm-tools-go/issues/167
+					// https://go.bytecodealliance.org/issues/167
 					continue
 				}
 				wit := td.Kind.WIT(nil, "")

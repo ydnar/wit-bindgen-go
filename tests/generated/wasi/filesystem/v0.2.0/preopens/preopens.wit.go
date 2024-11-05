@@ -4,7 +4,7 @@
 package preopens
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/cm"
+	"go.bytecodealliance.org/cm"
 	"tests/generated/wasi/filesystem/v0.2.0/types"
 )
 

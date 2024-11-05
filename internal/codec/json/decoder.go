@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
+	"go.bytecodealliance.org/internal/codec"
 )
 
 type Decoder struct {

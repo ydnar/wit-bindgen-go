@@ -1,4 +1,4 @@
-module github.com/bytecodealliance/wasm-tools-go
+module go.bytecodealliance.org
 
 go 1.22.0
 

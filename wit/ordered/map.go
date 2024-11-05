@@ -1,8 +1,8 @@
 package ordered
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
-	"github.com/bytecodealliance/wasm-tools-go/wit/iterate"
+	"go.bytecodealliance.org/internal/codec"
+	"go.bytecodealliance.org/wit/iterate"
 )
 
 // Map represents an ordered map of key-value pairs.

@@ -4,8 +4,8 @@ import (
 	"io"
 
 	"github.com/coreos/go-semver/semver"
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec/json"
+	"go.bytecodealliance.org/internal/codec"
+	"go.bytecodealliance.org/internal/codec/json"
 )
 
 // DecodeJSON decodes JSON from r into a [Resolve] struct.
@@ -226,7 +226,7 @@ type interfaceRefCodec struct {
 }
 
 // This exists to support legacy JSON from wasm-tools pre v1.209.0.
-// See https://github.com/bytecodealliance/wasm-tools-go/issues/151.
+// See https://go.bytecodealliance.org/issues/151.
 func (c *interfaceRefCodec) DecodeInt(i int) error {
 	c.ref.Interface = c.getInterface(i)
 	return nil

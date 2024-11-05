@@ -6,7 +6,7 @@ import (
 	"go/format"
 	"strings"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
+	"go.bytecodealliance.org/internal/codec"
 )
 
 // File represents a generated file. It may be a Go file

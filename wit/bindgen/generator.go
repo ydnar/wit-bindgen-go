@@ -16,16 +16,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bytecodealliance/wasm-tools-go/cm"
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
-	"github.com/bytecodealliance/wasm-tools-go/internal/go/gen"
-	"github.com/bytecodealliance/wasm-tools-go/internal/stringio"
-	"github.com/bytecodealliance/wasm-tools-go/wit"
-	"github.com/bytecodealliance/wasm-tools-go/wit/logging"
+	"go.bytecodealliance.org/cm"
+	"go.bytecodealliance.org/internal/codec"
+	"go.bytecodealliance.org/internal/go/gen"
+	"go.bytecodealliance.org/internal/stringio"
+	"go.bytecodealliance.org/wit"
+	"go.bytecodealliance.org/wit/logging"
 )
 
 const (
-	cmPackage = "github.com/bytecodealliance/wasm-tools-go/cm"
+	cmPackage = "go.bytecodealliance.org/cm"
 	emptyAsm  = `// This file exists for testing this package without WebAssembly,
 // allowing empty function bodies with a //go:wasmimport directive.
 // See https://pkg.go.dev/cmd/compile for more information.
