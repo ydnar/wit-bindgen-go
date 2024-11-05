@@ -17,10 +17,10 @@ import (
 
 	"golang.org/x/tools/go/packages"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
-	"github.com/bytecodealliance/wasm-tools-go/internal/go/gen"
-	"github.com/bytecodealliance/wasm-tools-go/internal/relpath"
-	"github.com/bytecodealliance/wasm-tools-go/wit"
+	"go.bytecodealliance.org/internal/codec"
+	"go.bytecodealliance.org/internal/go/gen"
+	"go.bytecodealliance.org/internal/relpath"
+	"go.bytecodealliance.org/wit"
 )
 
 var writeGoFiles = flag.Bool("write", false, "write generated Go files")

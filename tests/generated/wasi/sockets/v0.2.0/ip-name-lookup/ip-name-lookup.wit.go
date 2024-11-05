@@ -4,7 +4,7 @@
 package ipnamelookup
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/cm"
+	"go.bytecodealliance.org/cm"
 	"tests/generated/wasi/io/v0.2.0/poll"
 	"tests/generated/wasi/sockets/v0.2.0/network"
 )

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/oci"
-	"github.com/bytecodealliance/wasm-tools-go/wit"
+	"go.bytecodealliance.org/internal/oci"
+	"go.bytecodealliance.org/wit"
 )
 
 // LoadWIT loads a single [wit.Resolve].

@@ -6,4 +6,4 @@ package tests
 
 //go:generate rm -rf ./generated/*
 //go:generate mkdir -p ./generated
-//go:generate go run github.com/bytecodealliance/wasm-tools-go/cmd/wit-bindgen-go generate --versioned -o ./generated ../testdata/wasi/cli.wit.json
+//go:generate go run go.bytecodealliance.org/cmd/wit-bindgen-go generate --versioned -o ./generated ../testdata/wasi/cli.wit.json

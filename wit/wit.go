@@ -433,7 +433,7 @@ func escape(name string) string {
 
 // A map of all [WIT keywords].
 //
-// [WIT keywords]: https://github.com/bytecodealliance/wasm-tools/blob/main/crates/wit-parser/src/ast/lex.rs#L524-L591
+// [WIT keywords]: https://go.bytecodealliance.org/wasm-tools/blob/main/crates/wit-parser/src/ast/lex.rs#L524-L591
 var witKeywords = map[string]bool{
 	"as":          true,
 	"bool":        true,

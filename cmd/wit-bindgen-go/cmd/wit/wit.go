@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/witcli"
-	"github.com/bytecodealliance/wasm-tools-go/wit"
+	"go.bytecodealliance.org/internal/witcli"
+	"go.bytecodealliance.org/wit"
 	"github.com/urfave/cli/v3"
 )
 

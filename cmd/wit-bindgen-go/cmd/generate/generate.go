@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/codec"
-	"github.com/bytecodealliance/wasm-tools-go/internal/go/gen"
-	"github.com/bytecodealliance/wasm-tools-go/internal/witcli"
-	"github.com/bytecodealliance/wasm-tools-go/wit/bindgen"
-	"github.com/bytecodealliance/wasm-tools-go/wit/logging"
+	"go.bytecodealliance.org/internal/codec"
+	"go.bytecodealliance.org/internal/go/gen"
+	"go.bytecodealliance.org/internal/witcli"
+	"go.bytecodealliance.org/wit/bindgen"
+	"go.bytecodealliance.org/wit/logging"
 	"github.com/urfave/cli/v3"
 )
 
@@ -51,7 +51,7 @@ var Command = &cli.Command{
 			Value:    "",
 			OnlyOnce: true,
 			Config:   cli.StringConfig{TrimSpace: true},
-			Usage:    "Import path for the Component Model utility package, e.g. github.com/bytecodealliance/wasm-tools-go/cm",
+			Usage:    "Import path for the Component Model utility package, e.g. go.bytecodealliance.org/cm",
 		},
 		&cli.BoolFlag{
 			Name:  "versioned",

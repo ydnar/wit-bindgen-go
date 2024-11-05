@@ -1,8 +1,8 @@
 package bindgen
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/internal/go/gen"
-	"github.com/bytecodealliance/wasm-tools-go/wit"
+	"go.bytecodealliance.org/internal/go/gen"
+	"go.bytecodealliance.org/wit"
 )
 
 // Go generates one or more Go packages from [wit.Resolve] res.

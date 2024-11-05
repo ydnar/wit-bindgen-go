@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/go/gen"
+	"go.bytecodealliance.org/internal/go/gen"
 )
 
 // GoPackageName generates a Go local package name (e.g. "json").

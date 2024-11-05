@@ -3,7 +3,7 @@ package witcli
 import (
 	"os"
 
-	"github.com/bytecodealliance/wasm-tools-go/wit/logging"
+	"go.bytecodealliance.org/wit/logging"
 )
 
 // Logger returns a [logging.Logger] that outputs to stdout.

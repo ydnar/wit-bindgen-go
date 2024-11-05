@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/relpath"
+	"go.bytecodealliance.org/internal/relpath"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
 )

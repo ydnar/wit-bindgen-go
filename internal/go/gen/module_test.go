@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/bytecodealliance/wasm-tools-go/internal/relpath"
+	"go.bytecodealliance.org/internal/relpath"
 )
 
 func TestPackagePath(t *testing.T) {
@@ -17,7 +17,7 @@ func TestPackagePath(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	want := "github.com/bytecodealliance/wasm-tools-go/internal/go/gen"
+	want := "go.bytecodealliance.org/internal/go/gen"
 	if got != want {
 		t.Errorf("PackagePath(%q): got %s, expected %s", wd, got, want)
 	}
