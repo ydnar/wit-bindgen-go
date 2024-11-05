@@ -3,7 +3,7 @@ package bindgen
 import (
 	"slices"
 
-	"github.com/bytecodealliance/wasm-tools-go/wit"
+	"go.bytecodealliance.org/wit"
 )
 
 // variantShape returns the type with the greatest size.

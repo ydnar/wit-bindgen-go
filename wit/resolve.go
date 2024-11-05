@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/bytecodealliance/wasm-tools-go/wit/iterate"
-	"github.com/bytecodealliance/wasm-tools-go/wit/ordered"
+	"go.bytecodealliance.org/wit/iterate"
+	"go.bytecodealliance.org/wit/ordered"
 	"github.com/coreos/go-semver/semver"
 )
 
@@ -1076,7 +1076,7 @@ func (l *List) hasResource() bool         { return HasResource(l.Type) }
 // Future represents a WIT [future type], expected to be part of [WASI Preview 3].
 // It implements the [Node], [ABI], and [TypeDefKind] interfaces.
 //
-// [future type]: https://github.com/bytecodealliance/wit-bindgen/issues/270
+// [future type]: https://go.bytecodealliance.org/wit-bindgen/issues/270
 // [WASI Preview 3]: https://bytecodealliance.org/articles/webassembly-the-updated-roadmap-for-developers
 type Future struct {
 	_typeDefKind

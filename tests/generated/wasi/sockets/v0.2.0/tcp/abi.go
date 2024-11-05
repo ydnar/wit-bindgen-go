@@ -3,7 +3,7 @@
 package tcp
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/cm"
+	"go.bytecodealliance.org/cm"
 	"tests/generated/wasi/sockets/v0.2.0/network"
 	"unsafe"
 )

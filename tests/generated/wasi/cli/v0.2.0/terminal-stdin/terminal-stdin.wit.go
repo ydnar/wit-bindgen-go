@@ -7,7 +7,7 @@
 package terminalstdin
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/cm"
+	"go.bytecodealliance.org/cm"
 	terminalinput "tests/generated/wasi/cli/v0.2.0/terminal-input"
 )
 
