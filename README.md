@@ -1,8 +1,8 @@
 # go.bytecodealliance.org
 
-[WebAssembly](https://webassembly.org), [WASI](https://wasi.dev), and [Component Model](https://component-model.bytecodealliance.org/) modules for [Go](https://go.dev) and [TinyGo](https://tinygo.org).
-
 [![pkg.go.dev](https://img.shields.io/badge/docs-pkg.go.dev-blue.svg)](https://pkg.go.dev/go.bytecodealliance.org) [![build status](https://img.shields.io/github/actions/workflow/status/bytecodealliance/go-modules/test.yaml?branch=main)](https://github.com/bytecodealliance/go-modules/actions)
+
+[WebAssembly](https://webassembly.org), [WASI](https://wasi.dev), and [Component Model](https://component-model.bytecodealliance.org/) tools for [Go](https://go.dev) and [TinyGo](https://tinygo.org).
 
 ## About
 
