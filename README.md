@@ -1,13 +1,13 @@
-# wasm-tools-go
+# go.bytecodealliance.org
 
-[![build status](https://img.shields.io/github/actions/workflow/status/bytecodealliance/wasm-tools-go/test.yaml?branch=main)](https://github.com/bytecodealliance/go-modules/actions)
-[![pkg.go.dev](https://img.shields.io/badge/docs-pkg.go.dev-blue.svg)](https://pkg.go.dev/github.com/bytecodealliance/wasm-tools-go)
+[![pkg.go.dev](https://img.shields.io/badge/docs-pkg.go.dev-blue.svg)](https://pkg.go.dev/go.bytecodealliance.org) [![build status](https://img.shields.io/github/actions/workflow/status/bytecodealliance/go-modules/test.yaml?branch=main)](https://github.com/bytecodealliance/go-modules/actions)
 
-## [WebAssembly](https://webassembly.org) + [WASI](https://wasi.dev) tools for [Go](https://go.dev)
+
+A monorepo of [WebAssembly](https://webassembly.org), [WASI](https://wasi.dev), and [Component Model](https://component-model.bytecodealliance.org/) modules for [Go](https://go.dev) and [TinyGo](https://tinygo.org).
 
 ## About
 
-This repository contains code to generate Go bindings for [Component Model](https://component-model.bytecodealliance.org/) interfaces defined in [WIT](https://component-model.bytecodealliance.org/design/wit.html) (WebAssembly Interface Type) files. The goal of this project is to accelerate adoption of the Component Model and development of [WASI 0.2+](https://bytecodealliance.org/articles/WASI-0.2) in Go.
+This repository contains code to generate Go bindings for [Component Model](https://component-model.bytecodealliance.org/) interfaces defined in [WIT](https://component-model.bytecodealliance.org/design/wit.html) (WebAssembly Interface Type) files. A goal of this project is to accelerate adoption of the Component Model and development of [WASI 0.2+](https://bytecodealliance.org/articles/WASI-0.2) in Go.
 
 ### Component Model
 
