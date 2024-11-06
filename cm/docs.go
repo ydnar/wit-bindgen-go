@@ -1,4 +1,4 @@
-// Package cm contains types and functions for interfacing with the WebAssembly Component Model.
+// Package cm provides types and functions for interfacing with the WebAssembly Component Model.
 //
 // The types in this package (such as [List], [Option], [Result], and [Variant]) are designed to match the memory layout
 // of [Component Model] types as specified in the [Canonical ABI].
