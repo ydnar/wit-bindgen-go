@@ -11,17 +11,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
-- [#215](https://github.com/bytecodealliance/wasm-tools-go/issues/215): generate variant accessor methods with the correct scope for Go names.
+- [#215](https://github.com/bytecodealliance/go-modules/issues/215): generate variant accessor methods with the correct scope for Go names.
 
 ### New Contributors
 
-- [@vados-cosmonic](https://github.com/vados-cosmonic): [#212](https://github.com/bytecodealliance/wasm-tools-go/issues/212) and [#214](https://github.com/bytecodealliance/wasm-tools-go/pull/214) — verbose logging controls in `wit-bindgen-go`.
+- [@vados-cosmonic](https://github.com/vados-cosmonic): [#212](https://github.com/bytecodealliance/go-modules/issues/212) and [#214](https://github.com/bytecodealliance/go-modules/pull/214) — verbose logging controls in `wit-bindgen-go`.
 
 ## [v0.3.0] — 2024-10-11
 
 ### Added
 
-- Go [type aliases](https://go.dev/ref/spec#Alias_declarations) are now generated for each WIT type alias (`type foo = bar`). Deep chains of type aliases (`type b = a; type c = b;`) are fully supported. Generated documentation now reflects whether a type is an alias. Fixes [#204](https://github.com/bytecodealliance/wasm-tools-go/issues/204).
+- Go [type aliases](https://go.dev/ref/spec#Alias_declarations) are now generated for each WIT type alias (`type foo = bar`). Deep chains of type aliases (`type b = a; type c = b;`) are fully supported. Generated documentation now reflects whether a type is an alias. Fixes [#204](https://github.com/bytecodealliance/go-modules/issues/204).
 - `go:wasmimport` and `go:wasmexport` functions are now generated in a separate `.wasm.go` file. This helps enable testing or use of generated packages outside of WebAssembly.
 - `wit-bindgen-go generate` now generates a WIT file for each WIT world in its corresponding Go package directory. For example the `wasi:http/proxy` world would generate `wasi/http/proxy/proxy.wit`.
 - `wit-bindgen-go wit` now accepts a `--world` argument in the form of `imports`, `wasi:clocks/imports`, or `wasi:clocks/imports@0.2.0`. This filters the serialized WIT to a specific world and interfaces it references. This can be used to generate focused WIT for a specific world with a minimal set of dependencies.
@@ -69,18 +69,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - Generated structs and structs in package `cm` now include a [`HostLayout` field](https://github.com/golang/go/issues/66408) in order to conform with the [relaxed types proposal](https://github.com/golang/go/issues/66984) for `GOARCH=wasm32`. The `cm.HostLayout` type is an alias for `structs.HostLayout` on Go 1.23 or later, and a polyfill for Go 1.22 or earlier.
-- [#163](https://github.com/bytecodealliance/wasm-tools-go/issues/163): added `cm.F32ToU64()` and `cm.U64ToF32()` for flattening `f32` and `u64` types in the Canonical ABI.
+- [#163](https://github.com/bytecodealliance/go-modules/issues/163): added `cm.F32ToU64()` and `cm.U64ToF32()` for flattening `f32` and `u64` types in the Canonical ABI.
 - Test data from [bytecodealliance/wit-bindgen/tests/codegen](https://github.com/bytecodealliance/wit-bindgen/tree/main/tests/codegen).
 
 ### Fixed
 
-- [#159](https://github.com/bytecodealliance/wasm-tools-go/pull/159): correctly escape all WIT keywords, including when used in package names.
-- [#160](https://github.com/bytecodealliance/wasm-tools-go/issues/160): fixed the use of Go reserved keywords in function returns as result types.
-- [#161](https://github.com/bytecodealliance/wasm-tools-go/issues/161): correctly handle `constructor` as a WIT keyword in wit.
-- [#165](https://github.com/bytecodealliance/wasm-tools-go/issues/165): fixed use of imported types in exported functions.
-- [#167](https://github.com/bytecodealliance/wasm-tools-go/issues/167): fixed a logic flaw in `TestHasBorrow`.
-- [#170](https://github.com/bytecodealliance/wasm-tools-go/issues/170): resolve implied names for interface imports and exports in a world.
-- [#175](https://github.com/bytecodealliance/wasm-tools-go/issues/175): generated correct symbol names for imported and exported functions in worlds (`$root`) or interfaces declared inline in worlds.
+- [#159](https://github.com/bytecodealliance/go-modules/pull/159): correctly escape all WIT keywords, including when used in package names.
+- [#160](https://github.com/bytecodealliance/go-modules/issues/160): fixed the use of Go reserved keywords in function returns as result types.
+- [#161](https://github.com/bytecodealliance/go-modules/issues/161): correctly handle `constructor` as a WIT keyword in wit.
+- [#165](https://github.com/bytecodealliance/go-modules/issues/165): fixed use of imported types in exported functions.
+- [#167](https://github.com/bytecodealliance/go-modules/issues/167): fixed a logic flaw in `TestHasBorrow`.
+- [#170](https://github.com/bytecodealliance/go-modules/issues/170): resolve implied names for interface imports and exports in a world.
+- [#175](https://github.com/bytecodealliance/go-modules/issues/175): generated correct symbol names for imported and exported functions in worlds (`$root`) or interfaces declared inline in worlds.
 
 ## [v0.2.0] — 2024-09-05
 
@@ -95,7 +95,7 @@ Going forward, please update your Go imports from `github.com/ydnar/wasm-tools-g
 
 ### Fixed
 
-- [#151](https://github.com/bytecodealliance/wasm-tools-go/issues/151): backport support for JSON generated by `wasm-tools` prior to v1.209.0, which added `@since` and `@unstable` feature gates.
+- [#151](https://github.com/bytecodealliance/go-modules/issues/151): backport support for JSON generated by `wasm-tools` prior to v1.209.0, which added `@since` and `@unstable` feature gates.
 
 ## [v0.1.5] — 2024-08-23
 
@@ -105,7 +105,7 @@ Going forward, please update your Go imports from `github.com/ydnar/wasm-tools-g
 
 ### Changed
 
-- Omit the default `//go:build !wasip1` build tags from generated Go files. This enables `wit-bindgen-go` to target `GOOS=wasip1` (fixes [#147](https://github.com/bytecodealliance/wasm-tools-go/issues/147)).
+- Omit the default `//go:build !wasip1` build tags from generated Go files. This enables `wit-bindgen-go` to target `GOOS=wasip1` (fixes [#147](https://github.com/bytecodealliance/go-modules/issues/147)).
 - Package `wit` now serializes multi-package WIT files with an un-nested “root” package. See [WebAssembly/component-model#380](https://github.com/WebAssembly/component-model/pull/380) and [bytecodealliance/wasm-tools#1700](https://github.com/bytecodealliance/wasm-tools/pull/1700).
 
 ## [v0.1.4] — 2024-07-16
@@ -124,12 +124,12 @@ Going forward, please update your Go imports from `github.com/ydnar/wasm-tools-g
 
 ### Added
 
-- [#128](https://github.com/bytecodealliance/wasm-tools-go/pull/128): implemented `String` method for `enum` types ([@rajatjindal](https://github.com/rajatjindal)).
+- [#128](https://github.com/bytecodealliance/go-modules/pull/128): implemented `String` method for `enum` types ([@rajatjindal](https://github.com/rajatjindal)).
 
 ### Fixed
 
-- [#130](https://github.com/bytecodealliance/wasm-tools-go/issues/130): anonymous `tuple` types now correctly have exported Go struct fields.
-- [#129](https://github.com/bytecodealliance/wasm-tools-go/issues/129): correctly handle zero-length `tuple` and `record` types, represented as `struct{}`.
+- [#130](https://github.com/bytecodealliance/go-modules/issues/130): anonymous `tuple` types now correctly have exported Go struct fields.
+- [#129](https://github.com/bytecodealliance/go-modules/issues/129): correctly handle zero-length `tuple` and `record` types, represented as `struct{}`.
 
 ## [v0.1.2] — 2024-07-05
 
@@ -164,7 +164,7 @@ This release changes the memory layout of `variant` and `result` types to permit
 
 ### Fixed
 
-- [#95](https://github.com/bytecodealliance/wasm-tools-go/issues/95): `wit-bindgen-go` now correctly generates packed `data` shape types for `variant` and `result` types.
+- [#95](https://github.com/bytecodealliance/go-modules/issues/95): `wit-bindgen-go` now correctly generates packed `data` shape types for `variant` and `result` types.
 - Fixed swapped `Shape` and `Align` type parameters in the functions `cm.New` and `cm.Case` for manipulating `variant` types.
 - Variant validation now correctly reports `variant` instead of `result` in panic messages.
 
@@ -174,23 +174,22 @@ Initial version, supporting [TinyGo](https://tinygo.org/) + [WASI](https://wasi.
 
 ### Known Issues
 
-- [#95](https://github.com/bytecodealliance/wasm-tools-go/issues/95): `variant` and `result` types without fully-packed `data` shape types will not correctly represent all associated types.
-- [#111](https://github.com/bytecodealliance/wasm-tools-go/issues/111): `flags` types with > 32 labels are not correctly supported. See [component-model#370](https://github.com/WebAssembly/component-model/issues/370) and [wasm-tools#1635](https://github.com/bytecodealliance/wasm-tools/pull/1635) for more information.
-- [#118](https://github.com/bytecodealliance/wasm-tools-go/issues/118): Canonial ABI [post-return](https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#canon-lift) functions to clean up allocations are not currently generated.
+- [#95](https://github.com/bytecodealliance/go-modules/issues/95): `variant` and `result` types without fully-packed `data` shape types will not correctly represent all associated types.
+- [#111](https://github.com/bytecodealliance/go-modules/issues/111): `flags` types with > 32 labels are not correctly supported. See [component-model#370](https://github.com/WebAssembly/component-model/issues/370) and [wasm-tools#1635](https://github.com/bytecodealliance/wasm-tools/pull/1635) for more information.
+- [#118](https://github.com/bytecodealliance/go-modules/issues/118): Canonial ABI [post-return](https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#canon-lift) functions to clean up allocations are not currently generated.
 - Because Go does not have a native tagged union type, pointers represented in `variant` and `result` types may not be visible to the garbage collector and may be freed while still in use.
 - Support for mainline [Go](https://go.dev/).
 
-[Unreleased]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.3.1..HEAD>
-[v0.3.1]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.3.0..v0.3.1>
-[v0.3.0]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.2.4..v0.3.0>
-[v0.2.4]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.2.3..v0.2.4>
-[v0.2.3]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.2.2..v0.2.3>
-[v0.2.2]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.2.1..v0.2.2>
-[v0.2.1]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.2.0...v0.2.1>
-[v0.2.0]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.1.5...v0.2.0>
-[v0.1.5]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.1.4...v0.1.5>
-[v0.1.4]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.1.3...v0.1.4>
-[v0.1.3]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.1.2...v0.1.3>
-[v0.1.2]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.1.1...v0.1.2>
-[v0.1.1]: <https://github.com/bytecodealliance/wasm-tools-go/compare/v0.1.0...v0.1.1>
-[v0.1.0]: <https://github.com/bytecodealliance/wasm-tools-go/tree/v0.1.0>
+[v0.3.1]: <https://github.com/bytecodealliance/go-modules/compare/v0.3.0..v0.3.1>
+[v0.3.0]: <https://github.com/bytecodealliance/go-modules/compare/v0.2.4..v0.3.0>
+[v0.2.4]: <https://github.com/bytecodealliance/go-modules/compare/v0.2.3..v0.2.4>
+[v0.2.3]: <https://github.com/bytecodealliance/go-modules/compare/v0.2.2..v0.2.3>
+[v0.2.2]: <https://github.com/bytecodealliance/go-modules/compare/v0.2.1..v0.2.2>
+[v0.2.1]: <https://github.com/bytecodealliance/go-modules/compare/v0.2.0...v0.2.1>
+[v0.2.0]: <https://github.com/bytecodealliance/go-modules/compare/v0.1.5...v0.2.0>
+[v0.1.5]: <https://github.com/bytecodealliance/go-modules/compare/v0.1.4...v0.1.5>
+[v0.1.4]: <https://github.com/bytecodealliance/go-modules/compare/v0.1.3...v0.1.4>
+[v0.1.3]: <https://github.com/bytecodealliance/go-modules/compare/v0.1.2...v0.1.3>
+[v0.1.2]: <https://github.com/bytecodealliance/go-modules/compare/v0.1.1...v0.1.2>
+[v0.1.1]: <https://github.com/bytecodealliance/go-modules/compare/v0.1.0...v0.1.1>
+[v0.1.0]: <https://github.com/bytecodealliance/go-modules/tree/v0.1.0>

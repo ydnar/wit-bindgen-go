@@ -40,7 +40,7 @@ Similarly, a function is exported for each resource method (e.g. `drink` and `sp
 
 ### Post-Return
 
-**Note: as of v0.1.0, this package does not support post-return functions.** See [#118](https://github.com/bytecodealliance/wasm-tools-go/issues/118) for more information.
+**Note: as of v0.1.0, this package does not support post-return functions.** See [#118](https://github.com/bytecodealliance/go-modules/issues/118) for more information.
 
 For each exported function that returns allocated memory, there is a [post-return](https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#canon-lift) function called by the Canonical ABI machinery to allow the component to free the allocation(s).
 

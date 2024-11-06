@@ -1,150 +1,150 @@
 {
-  "worlds": [
-    {
-      "name": "resources",
-      "imports": {
-        "interface-0": {
-          "interface": {
-            "id": 0
-          }
-        },
-        "z": {
-          "type": 1
-        },
-        "big": {
-          "type": 3
-        }
-      },
-      "exports": {
-        "big-record": {
-          "function": {
-            "name": "big-record",
-            "kind": "freestanding",
-            "params": [
-              {
-                "name": "r",
-                "type": 3
-              }
-            ],
-            "results": []
-          }
-        },
-        "maybe-with-z": {
-          "function": {
-            "name": "maybe-with-z",
-            "kind": "freestanding",
-            "params": [
-              {
-                "name": "a",
-                "type": 4
-              }
-            ],
-            "results": []
-          }
-        }
-      },
-      "package": 0
-    }
-  ],
-  "interfaces": [
-    {
-      "name": "types",
-      "types": {
-        "z": 0
-      },
-      "functions": {
-        "[constructor]z": {
-          "name": "[constructor]z",
-          "kind": {
-            "constructor": 0
-          },
-          "params": [
-            {
-              "name": "a",
-              "type": "f64"
-            }
-          ],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
-        }
-      },
-      "package": 0
-    }
-  ],
-  "types": [
-    {
-      "name": "z",
-      "kind": "resource",
-      "owner": {
-        "interface": 0
-      }
-    },
-    {
-      "name": "z",
-      "kind": {
-        "type": 0
-      },
-      "owner": {
-        "world": 0
-      }
-    },
-    {
-      "name": null,
-      "kind": {
-        "handle": {
-          "borrow": 1
-        }
-      },
-      "owner": null
-    },
-    {
-      "name": "big",
-      "kind": {
-        "record": {
-          "fields": [
-            {
-              "name": "x1",
-              "type": 2
-            }
-          ]
-        }
-      },
-      "owner": {
-        "world": 0
-      }
-    },
-    {
-      "name": null,
-      "kind": {
-        "option": 2
-      },
-      "owner": null
-    },
-    {
-      "name": null,
-      "kind": {
-        "handle": {
-          "own": 0
-        }
-      },
-      "owner": null
-    }
-  ],
-  "packages": [
-    {
-      "name": "issues:issue165",
-      "docs": {
-        "contents": "https://github.com/bytecodealliance/wasm-tools-go/issues/165"
-      },
-      "interfaces": {
-        "types": 0
-      },
-      "worlds": {
-        "resources": 0
-      }
-    }
-  ]
+	"worlds": [
+		{
+			"name": "resources",
+			"imports": {
+				"interface-0": {
+					"interface": {
+						"id": 0
+					}
+				},
+				"z": {
+					"type": 1
+				},
+				"big": {
+					"type": 3
+				}
+			},
+			"exports": {
+				"big-record": {
+					"function": {
+						"name": "big-record",
+						"kind": "freestanding",
+						"params": [
+							{
+								"name": "r",
+								"type": 3
+							}
+						],
+						"results": []
+					}
+				},
+				"maybe-with-z": {
+					"function": {
+						"name": "maybe-with-z",
+						"kind": "freestanding",
+						"params": [
+							{
+								"name": "a",
+								"type": 4
+							}
+						],
+						"results": []
+					}
+				}
+			},
+			"package": 0
+		}
+	],
+	"interfaces": [
+		{
+			"name": "types",
+			"types": {
+				"z": 0
+			},
+			"functions": {
+				"[constructor]z": {
+					"name": "[constructor]z",
+					"kind": {
+						"constructor": 0
+					},
+					"params": [
+						{
+							"name": "a",
+							"type": "f64"
+						}
+					],
+					"results": [
+						{
+							"type": 5
+						}
+					]
+				}
+			},
+			"package": 0
+		}
+	],
+	"types": [
+		{
+			"name": "z",
+			"kind": "resource",
+			"owner": {
+				"interface": 0
+			}
+		},
+		{
+			"name": "z",
+			"kind": {
+				"type": 0
+			},
+			"owner": {
+				"world": 0
+			}
+		},
+		{
+			"name": null,
+			"kind": {
+				"handle": {
+					"borrow": 1
+				}
+			},
+			"owner": null
+		},
+		{
+			"name": "big",
+			"kind": {
+				"record": {
+					"fields": [
+						{
+							"name": "x1",
+							"type": 2
+						}
+					]
+				}
+			},
+			"owner": {
+				"world": 0
+			}
+		},
+		{
+			"name": null,
+			"kind": {
+				"option": 2
+			},
+			"owner": null
+		},
+		{
+			"name": null,
+			"kind": {
+				"handle": {
+					"own": 0
+				}
+			},
+			"owner": null
+		}
+	],
+	"packages": [
+		{
+			"name": "issues:issue165",
+			"docs": {
+				"contents": "https://github.com/bytecodealliance/go-modules/issues/165"
+			},
+			"interfaces": {
+				"types": 0
+			},
+			"worlds": {
+				"resources": 0
+			}
+		}
+	]
 }

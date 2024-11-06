@@ -495,7 +495,7 @@ func TestHasBorrowOnNamedTypes(t *testing.T) {
 			for _, td := range res.TypeDefs {
 				if td.Name == nil {
 					// Skip anonymous types here. This is tested on `TestHasBorrow`.
-					// https://github.com/bytecodealliance/wasm-tools-go/issues/167
+					// https://github.com/bytecodealliance/go-modules/issues/167
 					continue
 				}
 				wit := td.Kind.WIT(nil, "")
