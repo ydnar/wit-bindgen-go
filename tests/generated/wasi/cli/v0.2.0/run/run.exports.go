@@ -3,7 +3,7 @@
 package run
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/cm"
+	"go.bytecodealliance.org/cm"
 )
 
 // Exports represents the caller-defined exports from "wasi:cli/run@0.2.0".

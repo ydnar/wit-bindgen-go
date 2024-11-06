@@ -7,7 +7,7 @@
 package poll
 
 import (
-	"github.com/bytecodealliance/wasm-tools-go/cm"
+	"go.bytecodealliance.org/cm"
 )
 
 // Pollable represents the imported resource "wasi:io/poll@0.2.0#pollable".

@@ -137,7 +137,7 @@
     {
       "name": "issues:issue165",
       "docs": {
-        "contents": "https://github.com/bytecodealliance/wasm-tools-go/issues/165"
+        "contents": "https://github.com/bytecodealliance/go-modules/issues/165"
       },
       "interfaces": {
         "types": 0

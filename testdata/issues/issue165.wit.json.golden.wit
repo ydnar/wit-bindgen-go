@@ -1,4 +1,4 @@
-/// https://github.com/bytecodealliance/wasm-tools-go/issues/165
+/// https://github.com/bytecodealliance/go-modules/issues/165
 package issues:issue165;
 
 interface types {
