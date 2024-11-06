@@ -2,6 +2,10 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4.0] — 2024-11-05
+
+This module has been renamed. Going forward, please use `go.bytecodealliance.org` instead of `github.com/bytecodealliance/wasm-tools-go`.
+
 ## [v0.3.1] — 2024-11-01
 
 ### Added
@@ -180,6 +184,8 @@ Initial version, supporting [TinyGo](https://tinygo.org/) + [WASI](https://wasi.
 - Because Go does not have a native tagged union type, pointers represented in `variant` and `result` types may not be visible to the garbage collector and may be freed while still in use.
 - Support for mainline [Go](https://go.dev/).
 
+[Unreleased]: <https://github.com/bytecodealliance/go-modules/compare/v0.4.0..HEAD>
+[v0.4.0]: <https://github.com/bytecodealliance/go-modules/compare/v0.3.1..v0.4.0>
 [v0.3.1]: <https://github.com/bytecodealliance/go-modules/compare/v0.3.0..v0.3.1>
 [v0.3.0]: <https://github.com/bytecodealliance/go-modules/compare/v0.2.4..v0.3.0>
 [v0.2.4]: <https://github.com/bytecodealliance/go-modules/compare/v0.2.3..v0.2.4>
