@@ -10,14 +10,14 @@ Developing and testing this package requires an up-to-date installation of [Go](
 
 Tests are supported under both Go and TinyGo, on Linux, macOS, and WebAssembly.
 
-```sh
+```console
 go test ./...
 tinygo test ./...
 ```
 
 Testing with WebAssembly (`wasip1`) requires an installation of [`go_wasip1_wasm32_exec`](https://go.dev/blog/wasi) and [Wasmtime](https://wasmtime.dev). WASI 0.2 `wasip2` is supported under TinyGo version 0.33.0 or later.
 
-```sh
+```console
 GOARCH=wasm GOOS=wasip1 go test ./...
 GOARCH=wasm GOOS=wasip1 tinygo test ./...
 tinygo test -target=wasip2 ./... # requires TinyGo 0.33.0 or later
