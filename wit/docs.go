@@ -32,6 +32,6 @@
 // [WebAssembly Interface Type]: https://component-model.bytecodealliance.org/design/wit.html
 // [WebAssembly Component Model]: https://component-model.bytecodealliance.org/introduction.html
 // [wit-parser]: https://docs.rs/wit-parser/latest/wit_parser/
-// [source]: https://go.bytecodealliance.org/wasm-tools/tree/main/crates/wit-parser
+// [source]: https://github.com/wasm-tools/tree/main/crates/wit-parser
 // [wasm-tools]: https://crates.io/crates/wasm-tools
 package wit

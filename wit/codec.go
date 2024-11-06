@@ -226,11 +226,7 @@ type interfaceRefCodec struct {
 }
 
 // This exists to support legacy JSON from wasm-tools pre v1.209.0.
-<<<<<<< HEAD
 // See https://github.com/bytecodealliance/go-modules/issues/151.
-=======
-// See https://go.bytecodealliance.org/issues/151.
->>>>>>> bb5f758 (Mass search replace 'github.com/bytecodealliance/wasm-tools-go' -> 'go.bytecodealliance.org')
 func (c *interfaceRefCodec) DecodeInt(i int) error {
 	c.ref.Interface = c.getInterface(i)
 	return nil
