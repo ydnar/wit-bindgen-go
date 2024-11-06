@@ -1,5 +1,11 @@
-// Package wit contains a Go representation of the WIT ([WebAssembly Interface Type])
-// specification as defined in the [WebAssembly Component Model].
+// Package wit contains a Go representation of the WIT (WebAssembly Interface Type) specification.
+//
+// # WIT
+//
+// WIT ([WebAssembly Interface Type]) is an interface definition language with rich types, functions, and methods,
+// used to define the interface of a [Component].
+//
+// Note: this package depends on the [wasm-tools] exectuable to parse WIT into an intermediary JSON representation.
 //
 // # Structure
 //
@@ -29,9 +35,9 @@
 //
 //	// Do something with res
 //
-// [WebAssembly Interface Type]: https://component-model.bytecodealliance.org/design/wit.html
-// [WebAssembly Component Model]: https://component-model.bytecodealliance.org/introduction.html
 // [wit-parser]: https://docs.rs/wit-parser/latest/wit_parser/
 // [source]: https://github.com/bytecodealliance/wasm-tools/tree/main/crates/wit-parser
 // [wasm-tools]: https://crates.io/crates/wasm-tools
+// [WebAssembly Interface Type]: https://component-model.bytecodealliance.org/design/wit.html
+// [Component]: https://component-model.bytecodealliance.org/introduction.html
 package wit
