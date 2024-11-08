@@ -30,7 +30,7 @@ func lower_NewTimestamp(v NewTimestamp) (f0 uint32, f1 uint64, f2 uint32) {
 	f0 = (uint32)(v.Tag())
 	switch f0 {
 	case 2: // timestamp
-		v1, v2 := lower_DateTime(*v.Timestamp())
+		v1, v2 := lower_DateTime(*cm.Case[DateTime](&v, 2))
 		f1 = (uint64)(v1)
 		f2 = (uint32)(v2)
 	}
