@@ -539,8 +539,11 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 
 	// Predeclare reserved methods.
 	switch t.Kind.(type) {
+	case *wit.Enum:
+		decl.scope.DeclareName("String") // For fmt.Stringer
 	case *wit.Variant:
-		decl.scope.DeclareName("Tag")
+		decl.scope.DeclareName("Tag")    // Method on cm.Variant
+		decl.scope.DeclareName("String") // For fmt.Stringer
 	}
 
 	return decl, nil
@@ -836,7 +839,6 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 
 	decl, _ := g.typeDecl(dir, t)
 	scope := decl.scope
-	scope.DeclareName("String") // For fmt.Stringer
 
 	// Emit type
 	var b strings.Builder
@@ -863,7 +865,7 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 		if c.Type == nil {
 			stringio.Write(&b, "var ", dataName, " ", typeRep, "\n")
 		}
-		stringio.Write(&b, "return ", cm, ".New[", goName, "](", caseNum, ", ", dataName, ")\n")
+		stringio.Write(&b, "return ", g.cmCall(file, "New["+goName+"]", caseNum+", "+dataName), "\n")
 		b.WriteString("}\n\n")
 
 		// Emit getter
@@ -877,7 +879,7 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 			// Case with associated type T returns *T
 			stringio.Write(&b, "// ", caseName, " returns a non-nil *[", typeRep, "] if [", goName, "] represents the variant case \"", c.Name, "\".\n")
 			stringio.Write(&b, "func (self *", goName, ") ", caseName, "() *", typeRep, " {\n")
-			stringio.Write(&b, "return ", cm, ".Case[", typeRep, "](self, ", caseNum, ")")
+			stringio.Write(&b, "return ", g.cmCall(file, "Case["+typeRep+"]", "self, "+caseNum))
 			b.WriteString("}\n\n")
 		}
 	}
@@ -1124,7 +1126,7 @@ func (g *generator) lowerFlags(file *gen.File, dir wit.Direction, t *wit.TypeDef
 }
 
 func (g *generator) lowerVariant(file *gen.File, dir wit.Direction, t *wit.TypeDef, input string) string {
-	decl, _ := g.typeDecl(dir, t)
+	// decl, _ := g.typeDecl(dir, t)
 	v := t.Kind.(*wit.Variant)
 	flat := t.Flat()
 	if v.Enum() != nil {
@@ -1139,9 +1141,10 @@ func (g *generator) lowerVariant(file *gen.File, dir wit.Direction, t *wit.TypeD
 			continue
 		}
 		caseNum := strconv.Itoa(i)
-		caseName := decl.scope.GetName(GoName(c.Name, true))
+		// caseName := decl.scope.GetName(GoName(c.Name, true))
+		input := "*" + g.cmCall(abiFile, "Case["+g.typeRep(file, dir, c.Type)+"]", "&v, "+caseNum)
 		stringio.Write(&b, "case ", caseNum, ": // ", c.Name, "\n")
-		b.WriteString(g.lowerVariantCaseInto(abiFile, dir, c.Type, flat[1:], "*v."+caseName+"()"))
+		b.WriteString(g.lowerVariantCaseInto(abiFile, dir, c.Type, flat[1:], input))
 	}
 	b.WriteString("}\n")
 	b.WriteString("return\n")

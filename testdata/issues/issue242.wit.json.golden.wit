@@ -1,0 +1,15 @@
+package issues:issue242;
+
+interface i {
+	variant v {
+		a,
+		b,
+		/// tag might collide with (cm.Variant).Tag() method
+		tag,
+		%string(string),
+	}
+}
+
+world w {
+	import i;
+}

@@ -1,0 +1,70 @@
+{
+  "worlds": [
+    {
+      "name": "w",
+      "imports": {
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "exports": {},
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "i",
+      "types": {
+        "v": 0
+      },
+      "functions": {},
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "v",
+      "kind": {
+        "variant": {
+          "cases": [
+            {
+              "name": "a",
+              "type": null
+            },
+            {
+              "name": "b",
+              "type": null
+            },
+            {
+              "name": "tag",
+              "type": null,
+              "docs": {
+                "contents": "tag might collide with (cm.Variant).Tag() method"
+              }
+            },
+            {
+              "name": "string",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 0
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "issues:issue242",
+      "interfaces": {
+        "i": 0
+      },
+      "worlds": {
+        "w": 0
+      }
+    }
+  ]
+}

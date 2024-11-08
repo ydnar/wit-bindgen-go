@@ -1,0 +1,17 @@
+package issues:issue240;
+
+interface i {
+	// v refers to r
+	variant v {
+		one(r),
+	}
+
+	// r refers to v
+	resource r {
+		f: func(param: v);
+	}
+}
+
+world w {
+    import i;
+}
