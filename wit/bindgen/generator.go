@@ -539,8 +539,11 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 
 	// Predeclare reserved methods.
 	switch t.Kind.(type) {
+	case *wit.Enum:
+		decl.scope.DeclareName("String") // For fmt.Stringer
 	case *wit.Variant:
-		decl.scope.DeclareName("Tag")
+		decl.scope.DeclareName("Tag")    // Method on cm.Variant
+		decl.scope.DeclareName("String") // For fmt.Stringer
 	}
 
 	return decl, nil
@@ -836,7 +839,6 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 
 	decl, _ := g.typeDecl(dir, t)
 	scope := decl.scope
-	scope.DeclareName("String") // For fmt.Stringer
 
 	// Emit type
 	var b strings.Builder
