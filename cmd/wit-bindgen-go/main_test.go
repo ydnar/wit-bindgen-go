@@ -3,14 +3,18 @@ package main
 import (
 	"bytes"
 	"context"
+	"strings"
 	"testing"
 )
 
 // TestSimpleGenVerbosity ensures that a basic generation case honors the verbose flag
 func TestSimpleGenVerbosity(t *testing.T) {
+	inWIT := `package tests:test;`
+	stdin := strings.NewReader(inWIT)
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd := Command
+	cmd.Reader = stdin
 	cmd.Writer = &stdout
 	cmd.ErrWriter = &stderr
 
@@ -20,7 +24,7 @@ func TestSimpleGenVerbosity(t *testing.T) {
 		"--world",
 		"http-fetch-simple",
 		"--dry-run",
-		"../../testdata/codegen/simple-http.wit",
+		"-",
 	}
 
 	// Run the app without verbose
@@ -29,6 +33,7 @@ func TestSimpleGenVerbosity(t *testing.T) {
 		t.Errorf("output was written to stderr despite lack of --verbose")
 	}
 
+	stdin.Reset(inWIT)
 	stdout.Reset()
 	stderr.Reset()
 

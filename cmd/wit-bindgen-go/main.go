@@ -64,7 +64,7 @@ var version = &cli.Command{
 	Name:  "version",
 	Usage: "print the version",
 	Action: func(ctx context.Context, cmd *cli.Command) error {
-		fmt.Printf("%s version %s\n", cmd.Root().Name, witcli.Version())
+		fmt.Fprintf(cmd.Writer, "%s version %s\n", cmd.Root().Name, witcli.Version())
 		return nil
 	},
 }
