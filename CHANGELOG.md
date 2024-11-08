@@ -2,6 +2,12 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- [#240](https://github.com/bytecodealliance/go-modules/issues/240): correctly handle cyclical data structures when generating variant lowering code.
+
 ## [v0.4.0] — 2024-11-05
 
 This module has been renamed. Going forward, please use `go.bytecodealliance.org` instead of `github.com/bytecodealliance/wasm-tools-go`.
