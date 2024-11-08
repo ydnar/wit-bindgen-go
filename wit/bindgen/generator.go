@@ -863,7 +863,7 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 		if c.Type == nil {
 			stringio.Write(&b, "var ", dataName, " ", typeRep, "\n")
 		}
-		stringio.Write(&b, "return ", cm, ".New[", goName, "](", caseNum, ", ", dataName, ")\n")
+		stringio.Write(&b, "return ", g.cmCall(file, "New["+goName+"]", caseNum+", "+dataName), "\n")
 		b.WriteString("}\n\n")
 
 		// Emit getter
@@ -877,7 +877,7 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 			// Case with associated type T returns *T
 			stringio.Write(&b, "// ", caseName, " returns a non-nil *[", typeRep, "] if [", goName, "] represents the variant case \"", c.Name, "\".\n")
 			stringio.Write(&b, "func (self *", goName, ") ", caseName, "() *", typeRep, " {\n")
-			stringio.Write(&b, "return ", cm, ".Case[", typeRep, "](self, ", caseNum, ")")
+			stringio.Write(&b, "return ", g.cmCall(file, "Case["+typeRep+"]", "self, "+caseNum))
 			b.WriteString("}\n\n")
 		}
 	}
