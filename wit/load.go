@@ -10,14 +10,9 @@ import (
 )
 
 // LoadJSON loads a [WIT] JSON file from path.
-// If path is "" or "-", it reads from os.Stdin.
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 func LoadJSON(path string) (*Resolve, error) {
-	r := reader(path)
-	if r != nil {
-		return DecodeJSON(r)
-	}
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -28,22 +23,19 @@ func LoadJSON(path string) (*Resolve, error) {
 
 // LoadWIT loads [WIT] data from path by processing it through [wasm-tools].
 // This will fail if wasm-tools is not in $PATH.
-// If path is "" or "-", it reads from os.Stdin.
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 // [wasm-tools]: https://crates.io/crates/wasm-tools
 func LoadWIT(path string) (*Resolve, error) {
-	r := reader(path)
-	return loadWIT(path, r)
+	return loadWIT(path, nil)
 }
 
-// ParseWIT parses [WIT] data from a buffer by processing it through [wasm-tools].
+// DecodeWIT decodes [WIT] data from Reader r by processing it through [wasm-tools].
 // This will fail if wasm-tools is not in $PATH.
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 // [wasm-tools]: https://crates.io/crates/wasm-tools
-func ParseWIT(buffer []byte) (*Resolve, error) {
-	r := bytes.NewReader(buffer)
+func DecodeWIT(r io.Reader) (*Resolve, error) {
 	return loadWIT("", r)
 }
 
@@ -52,7 +44,7 @@ func ParseWIT(buffer []byte) (*Resolve, error) {
 // If the path is not "" and "-", it will be used as the input file.
 // Otherwise, the reader will be used as the input.
 func loadWIT(path string, reader io.Reader) (*Resolve, error) {
-	if (path != "" && path != "-") && reader != nil {
+	if path != "" && reader != nil {
 		return nil, errors.New("cannot set both path and reader; provide only one")
 	}
 
@@ -64,7 +56,7 @@ func loadWIT(path string, reader io.Reader) (*Resolve, error) {
 	var stdout, stderr bytes.Buffer
 
 	cmdArgs := []string{"component", "wit", "-j", "--all-features"}
-	if path != "" && path != "-" {
+	if path != "" {
 		cmdArgs = append(cmdArgs, path)
 	}
 
@@ -79,11 +71,4 @@ func loadWIT(path string, reader io.Reader) (*Resolve, error) {
 	}
 
 	return DecodeJSON(&stdout)
-}
-
-func reader(path string) io.ReadCloser {
-	if path == "" || path == "-" {
-		return os.Stdin
-	}
-	return nil
 }

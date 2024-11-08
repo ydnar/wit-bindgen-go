@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/urfave/cli/v3"
+
 	"go.bytecodealliance.org/internal/codec"
 	"go.bytecodealliance.org/internal/go/gen"
 	"go.bytecodealliance.org/internal/witcli"
@@ -85,7 +86,7 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	res, err := witcli.LoadWIT(ctx, cfg.forceWIT, cfg.path)
+	res, err := witcli.LoadWIT(ctx, cfg.path, cmd.Reader, cfg.forceWIT)
 	if err != nil {
 		return err
 	}

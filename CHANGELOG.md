@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - [#240](https://github.com/bytecodealliance/go-modules/issues/240): correctly handle cyclical data structures when generating variant lowering code.
 
+### Changed
+
+- Breaking: package `wit` no longer interprets `-` to read from stdin when loading JSON or WIT using `wit.LoadJSON` or `wit.LoadWIT`. Use `wit.DecodeJSON` or `wit.DecodeWIT` to read JSON or WIT from an `io.Reader`.
+- Breaking: `wit.ParseWIT` has been removed. Use `wit.DecodeWIT(bytes.NewReader(b))` instead.
+
 ## [v0.4.0] — 2024-11-05
 
 This module has been renamed. Going forward, please use `go.bytecodealliance.org` instead of `github.com/bytecodealliance/wasm-tools-go`.

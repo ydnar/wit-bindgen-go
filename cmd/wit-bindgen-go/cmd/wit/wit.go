@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/urfave/cli/v3"
+
 	"go.bytecodealliance.org/internal/witcli"
 	"go.bytecodealliance.org/wit"
-	"github.com/urfave/cli/v3"
 )
 
 // Command is the CLI command for wit.
@@ -31,7 +32,7 @@ func action(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	res, err := witcli.LoadWIT(ctx, cmd.Bool("force-wit"), path)
+	res, err := witcli.LoadWIT(ctx, path, cmd.Reader, cmd.Bool("force-wit"))
 	if err != nil {
 		return err
 	}
