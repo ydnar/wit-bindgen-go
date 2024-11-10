@@ -7,12 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/urfave/cli/v3"
+
 	"go.bytecodealliance.org/internal/codec"
 	"go.bytecodealliance.org/internal/go/gen"
 	"go.bytecodealliance.org/internal/witcli"
 	"go.bytecodealliance.org/wit/bindgen"
 	"go.bytecodealliance.org/wit/logging"
-	"github.com/urfave/cli/v3"
 )
 
 // Command is the CLI command for wit.
@@ -80,12 +81,12 @@ type config struct {
 }
 
 func action(ctx context.Context, cmd *cli.Command) error {
-	cfg, err := parseFlags(cmd)
+	cfg, err := parseFlags(ctx, cmd)
 	if err != nil {
 		return err
 	}
 
-	res, err := witcli.LoadWIT(ctx, cfg.forceWIT, cfg.path)
+	res, err := witcli.LoadWIT(ctx, cfg.path, cmd.Reader, cfg.forceWIT)
 	if err != nil {
 		return err
 	}
@@ -102,10 +103,10 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	return writeGoPackages(packages, cfg)
+	return writeGoPackages(ctx, cmd, cfg, packages)
 }
 
-func parseFlags(cmd *cli.Command) (*config, error) {
+func parseFlags(_ context.Context, cmd *cli.Command) (*config, error) {
 	logger := witcli.Logger(cmd.Bool("verbose"), cmd.Bool("debug"))
 	dryRun := cmd.Bool("dry-run")
 	out := cmd.String("out")
@@ -145,7 +146,7 @@ func parseFlags(cmd *cli.Command) (*config, error) {
 	}, nil
 }
 
-func writeGoPackages(packages []*gen.Package, cfg *config) error {
+func writeGoPackages(_ context.Context, cmd *cli.Command, cfg *config, packages []*gen.Package) error {
 	cfg.logger.Infof("Generated %d Go package(s)\n", len(packages))
 	for _, pkg := range packages {
 		if !pkg.HasContent() {
@@ -179,8 +180,8 @@ func writeGoPackages(packages []*gen.Package, cfg *config) error {
 			}
 
 			if cfg.dryRun {
-				fmt.Println(string(content))
-				fmt.Println()
+				fmt.Fprintln(cmd.Writer, string(content))
+				fmt.Fprintln(cmd.Writer)
 				continue
 			}
 

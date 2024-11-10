@@ -1,8 +1,10 @@
 package witcli
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -17,17 +19,24 @@ import (
 // If the resolved path doesn’t end in ".json", it will attempt to load
 // WIT indirectly by processing the input through wasm-tools.
 // If forceWIT is true, it will always process input through wasm-tools.
-func LoadWIT(ctx context.Context, forceWIT bool, path string) (*wit.Resolve, error) {
+func LoadWIT(ctx context.Context, path string, r io.Reader, forceWIT bool) (*wit.Resolve, error) {
 	if oci.IsOCIPath(path) {
 		fmt.Fprintf(os.Stderr, "Fetching OCI artifact %s\n", path)
-		if bytes, err := oci.PullWIT(ctx, path); err != nil {
+		if b, err := oci.PullWIT(ctx, path); err != nil {
 			return nil, err
 		} else {
-			return wit.ParseWIT(bytes)
+			return wit.DecodeWIT(bytes.NewReader(b))
 		}
 	}
-	if forceWIT || (path != "" && path != "-" && !strings.HasSuffix(path, ".json")) {
+	forceReader := path == "" || path == "-"
+	if forceWIT || (!forceReader && !strings.HasSuffix(path, ".json")) {
+		if forceReader {
+			return wit.DecodeWIT(r)
+		}
 		return wit.LoadWIT(path)
+	}
+	if forceReader {
+		return wit.DecodeJSON(r)
 	}
 	return wit.LoadJSON(path)
 }
