@@ -13,9 +13,9 @@ const (
 	Version1 = "\x01\x00\x00\x00"
 )
 
-// WriteModuleHeader writes a binary [WebAssembly module header], version 1.
+// WriteModuleHeader writes a binary [WebAssembly module header] (version 1) to w.
 //
-// WebAssembly module header: https://webassembly.github.io/spec/core/binary/modules.html#binary-module
+// [WebAssembly module header]: https://webassembly.github.io/spec/core/binary/modules.html#binary-module
 func WriteModuleHeader(w io.Writer) error {
 	_, err := w.Write([]byte(Magic))
 	if err != nil {
@@ -25,9 +25,10 @@ func WriteModuleHeader(w io.Writer) error {
 	return err
 }
 
-// WriteSectionHeader writes a binary [WebAssembly section header].
+// WriteSectionHeader writes a binary [WebAssembly section header] to w.
+// It returns the number of bytes written and/or an error.
 //
-// WebAssembly section header: https://webassembly.github.io/spec/core/binary/modules.html#sections
+// [WebAssembly section header]: https://webassembly.github.io/spec/core/binary/modules.html#sections
 func WriteSectionHeader(w io.Writer, id section.ID, size uint64) (n int, err error) {
 	bw := bufio.NewWriter(w)
 	err = bw.WriteByte(byte(id))

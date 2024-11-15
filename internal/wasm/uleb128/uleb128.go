@@ -1,9 +1,4 @@
-// Package uleb128 implements unsigned LEB128 integer reads and writes.
-// Based on code from the Go standard library.
-//
-// Copyright 2018 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// Package uleb128 reads and writes unsigned LEB128 integers.
 package uleb128
 
 import "io"
@@ -11,7 +6,12 @@ import "io"
 // Write writes v in unsigned [LEB128] format to w.
 // Returns the number of bytes written and/or an error.
 //
-// LEB128: https://en.wikipedia.org/wiki/LEB128
+// Adapted from the Go standard library with the following copyright:
+// Copyright 2018 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+//
+// [LEB128]: https://en.wikipedia.org/wiki/LEB128
 func Write(w io.ByteWriter, v uint64) (n int, err error) {
 	more := true
 	for more {

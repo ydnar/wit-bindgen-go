@@ -2,7 +2,7 @@ package section
 
 // ID represents a WebAssembly [section ID].
 //
-// section ID: https://webassembly.github.io/spec/core/binary/modules.html#sections
+// [section ID]: https://webassembly.github.io/spec/core/binary/modules.html#sections
 type ID uint8
 
 const (
