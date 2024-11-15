@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"io"
 
-	"go.bytecodealliance.org/wasm/section"
-	"go.bytecodealliance.org/wasm/uleb128"
+	"go.bytecodealliance.org/internal/wasm/section"
+	"go.bytecodealliance.org/internal/wasm/uleb128"
 )
 
 const (

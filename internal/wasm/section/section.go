@@ -6,17 +6,17 @@ package section
 type ID uint8
 
 const (
-	IDCustom    ID = 0
-	IDType      ID = 1
-	IDImport    ID = 2
-	IDFunction  ID = 3
-	IDTable     ID = 4
-	IDMemory    ID = 5
-	IDGlobal    ID = 6
-	IDExport    ID = 7
-	IDStart     ID = 8
-	IDElement   ID = 9
-	IDCode      ID = 10
-	IDData      ID = 11
-	IDDataCount ID = 12
+	Custom    ID = 0
+	Type      ID = 1
+	Import    ID = 2
+	Function  ID = 3
+	Table     ID = 4
+	Memory    ID = 5
+	Global    ID = 6
+	Export    ID = 7
+	Start     ID = 8
+	Element   ID = 9
+	Code      ID = 10
+	Data      ID = 11
+	DataCount ID = 12
 )
