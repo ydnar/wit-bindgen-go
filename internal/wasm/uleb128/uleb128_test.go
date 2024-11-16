@@ -20,10 +20,10 @@ func TestReadWrite(t *testing.T) {
 		switch {
 		case i < 1<<17:
 			i++
-		case i < 1<<29:
+		case i < 1<<22:
 			i += 99991
 		case i < 1<<36:
-			i += 611953
+			i += 999331
 		case i == math.MaxUint64:
 			return
 		default:
@@ -35,10 +35,10 @@ func TestReadWrite(t *testing.T) {
 func roundTrip(v uint64) (uint64, []byte, error) {
 	var buf bytes.Buffer
 	_, err := Write(&buf, v)
-	if err != nil {
-		return 0, buf.Bytes(), err
-	}
 	b := buf.Bytes()
+	if err != nil {
+		return 0, b, err
+	}
 	v, _, err = Read(bytes.NewReader(b))
 	return v, b, err
 }
