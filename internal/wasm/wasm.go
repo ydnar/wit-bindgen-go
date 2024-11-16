@@ -13,6 +13,31 @@ const (
 	Version1 = "\x01\x00\x00\x00"
 )
 
+// Write writes a binary [WebAssembly module] to w.
+//
+// [WebAssembly module]: https://webassembly.github.io/spec/core/binary/modules.html#binary-module
+func Write(w io.Writer, sections []section.Section) error {
+	err := WriteModuleHeader(w)
+	if err != nil {
+		return err
+	}
+	for _, s := range sections {
+		contents, err := s.SectionContents()
+		if err != nil {
+			return err
+		}
+		_, err = WriteSectionHeader(w, s.SectionID(), uint64(len(contents)))
+		if err != nil {
+			return err
+		}
+		_, err = w.Write(contents)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // WriteModuleHeader writes a binary [WebAssembly module header] (version 1) to w.
 //
 // [WebAssembly module header]: https://webassembly.github.io/spec/core/binary/modules.html#binary-module
