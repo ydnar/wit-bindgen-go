@@ -1,4 +1,4 @@
-package uleb128
+package sleb128
 
 import (
 	"bytes"
@@ -7,10 +7,12 @@ import (
 )
 
 func TestReadWrite(t *testing.T) {
-	tests := []uint64{
+	tests := []int64{
 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+		-1, -2, -3, -4, -5, -6, -7, -8, -9, -10,
 		1 << 7, 1 << 8, 1 << 9,
-		math.MaxUint64,
+		-1 << 7, -1 << 8, -1 << 9,
+		math.MinInt64, math.MaxInt64,
 	}
 	for _, want := range tests {
 		got, b, err := roundTrip(want)
@@ -24,7 +26,7 @@ func TestReadWrite(t *testing.T) {
 	}
 }
 
-func roundTrip(v uint64) (uint64, []byte, error) {
+func roundTrip(v int64) (int64, []byte, error) {
 	var buf bytes.Buffer
 	_, err := Write(&buf, v)
 	b := buf.Bytes()

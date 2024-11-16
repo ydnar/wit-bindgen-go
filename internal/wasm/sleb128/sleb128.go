@@ -1,7 +1,34 @@
 // Package sleb128 reads and writes signed LEB128 integers.
 package sleb128
 
-import "io"
+import (
+	"io"
+	"unsafe"
+)
+
+// Read reads a signed [LEB128] value from r.
+// Returns the value, number of bytes read, and/or an error.
+//
+// [LEB128]: https://en.wikipedia.org/wiki/LEB128
+func Read(r io.ByteReader) (v int64, n int, err error) {
+	shift := 0
+	for {
+		b, err := r.ReadByte()
+		if err != nil {
+			return 0, n, err
+		}
+		n++
+		v |= int64(b&0x7f) << shift
+		shift += 7
+		if (b & 0x80) == 0 {
+			if shift < int(unsafe.Sizeof(v)<<8) && (b&0x40) != 0 {
+				v |= (^0 << shift)
+			}
+			break
+		}
+	}
+	return v, n, nil
+}
 
 // Write writes v in signed [LEB128] format to w.
 // Returns the number of bytes written and/or an error.
