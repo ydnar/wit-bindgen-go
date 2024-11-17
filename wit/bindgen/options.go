@@ -22,7 +22,7 @@ type options struct {
 	generatedBy string
 
 	// world is the name of the WIT world to generate, e.g. "command" or "wasi:cli/command".
-	// Default: all worlds in the Resolve will be generated.
+	// Default: the first world in the Resolve will be generated.
 	world string
 
 	// packageRoot is the root Go package or module path used in generated code.
@@ -34,6 +34,9 @@ type options struct {
 
 	// versioned determines if Go packages are generated with version numbers.
 	versioned bool
+
+	// generateWIT determines if WIT files will be generated for each world and interface.
+	generateWIT bool
 }
 
 func (opts *options) apply(o ...Option) error {
@@ -64,6 +67,7 @@ func GeneratedBy(name string) Option {
 }
 
 // World returns an [Option] that specifies the WIT world to generate.
+// By default, the first world will be generated.
 func World(world string) Option {
 	return optionFunc(func(opts *options) error {
 		opts.world = world
@@ -93,6 +97,15 @@ func CMPackage(path string) Option {
 func Versioned(versioned bool) Option {
 	return optionFunc(func(opts *options) error {
 		opts.versioned = versioned
+		return nil
+	})
+}
+
+// WIT returns an [Option] that specifies that a WIT file will be generated
+// for each Go package corresponding to each WIT world and interface.
+func WIT(generateWIT bool) Option {
+	return optionFunc(func(opts *options) error {
+		opts.generateWIT = generateWIT
 		return nil
 	})
 }

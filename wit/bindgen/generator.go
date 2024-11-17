@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"go/token"
 	"io"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -20,6 +21,7 @@ import (
 	"go.bytecodealliance.org/internal/codec"
 	"go.bytecodealliance.org/internal/go/gen"
 	"go.bytecodealliance.org/internal/stringio"
+	"go.bytecodealliance.org/internal/wasm"
 	"go.bytecodealliance.org/wit"
 	"go.bytecodealliance.org/wit/logging"
 )
@@ -83,8 +85,9 @@ type typeUse struct {
 }
 
 type generator struct {
-	opts options
-	res  *wit.Resolve
+	opts  options
+	res   *wit.Resolve
+	world *wit.World // optional, can be nil
 
 	// versioned is set to true if there are multiple versions of a WIT package in res,
 	// which affects the generated Go package paths.
@@ -152,7 +155,23 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 		g.opts.cmPackage = cmPackage
 	}
 	g.res = res
+	for _, g.world = range res.Worlds {
+		if g.world.Match(g.opts.world) {
+			break
+		}
+		// otherwise chose the last world
+	}
 	return g, nil
+}
+
+// TODO: factor this out
+func findWorld(r *wit.Resolve, pattern string) *wit.World {
+	for _, w := range r.Worlds {
+		if w.Match(pattern) {
+			return w
+		}
+	}
+	return nil
 }
 
 func (g *generator) generate() ([]*gen.Package, error) {
@@ -205,8 +224,8 @@ func (g *generator) define(dir wit.Direction, v wit.Node) (defined bool) {
 // WIT interfaces and/or worlds into a single Go package.
 func (g *generator) defineWorlds() error {
 	g.opts.logger.Infof("Generating Go for %d world(s)\n", len(g.res.Worlds))
-	for i, w := range g.res.Worlds {
-		if w.Match(g.opts.world) || (g.opts.world == "" && i == len(g.res.Worlds)-1) {
+	for _, w := range g.res.Worlds {
+		if w == g.world || g.world == nil {
 			err := g.defineWorld(w)
 			if err != nil {
 				return err
@@ -231,8 +250,8 @@ func (g *generator) defineWorld(w *wit.World) error {
 	}
 
 	// Write WIT file for this world
-	witFile := g.witFileFor(w)
-	witFile.WriteString(g.res.WIT(w, ""))
+	// witFile := g.witFileFor(w)
+	// witFile.WriteString(g.res.WIT(wit.Filter(w, nil), ""))
 
 	// Write Go package docs
 	file := g.fileFor(w)
@@ -299,8 +318,13 @@ func (g *generator) defineInterface(w *wit.World, dir wit.Direction, i *wit.Inte
 	if err != nil {
 		return err
 	}
-	file := g.fileFor(i)
 
+	// Write WIT file for this interface
+	// Disabled until we write metadata .wasm file
+	// witFile := g.witFileFor(i)
+	// witFile.WriteString(g.res.WIT(wit.Filter(g.world, i), ""))
+
+	file := g.fileFor(i)
 	{
 		var b strings.Builder
 		stringio.Write(&b, "Package ", pkg.Name, " represents the ", dir.String(), " ", i.WITKind(), " \"", g.moduleNames[i], "\".\n")
@@ -2277,7 +2301,7 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 	if name != id.Extension {
 		segments = append(segments, name) // for anonymous interfaces nested under worlds
 	}
-	path := strings.Join(segments, "/")
+	pkgPath := strings.Join(segments, "/")
 
 	// TODO: write tests for this
 	goName := GoPackageName(name)
@@ -2291,29 +2315,89 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 		}
 	}
 
-	pkg = gen.NewPackage(path + "#" + goName)
+	pkg = gen.NewPackage(pkgPath + "#" + goName)
 	g.packages[pkg.Path] = pkg
 	g.witPackages[owner] = pkg
 	g.exportScopes[owner] = gen.NewScope(nil)
 	pkg.DeclareName("Exports")
 
-	// Write a Cgo file that adds a library to the linker arguments.
-	// The library is a WebAssembly file that includes a custom section
-	// with a name prefixed with "component-type:". The contents are the
+	// Write a WebAssembly file that includes a custom section
+	// with a name prefixed with "component-type". The contents are the
 	// Component Model definition for a world that encapsulates the
 	// Component Model types and functions imported into and/or exported
 	// from this Go package.
-	if false {
-		cgoFile := g.cgoFileFor(owner)
-		lib := id.String()
-		if name != id.Extension {
-			lib += "-" + name
+	{
+		// Synthesize a unique-ish name
+		worldID := w.Package.Name
+		worldID.Extension = "WORLD-" + w.Name
+		if i != nil {
+			worldID.Extension += "-INTERFACE-" + name
 		}
-		lib = strings.ReplaceAll(lib, "/", "-")
-		lib = strings.ReplaceAll(lib, ":", "-")
-		stringio.Write(cgoFile, "// #cgo LDFLAGS: -L. -l", lib, "\n")
-		stringio.Write(cgoFile, "import \"C\"\n")
+		worldName := worldID.String()
+		worldName = replacer.Replace(worldName)
+		// libFile := pkg.File("lib" + worldName + ".a")
+
+		// Generate wasm file
+		res, world := synthesizeWorld(g.res, w, worldName)
+		witText := res.WIT(wit.Filter(world, i), "")
+		if g.opts.generateWIT {
+			witFile := g.witFileFor(owner)
+			witFile.WriteString(witText)
+		}
+		content, err := g.componentEmbed(witText)
+		if err != nil {
+			// return nil, err
+		}
+		componentType := &wasm.CustomSection{
+			Name:     "component-type:" + worldName,
+			Contents: content,
+		}
+		if false {
+			sysoFile := pkg.File(path.Base(pkg.Path) + ".wasm.syso")
+			wasm.Write(sysoFile, []wasm.Section{&wasm.LinkingSection{}, componentType})
+		}
+
+		// Write Cgo file
+		// cgoFile := g.cgoFileFor(owner)
+		// stringio.Write(cgoFile, "// #cgo LDFLAGS: -L. -l", lib, "\n")
+		// stringio.Write(cgoFile, "import \"C\"\n")
 	}
 
 	return pkg, nil
+}
+
+var replacer = strings.NewReplacer("/", "-", ":", "-", "@", "-v", ".", "")
+
+// componentEmbed runs generated WIT through wasm-tools to generate a wasm file with a component-type custom section.
+func (g *generator) componentEmbed(witData string) ([]byte, error) {
+	// TODO: --all-features?
+	cmd := exec.Command("wasm-tools", "component", "embed", "--only-custom", "/dev/stdin")
+	cmd.Stdin = strings.NewReader(witData)
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
+	err := cmd.Run()
+	if err != nil {
+		g.opts.logger.Errorf("wasm-tools: %s", stderr.String())
+	}
+	return stdout.Bytes(), err
+}
+
+func synthesizeWorld(r *wit.Resolve, w *wit.World, name string) (*wit.Resolve, *wit.World) {
+	p := &wit.Package{}
+	p.Name.Namespace = "go"
+	p.Name.Package = "bindgen"
+
+	w = w.Clone()
+	w.Name = name
+	w.Docs = wit.Docs{}
+	w.Package = p
+	p.Worlds.Set(name, w)
+
+	r = r.Clone()
+	r.Worlds = append(r.Worlds, w)
+	r.Packages = append(r.Packages, p)
+
+	return r, w
 }

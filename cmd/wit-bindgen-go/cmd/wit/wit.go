@@ -21,7 +21,15 @@ var Command = &cli.Command{
 			Value:    "",
 			OnlyOnce: true,
 			Config:   cli.StringConfig{TrimSpace: true},
-			Usage:    "WIT world to generate, otherwise generate all worlds",
+			Usage:    "WIT world to emit, otherwise emit all worlds",
+		},
+		&cli.StringFlag{
+			Name:     "interface",
+			Aliases:  []string{"i"},
+			Value:    "",
+			OnlyOnce: true,
+			Config:   cli.StringConfig{TrimSpace: true},
+			Usage:    "WIT interface to emit, otherwise emit all interfaces",
 		},
 	},
 	Action: action,
@@ -32,19 +40,30 @@ func action(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
 	res, err := witcli.LoadWIT(ctx, path, cmd.Reader, cmd.Bool("force-wit"))
 	if err != nil {
 		return err
 	}
+
 	var w *wit.World
-	world := cmd.String("world")
-	if world != "" {
+	if world := cmd.String("world"); world != "" {
 		w = findWorld(res, world)
 		if w == nil {
 			return fmt.Errorf("world %s not found", world)
 		}
 	}
-	fmt.Print(res.WIT(w, ""))
+
+	var i *wit.Interface
+	if face := cmd.String("interface"); face != "" {
+		i = findInterface(res, face)
+		if i == nil {
+			return fmt.Errorf("interface %s not found", face)
+		}
+	}
+
+	filter := wit.Filter(w, i)
+	fmt.Print(res.WIT(filter, ""))
 	return nil
 }
 
@@ -52,6 +71,15 @@ func findWorld(r *wit.Resolve, pattern string) *wit.World {
 	for _, w := range r.Worlds {
 		if w.Match(pattern) {
 			return w
+		}
+	}
+	return nil
+}
+
+func findInterface(r *wit.Resolve, pattern string) *wit.Interface {
+	for _, i := range r.Interfaces {
+		if i.Match(pattern) {
+			return i
 		}
 	}
 	return nil
