@@ -64,7 +64,7 @@ func (r *Resolve) WIT(ctx Node, _ string) string {
 		var name string
 		if i != 0 {
 			// Write subsequent packages with explicit name, which renders the package WIT with nested braces.
-			name = p.Name.WIT(p, "")
+			name = p.Name.WIT(ctx, "")
 		}
 		wit := p.WIT(ctx, name)
 		if wit != "" {
@@ -1100,7 +1100,7 @@ func (id *Ident) WITKind() string { return "ident" }
 // WIT returns the [WIT] text format of [Ident] id.
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
-func (id *Ident) WIT(ctx Node, _ string) string {
+func (id *Ident) WIT(_ Node, _ string) string {
 	ide := Ident{
 		Namespace: escape(id.Namespace),
 		Package:   escape(id.Package),
