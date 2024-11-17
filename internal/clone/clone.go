@@ -10,26 +10,34 @@ import (
 // If v implements [Clonable], the value of CloneWith will be returned.
 // Otherwise it returns a shallow copy, or nil if v is nil.
 // The supplied State must not be nil.
-func Clone[T any](state *State, v *T) *T {
-	if v == nil {
-		return nil
+func Clone[T any](state *State, v T) T {
+	i := any(v)
+	switch i.(type) {
+	case nil:
+		return v
 	}
-	p := unsafe.Pointer(v)
-	if c, ok := state.clones[p]; ok {
-		return (*T)(c)
+	var clone T
+	if memoizable(v) {
+		if c, ok := state.clones[i]; ok {
+			return c.(T)
+		}
 	}
-	var clone *T
-	if clonable, ok := any(v).(Clonable[T]); ok {
-		clone = clonable.CloneWith(state)
+	if clonable, ok := i.(Clonable); ok {
+		clone = clonable.CloneWith(state).(T)
 	} else {
-		shallow := *v
-		clone = &shallow
+		clone = v
 	}
-	if state.clones == nil {
-		state.clones = make(map[unsafe.Pointer]unsafe.Pointer)
+	if memoizable(v) {
+		if state.clones == nil {
+			state.clones = make(map[any]any)
+		}
+		state.clones[i] = clone
 	}
-	state.clones[p] = unsafe.Pointer(clone)
 	return clone
+}
+
+func memoizable[T any](v T) bool {
+	return unsafe.Sizeof(v) == unsafe.Sizeof(any(nil)) || unsafe.Sizeof(v) == unsafe.Sizeof((*byte)(nil))
 }
 
 // Slice returns a copy of slice s.
@@ -39,23 +47,19 @@ func Slice[S ~[]T, T any](state *State, s S) S {
 		return s
 	}
 	clone := slices.Clone(s)
-	// for i := range clone {
-	// 	e, ok := any(clone[i]).(Clonable[T])
-	// 	if !ok {
-	// 		break
-	// 	}
-
-	// }
+	for i, e := range clone {
+		clone[i] = Clone(state, e)
+	}
 	return clone
 }
 
 // Cloneable represents any type that can be cloned.
-type Clonable[T any] interface {
-	CloneWith(*State) *T
+type Clonable interface {
+	CloneWith(*State) any
 }
 
 // State keeps track of previously cloned pointers, so circular data structures may be cloned.
 // The zero value is safe for use.
 type State struct {
-	clones map[unsafe.Pointer]unsafe.Pointer
+	clones map[any]any
 }
