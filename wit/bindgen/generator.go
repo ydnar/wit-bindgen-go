@@ -2303,15 +2303,17 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 	// Component Model definition for a world that encapsulates the
 	// Component Model types and functions imported into and/or exported
 	// from this Go package.
-	cgoFile := g.cgoFileFor(owner)
-	lib := id.String()
-	if name != id.Extension {
-		lib += "-" + name
+	if false {
+		cgoFile := g.cgoFileFor(owner)
+		lib := id.String()
+		if name != id.Extension {
+			lib += "-" + name
+		}
+		lib = strings.ReplaceAll(lib, "/", "-")
+		lib = strings.ReplaceAll(lib, ":", "-")
+		stringio.Write(cgoFile, "// #cgo LDFLAGS: -L. -l", lib, "\n")
+		stringio.Write(cgoFile, "import \"C\"\n")
 	}
-	lib = strings.ReplaceAll(lib, "/", "-")
-	lib = strings.ReplaceAll(lib, ":", "-")
-	stringio.Write(cgoFile, "// #cgo LDFLAGS: -L. -l", lib, "\n")
-	stringio.Write(cgoFile, "import \"C\"\n")
 
 	return pkg, nil
 }
