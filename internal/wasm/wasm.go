@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"io"
 
-	"go.bytecodealliance.org/internal/wasm/section"
 	"go.bytecodealliance.org/internal/wasm/uleb128"
 )
 
@@ -16,7 +15,7 @@ const (
 // Write writes a binary [WebAssembly module] to w.
 //
 // [WebAssembly module]: https://webassembly.github.io/spec/core/binary/modules.html#binary-module
-func Write(w io.Writer, sections []section.Section) error {
+func Write(w io.Writer, sections []Section) error {
 	err := WriteModuleHeader(w)
 	if err != nil {
 		return err
@@ -54,7 +53,7 @@ func WriteModuleHeader(w io.Writer) error {
 // It returns the number of bytes written and/or an error.
 //
 // [WebAssembly section header]: https://webassembly.github.io/spec/core/binary/modules.html#sections
-func WriteSectionHeader(w io.Writer, id section.ID, size uint64) (n int, err error) {
+func WriteSectionHeader(w io.Writer, id SectionID, size uint64) (n int, err error) {
 	bw := bufio.NewWriter(w)
 	err = bw.WriteByte(byte(id))
 	if err != nil {
@@ -65,4 +64,22 @@ func WriteSectionHeader(w io.Writer, id section.ID, size uint64) (n int, err err
 		return n + 1, err
 	}
 	return n + 1, bw.Flush()
+}
+
+// WriteString writes a string to w as a [LEB128] encoded length followed by the string bytes.
+// Returns the number of bytes written and/or an error.
+//
+// [LEB128]: https://en.wikipedia.org/wiki/LEB128
+func WriteString(w io.Writer, s string) (n int, err error) {
+	bw := bufio.NewWriter(w)
+	n, err = uleb128.Write(bw, uint64(len(s)))
+	if err != nil {
+		return n, err
+	}
+	ns, err := bw.WriteString(s)
+	n += ns
+	if err != nil {
+		return n, err
+	}
+	return n, bw.Flush()
 }
