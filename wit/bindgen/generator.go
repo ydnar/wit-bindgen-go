@@ -2217,6 +2217,16 @@ func (g *generator) wasmFileFor(owner wit.TypeOwner) *gen.File {
 	return file
 }
 
+func (g *generator) cgoFileFor(owner wit.TypeOwner) *gen.File {
+	pkg := g.packageFor(owner)
+	file := pkg.File(pkg.Name + ".cgo.go")
+	file.GeneratedBy = g.opts.generatedBy
+	if file.GoBuild == "" {
+		file.GoBuild = "tinygo.wasm"
+	}
+	return file
+}
+
 func (g *generator) packageFor(owner wit.TypeOwner) *gen.Package {
 	return g.witPackages[owner]
 }
@@ -2286,6 +2296,22 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 	g.witPackages[owner] = pkg
 	g.exportScopes[owner] = gen.NewScope(nil)
 	pkg.DeclareName("Exports")
+
+	// Write a Cgo file that adds a library to the linker arguments.
+	// The library is a WebAssembly file that includes a custom section
+	// with a name prefixed with "component-type:". The contents are the
+	// Component Model definition for a world that encapsulates the
+	// Component Model types and functions imported into and/or exported
+	// from this Go package.
+	cgoFile := g.cgoFileFor(owner)
+	lib := id.String()
+	if name != id.Extension {
+		lib += "-" + name
+	}
+	lib = strings.ReplaceAll(lib, "/", "-")
+	lib = strings.ReplaceAll(lib, ":", "-")
+	stringio.Write(cgoFile, "// #cgo LDFLAGS: -L. -l", lib, "\n")
+	stringio.Write(cgoFile, "import \"C\"\n")
 
 	return pkg, nil
 }
