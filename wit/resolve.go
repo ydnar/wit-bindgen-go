@@ -8,6 +8,8 @@ import (
 	"unsafe"
 
 	"github.com/coreos/go-semver/semver"
+
+	"go.bytecodealliance.org/wit/clone"
 	"go.bytecodealliance.org/wit/iterate"
 	"go.bytecodealliance.org/wit/ordered"
 )
@@ -27,6 +29,17 @@ type Resolve struct {
 	Interfaces []*Interface
 	TypeDefs   []*TypeDef
 	Packages   []*Package
+}
+
+// CloneWith implements [clone.Clonable].
+// The resulting [Resolve] and its contents may be freely modified.
+func (r *Resolve) CloneWith(state *clone.State) any {
+	c := *r
+	c.Worlds = clone.Slice(state, r.Worlds)
+	c.Interfaces = clone.Slice(state, r.Interfaces)
+	c.TypeDefs = clone.Slice(state, r.TypeDefs)
+	c.Packages = clone.Slice(state, r.Packages)
+	return &c
 }
 
 // AllFunctions returns a [sequence] that yields each [Function] in a [Resolve].
@@ -59,6 +72,16 @@ type World struct {
 	Package   *Package  // the Package this World belongs to (must be non-nil)
 	Stability Stability // WIT @since or @unstable (nil if unknown)
 	Docs      Docs
+}
+
+// CloneWith implements [clone.Clonable].
+func (w *World) CloneWith(state *clone.State) any {
+	c := *w
+	c.Imports = clone.Clone(state, w.Imports)
+	c.Exports = clone.Clone(state, w.Exports)
+	c.Package = clone.Clone(state, c.Package)
+	c.Stability = clone.Clone(state, c.Stability)
+	return &c
 }
 
 func (w *World) dependsOn(pkg *Package) bool {
@@ -189,6 +212,14 @@ type InterfaceRef struct {
 	Stability Stability
 }
 
+// CloneWith implements [clone.Clonable].
+func (ref *InterfaceRef) CloneWith(state *clone.State) any {
+	c := *ref
+	c.Interface = clone.Clone(state, ref.Interface)
+	c.Stability = clone.Clone(state, c.Stability)
+	return &c
+}
+
 func (ref *InterfaceRef) dependsOn(pkg *Package) bool {
 	return DependsOn(ref.Interface, pkg)
 }
@@ -208,6 +239,16 @@ type Interface struct {
 	Package   *Package  // the Package this Interface belongs to
 	Stability Stability // WIT @since or @unstable (nil if unknown)
 	Docs      Docs
+}
+
+// CloneWith implements [clone.Clonable].
+func (i *Interface) CloneWith(state *clone.State) any {
+	c := *i
+	c.TypeDefs = clone.Clone(state, i.TypeDefs)
+	c.Functions = clone.Clone(state, i.Functions)
+	c.Package = clone.Clone(state, i.Package)
+	c.Stability = clone.Clone(state, i.Stability)
+	return &c
 }
 
 func (i *Interface) dependsOn(pkg *Package) bool {
@@ -275,6 +316,15 @@ type TypeDef struct {
 	Owner     TypeOwner
 	Stability Stability // WIT @since or @unstable (nil if unknown)
 	Docs      Docs
+}
+
+// CloneWith implements [clone.Clonable].
+func (t *TypeDef) CloneWith(state *clone.State) any {
+	c := *t
+	c.Kind = clone.Clone(state, t.Kind)
+	c.Owner = clone.Clone(state, t.Owner)
+	c.Stability = clone.Clone(state, t.Stability)
+	return &c
 }
 
 // TypeName returns the [WIT] type name for t.
@@ -427,6 +477,13 @@ type Pointer struct {
 	Type Type
 }
 
+// CloneWith implements [clone.Clonable].
+func (p *Pointer) CloneWith(state *clone.State) any {
+	c := *p
+	c.Type = clone.Clone(state, p.Type)
+	return &c
+}
+
 // Size returns the [ABI byte size] for [Pointer].
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
@@ -454,6 +511,13 @@ func (p *Pointer) hasResource() bool           { return HasResource(p.Type) }
 type Record struct {
 	_typeDefKind
 	Fields []Field
+}
+
+// CloneWith implements [clone.Clonable].
+func (r *Record) CloneWith(state *clone.State) any {
+	c := *r
+	c.Fields = clone.Slice(state, r.Fields)
+	return &c
 }
 
 // Size returns the [ABI byte size] for [Record] r.
