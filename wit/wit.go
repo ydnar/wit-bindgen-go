@@ -18,6 +18,42 @@ type Node interface {
 	WIT(ctx Node, name string) string
 }
 
+func Filter(w *World, i *Interface) Node {
+	if w == nil && i == nil {
+		return nil
+	}
+	return &witFilter{
+		w: w,
+		i: i,
+	}
+}
+
+type witFilter struct {
+	w *World
+	i *Interface
+}
+
+func (*witFilter) WITKind() string             { panic("BUG: WITKind called on filter") }
+func (*witFilter) WIT(_ Node, _ string) string { panic("BUG: WIT called on filter") }
+
+func (f *witFilter) UsesWorld(w *World) bool {
+	if f.w != nil && w == f.w {
+		return true
+	}
+	return false
+}
+
+func (f *witFilter) UsesInterface(i *Interface) bool {
+	if f.i != nil && i == f.i {
+		return true
+	}
+	if f.w != nil && f.w.HasInterface(i) {
+		return true
+	}
+	// TODO: walk dependency tree
+	return false
+}
+
 func indent(s string) string {
 	const ws = "\t"
 	return strings.ReplaceAll(strings.TrimSuffix(ws+strings.ReplaceAll(s, "\n", "\n"+ws), ws), ws+"\n", "\n")
@@ -199,7 +235,6 @@ func (w *World) WIT(ctx Node, name string) string {
 		if n == 0 {
 			b.WriteRune('\n')
 		}
-		// b.WriteString(indent(w.itemWIT("import", name, i)))
 		b.WriteString(indent(i.WIT(worldImport{w}, name)))
 		b.WriteRune('\n')
 		n++
@@ -209,7 +244,6 @@ func (w *World) WIT(ctx Node, name string) string {
 		if n == 0 {
 			b.WriteRune('\n')
 		}
-		// b.WriteString(indent(w.itemWIT("export", name, i)))
 		b.WriteString(indent(i.WIT(worldExport{w}, name)))
 		b.WriteRune('\n')
 		n++
@@ -223,16 +257,6 @@ type (
 	worldImport struct{ *World }
 	worldExport struct{ *World }
 )
-
-func (w *World) itemWIT(motion, name string, v WorldItem) string {
-	switch v := v.(type) {
-	case *InterfaceRef, *Function:
-		return motion + " " + v.WIT(w, name) // TODO: handle resource methods?
-	case *TypeDef:
-		return v.WIT(w, name) // no motion, in Imports only
-	}
-	panic("BUG: unknown WorldItem")
-}
 
 // WITKind returns the WIT kind.
 func (*InterfaceRef) WITKind() string { return "interface ref" }
@@ -1041,10 +1065,7 @@ func (*Package) WITKind() string { return "package" }
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 func (p *Package) WIT(ctx Node, name string) string {
-	var filter *World
-	if w, ok := ctx.(*World); ok {
-		filter = w
-	}
+	filter, _ := ctx.(*witFilter)
 	multi := name != ""
 	var b strings.Builder
 	b.WriteString(p.Docs.WIT(ctx, ""))
@@ -1057,7 +1078,7 @@ func (p *Package) WIT(ctx Node, name string) string {
 	}
 	i := 0
 	p.Interfaces.All()(func(name string, face *Interface) bool {
-		if filter != nil && !filter.HasInterface(face) {
+		if filter != nil && !filter.UsesInterface(face) {
 			return true
 		}
 		b.WriteRune('\n')
@@ -1071,7 +1092,7 @@ func (p *Package) WIT(ctx Node, name string) string {
 		return true
 	})
 	p.Worlds.All()(func(name string, w *World) bool {
-		if filter != nil && w != filter {
+		if filter != nil && !filter.UsesWorld(w) {
 			return true
 		}
 		b.WriteRune('\n')

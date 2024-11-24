@@ -234,6 +234,24 @@ func (i *Interface) WITPackage() *Package {
 	return i.Package
 }
 
+// Match returns true if [Interface] i matches pattern, which can be one of:
+// "name", "namespace:package/name" (qualified), or "namespace:package/name@1.0.0" (versioned).
+func (i *Interface) Match(pattern string) bool {
+	if i.Name == nil {
+		return false
+	}
+	if pattern == *i.Name {
+		return true
+	}
+	id := i.Package.Name
+	id.Extension = *i.Name
+	if pattern == id.String() {
+		return true
+	}
+	id.Version = nil
+	return pattern == id.String()
+}
+
 // AllFunctions returns a [sequence] that yields each [Function] in an [Interface].
 // The sequence stops if yield returns false.
 //
