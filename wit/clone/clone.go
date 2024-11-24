@@ -7,7 +7,7 @@ import (
 
 // Clone returns a clone of pointer v.
 // If v was previously cloned, the earlier copy will be returned.
-// If *T implements [Clonable], the value of [Clonable.Clone] will be returned.
+// If *T implements [Clonable], the value of Clone will be returned.
 // Otherwise it returns a shallow copy, or nil if v is nil.
 // To clone interface values, pass a pointer to the interface.
 // The supplied [State] must not be nil.
