@@ -33,7 +33,7 @@ type Resolve struct {
 
 // CloneWith implements [clone.Clonable].
 // The resulting [Resolve] and its contents may be freely modified.
-func (r *Resolve) CloneWith(state *clone.State) any {
+func (r *Resolve) CloneWith(state *clone.State) clone.Clonable {
 	c := *r
 	c.Worlds = clone.Slice(state, r.Worlds)
 	c.Interfaces = clone.Slice(state, r.Interfaces)
@@ -75,7 +75,7 @@ type World struct {
 }
 
 // CloneWith implements [clone.Clonable].
-func (w *World) CloneWith(state *clone.State) any {
+func (w *World) CloneWith(state *clone.State) clone.Clonable {
 	c := *w
 	c.Imports = clone.Clone(state, w.Imports)
 	c.Exports = clone.Clone(state, w.Exports)
@@ -213,7 +213,7 @@ type InterfaceRef struct {
 }
 
 // CloneWith implements [clone.Clonable].
-func (ref *InterfaceRef) CloneWith(state *clone.State) any {
+func (ref *InterfaceRef) CloneWith(state *clone.State) clone.Clonable {
 	c := *ref
 	c.Interface = clone.Clone(state, ref.Interface)
 	c.Stability = clone.Clone(state, c.Stability)
@@ -242,7 +242,7 @@ type Interface struct {
 }
 
 // CloneWith implements [clone.Clonable].
-func (i *Interface) CloneWith(state *clone.State) any {
+func (i *Interface) CloneWith(state *clone.State) clone.Clonable {
 	c := *i
 	c.TypeDefs = clone.Clone(state, i.TypeDefs)
 	c.Functions = clone.Clone(state, i.Functions)
@@ -319,7 +319,7 @@ type TypeDef struct {
 }
 
 // CloneWith implements [clone.Clonable].
-func (t *TypeDef) CloneWith(state *clone.State) any {
+func (t *TypeDef) CloneWith(state *clone.State) clone.Clonable {
 	c := *t
 	c.Kind = clone.Clone(state, t.Kind)
 	c.Owner = clone.Clone(state, t.Owner)
@@ -478,7 +478,7 @@ type Pointer struct {
 }
 
 // CloneWith implements [clone.Clonable].
-func (p *Pointer) CloneWith(state *clone.State) any {
+func (p *Pointer) CloneWith(state *clone.State) clone.Clonable {
 	c := *p
 	c.Type = clone.Clone(state, p.Type)
 	return &c
@@ -514,7 +514,7 @@ type Record struct {
 }
 
 // CloneWith implements [clone.Clonable].
-func (r *Record) CloneWith(state *clone.State) any {
+func (r *Record) CloneWith(state *clone.State) clone.Clonable {
 	c := *r
 	c.Fields = clone.Slice(state, r.Fields)
 	return &c

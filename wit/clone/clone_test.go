@@ -6,38 +6,16 @@ import (
 	"testing"
 )
 
-type Example1 struct {
-	s string
-}
-
-func (e *Example1) CloneWith(*State) Clonable {
-	dst := *e
-	return &dst
-}
-
-func init() {
-}
-
 func TestCloneRoundTrip(t *testing.T) {
-	tests := []any{
-		nil, error(nil), 0, uint16(0), uint64(123),
-		"", "hello",
-		Example1{"hello"},
-		&Example1{"hello"},
-	}
 	state := &State{}
-	for _, src := range tests {
-		dst := Clone(state, &src)
-		fmt.Printf("Clone(%T): %T\n", src, dst)
-		if !reflect.DeepEqual(src, dst) {
-			t.Errorf("Clone(%#v): %#v", src, dst)
-		}
-	}
-	fmt.Printf("len(state.clones): %d\n", len(state.clones))
-}
-
-func TestCloneWideTypes(t *testing.T) {
-	state := &State{}
+	roundTrip(t, state, (*byte)(nil))
+	roundTrip(t, state, pointerTo(0))
+	roundTrip(t, state, pointerTo(uint16(0)))
+	roundTrip(t, state, pointerTo(uint64(123)))
+	roundTrip(t, state, pointerTo(""))
+	roundTrip(t, state, pointerTo("hello"))
+	roundTrip(t, state, &Example1{"hello"})
+	roundTrip(t, state, pointerTo(fmt.Stringer(&Example1{"hello"})))
 	roundTrip(t, state, pointerTo(error(nil)))
 	roundTrip(t, state, pointerTo(0))
 	roundTrip(t, state, &struct{ a, b string }{})
@@ -50,40 +28,41 @@ func pointerTo[T any](v T) *T {
 	return &v
 }
 
-func roundTrip[T comparable](t *testing.T, state *State, v *T) {
+func roundTrip[T any](t *testing.T, state *State, v *T) {
 	c := Clone(state, v)
-	fmt.Printf("Clone(%T): %T\n", v, c)
+	// fmt.Printf("Clone(%T): %T\n", v, c)
 	if !reflect.DeepEqual(v, c) {
 		t.Errorf("Clone(%#v): %#v", v, c)
 	}
 }
 
-func TestCloneInterface(t *testing.T) {
-	var s fmt.Stringer = stringer("hello")
-	report(s)
+type Example1 struct {
+	s string
 }
 
-type stringer string
+func (e *Example1) String() string {
+	return e.s
+}
 
-func (s stringer) String() string { return string(s) }
+func (e *Example1) CloneWith(*State) Clonable {
+	dst := *e
+	return &dst
+}
+
+type Stringer string
+
+func (s Stringer) String() string { return string(s) }
 
 func report[T any](v T) {
 	a := any(v)
-	fmt.Printf("value of v: %T\n", a)
+	fmt.Printf("type of v: %T\n", a)
 }
 
-func TestCloneValue(t *testing.T) {
-	v := &value{1, 2}
-	c := Clone(&State{}, v)
-	fmt.Printf("Clone(%v): %v\n", v, c)
-}
-
-type value struct {
+type Ints struct {
 	a, b int
 }
 
-func (v *value) CloneWith(state *State) Clonable {
-	println("hello!")
-	c := *v
+func (i *Ints) CloneWith(state *State) Clonable {
+	c := *i
 	return &c
 }

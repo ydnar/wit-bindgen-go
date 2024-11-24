@@ -17,17 +17,14 @@ func Clone[T any](state *State, v *T) *T {
 	}
 
 	// Check previous clones
-	if c, ok := state.clones[v]; ok {
-		return c.(*T)
+	if clone := state.load(v); clone != nil {
+		return clone.(*T)
 	}
 
 	// Check if *T implements Clonable
 	if clonable, ok := any(v).(Clonable); ok {
 		clone := any(clonable.CloneWith(state)).(*T)
-		if state.clones == nil {
-			state.clones = make(map[any]any)
-		}
-		state.clones[v] = clone
+		state.store(v, clone)
 		return clone
 	}
 
@@ -39,11 +36,9 @@ func Clone[T any](state *State, v *T) *T {
 	}
 
 	// Check if T was cloned
-	if memoizable(v) {
-		if c, ok := state.clones[*v]; ok {
-			clone := c.(T)
-			return &clone
-		}
+	if clone := state.load(*v); clone != nil {
+		clone := clone.(T)
+		return &clone
 	}
 
 	// Check if T implements Clonable
@@ -55,19 +50,9 @@ func Clone[T any](state *State, v *T) *T {
 		clone = *v
 	}
 
-	if memoizable(v) {
-		if state.clones == nil {
-			state.clones = make(map[any]any)
-		}
-		state.clones[*v] = clone
-	}
+	state.store(*v, clone)
 
 	return &clone
-}
-
-// Pointers and interface types are memoizable
-func memoizable[T any](v T) bool {
-	return unsafe.Sizeof(v) == unsafe.Sizeof(any(nil)) || unsafe.Sizeof(v) == unsafe.Sizeof((*byte)(nil))
 }
 
 // Slice returns a copy of slice s.
@@ -92,4 +77,26 @@ type Clonable interface {
 // The zero value is safe for use.
 type State struct {
 	clones map[any]any
+}
+
+func (state *State) load(v any) any {
+	if !memoizable(v) {
+		return nil
+	}
+	return state.clones[v]
+}
+
+func (state *State) store(v, clone any) {
+	if !memoizable(v) {
+		return
+	}
+	if state.clones == nil {
+		state.clones = make(map[any]any)
+	}
+	state.clones[v] = clone
+}
+
+func memoizable[T any](v T) bool {
+	// Pointers and interface types are memoizable
+	return unsafe.Sizeof(v) == unsafe.Sizeof(any(nil)) || unsafe.Sizeof(v) == unsafe.Sizeof((*byte)(nil))
 }
