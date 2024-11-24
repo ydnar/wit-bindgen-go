@@ -31,9 +31,9 @@ type Resolve struct {
 	Packages   []*Package
 }
 
-// CloneWith implements [clone.Clonable].
+// Clone implements [clone.Clonable].
 // The resulting [Resolve] and its contents may be freely modified.
-func (r *Resolve) CloneWith(state *clone.State) clone.Clonable {
+func (r *Resolve) Clone(state *clone.State) clone.Clonable {
 	c := *r
 	c.Worlds = clone.Slice(state, r.Worlds)
 	c.Interfaces = clone.Slice(state, r.Interfaces)
@@ -74,8 +74,8 @@ type World struct {
 	Docs      Docs
 }
 
-// CloneWith implements [clone.Clonable].
-func (w *World) CloneWith(state *clone.State) clone.Clonable {
+// Clone implements [clone.Clonable].
+func (w *World) Clone(state *clone.State) clone.Clonable {
 	c := *w
 	c.Imports = *clone.Clone(state, &w.Imports)
 	c.Exports = *clone.Clone(state, &w.Exports)
@@ -212,8 +212,8 @@ type InterfaceRef struct {
 	Stability Stability
 }
 
-// CloneWith implements [clone.Clonable].
-func (ref *InterfaceRef) CloneWith(state *clone.State) clone.Clonable {
+// Clone implements [clone.Clonable].
+func (ref *InterfaceRef) Clone(state *clone.State) clone.Clonable {
 	c := *ref
 	c.Interface = clone.Clone(state, ref.Interface)
 	c.Stability = *clone.Clone(state, &c.Stability)
@@ -241,8 +241,8 @@ type Interface struct {
 	Docs      Docs
 }
 
-// CloneWith implements [clone.Clonable].
-func (i *Interface) CloneWith(state *clone.State) clone.Clonable {
+// Clone implements [clone.Clonable].
+func (i *Interface) Clone(state *clone.State) clone.Clonable {
 	c := *i
 	c.Name = clone.Clone(state, c.Name)
 	c.TypeDefs = *clone.Clone(state, &i.TypeDefs)
@@ -319,8 +319,8 @@ type TypeDef struct {
 	Docs      Docs
 }
 
-// CloneWith implements [clone.Clonable].
-func (t *TypeDef) CloneWith(state *clone.State) clone.Clonable {
+// Clone implements [clone.Clonable].
+func (t *TypeDef) Clone(state *clone.State) clone.Clonable {
 	c := *t
 	c.Kind = *clone.Clone(state, &t.Kind)
 	c.Owner = *clone.Clone(state, &t.Owner)
@@ -478,8 +478,8 @@ type Pointer struct {
 	Type Type
 }
 
-// CloneWith implements [clone.Clonable].
-func (p *Pointer) CloneWith(state *clone.State) clone.Clonable {
+// Clone implements [clone.Clonable].
+func (p *Pointer) Clone(state *clone.State) clone.Clonable {
 	c := *p
 	c.Type = *clone.Clone(state, &p.Type)
 	return &c
@@ -514,8 +514,8 @@ type Record struct {
 	Fields []Field
 }
 
-// CloneWith implements [clone.Clonable].
-func (r *Record) CloneWith(state *clone.State) clone.Clonable {
+// Clone implements [clone.Clonable].
+func (r *Record) Clone(state *clone.State) clone.Clonable {
 	c := *r
 	c.Fields = clone.Slice(state, r.Fields)
 	return &c

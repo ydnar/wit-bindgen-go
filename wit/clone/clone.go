@@ -5,11 +5,12 @@ import (
 	"unsafe"
 )
 
-// Clone returns a copy of v.
+// Clone returns a clone of pointer v.
 // If v was previously cloned, the earlier copy will be returned.
-// If v implements [Clonable], the value of CloneWith will be returned.
+// If *T implements [Clonable], the value of [Clonable.Clone] will be returned.
 // Otherwise it returns a shallow copy, or nil if v is nil.
-// The supplied State must not be nil.
+// To clone interface values, pass a pointer to the interface.
+// The supplied [State] must not be nil.
 func Clone[T any](state *State, v *T) *T {
 	// First, check for nil
 	if v == nil {
@@ -23,7 +24,7 @@ func Clone[T any](state *State, v *T) *T {
 
 	// Check if *T implements Clonable
 	if clonable, ok := any(v).(Clonable); ok {
-		clone := any(clonable.CloneWith(state)).(*T)
+		clone := any(clonable.Clone(state)).(*T)
 		state.store(v, clone)
 		return clone
 	}
@@ -44,7 +45,7 @@ func Clone[T any](state *State, v *T) *T {
 	// Check if T implements Clonable
 	var clone T
 	if clonable, ok := any(*v).(Clonable); ok {
-		clone = clonable.CloneWith(state).(T)
+		clone = clonable.Clone(state).(T)
 	} else {
 		// Otherwise make shallow copy
 		clone = *v
@@ -55,8 +56,9 @@ func Clone[T any](state *State, v *T) *T {
 	return &clone
 }
 
-// Slice returns a copy of slice s.
-// The supplied State must not be nil.
+// Slice returns a clone of slice s.
+// Elements of s will be passed to [Clone].
+// The supplied [State] must not be nil.
 func Slice[S ~[]T, T any](state *State, s S) S {
 	if s == nil {
 		return s
@@ -69,11 +71,15 @@ func Slice[S ~[]T, T any](state *State, s S) S {
 }
 
 // Cloneable represents any type that can be cloned.
+// The returned value must be identical to the receiver type.
+//
+//	func (*T) Clone(*State) Clonable // returns *T
+//	func (T) Clone(*State) Clonable // returns T
 type Clonable interface {
-	CloneWith(*State) Clonable
+	Clone(*State) Clonable
 }
 
-// State keeps track of previously cloned pointers, so circular data structures may be cloned.
+// State tracks previously cloned values to enable cloning of circular data structures.
 // The zero value is safe for use.
 type State struct {
 	clones map[any]any
