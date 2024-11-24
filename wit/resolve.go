@@ -77,10 +77,10 @@ type World struct {
 // CloneWith implements [clone.Clonable].
 func (w *World) CloneWith(state *clone.State) clone.Clonable {
 	c := *w
-	c.Imports = clone.Clone(state, w.Imports)
-	c.Exports = clone.Clone(state, w.Exports)
-	c.Package = clone.Clone(state, c.Package)
-	c.Stability = clone.Clone(state, c.Stability)
+	c.Imports = *clone.Clone(state, &w.Imports)
+	c.Exports = *clone.Clone(state, &w.Exports)
+	c.Package = *clone.Clone(state, &c.Package)
+	c.Stability = *clone.Clone(state, &c.Stability)
 	return &c
 }
 
@@ -216,7 +216,7 @@ type InterfaceRef struct {
 func (ref *InterfaceRef) CloneWith(state *clone.State) clone.Clonable {
 	c := *ref
 	c.Interface = clone.Clone(state, ref.Interface)
-	c.Stability = clone.Clone(state, c.Stability)
+	c.Stability = *clone.Clone(state, &c.Stability)
 	return &c
 }
 
@@ -244,10 +244,11 @@ type Interface struct {
 // CloneWith implements [clone.Clonable].
 func (i *Interface) CloneWith(state *clone.State) clone.Clonable {
 	c := *i
-	c.TypeDefs = clone.Clone(state, i.TypeDefs)
-	c.Functions = clone.Clone(state, i.Functions)
+	c.Name = clone.Clone(state, c.Name)
+	c.TypeDefs = *clone.Clone(state, &i.TypeDefs)
+	c.Functions = *clone.Clone(state, &i.Functions)
 	c.Package = clone.Clone(state, i.Package)
-	c.Stability = clone.Clone(state, i.Stability)
+	c.Stability = *clone.Clone(state, &i.Stability)
 	return &c
 }
 
@@ -321,9 +322,9 @@ type TypeDef struct {
 // CloneWith implements [clone.Clonable].
 func (t *TypeDef) CloneWith(state *clone.State) clone.Clonable {
 	c := *t
-	c.Kind = clone.Clone(state, t.Kind)
-	c.Owner = clone.Clone(state, t.Owner)
-	c.Stability = clone.Clone(state, t.Stability)
+	c.Kind = *clone.Clone(state, &t.Kind)
+	c.Owner = *clone.Clone(state, &t.Owner)
+	c.Stability = *clone.Clone(state, &t.Stability)
 	return &c
 }
 
@@ -480,7 +481,7 @@ type Pointer struct {
 // CloneWith implements [clone.Clonable].
 func (p *Pointer) CloneWith(state *clone.State) clone.Clonable {
 	c := *p
-	c.Type = clone.Clone(state, p.Type)
+	c.Type = *clone.Clone(state, &p.Type)
 	return &c
 }
 
