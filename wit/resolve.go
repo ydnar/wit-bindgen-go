@@ -1861,32 +1861,6 @@ func (p *Package) dependsOn(dep Node) bool {
 	return done
 }
 
-// Returns true if node == dep.
-// Returns false if node or dep are nil.
-func DependsOn(node, dep Node) bool {
-	if node == nil || dep == nil {
-		return false
-	}
-	if node == dep {
-		return true
-	}
-	// Dereference InterfaceRefs
-	if rep, ok := dep.(*InterfaceRef); ok {
-		dep = rep.Interface
-	}
-	if k, ok := node.(TypeDefKind); ok {
-		node = Despecialize(k)
-	}
-	if d, ok := node.(dependent); ok {
-		return d.dependsOn(dep)
-	}
-	return false
-}
-
-type dependent interface {
-	dependsOn(dep Node) bool
-}
-
 func comparePackages(a, b *Package) int {
 	switch {
 	case a == b:
