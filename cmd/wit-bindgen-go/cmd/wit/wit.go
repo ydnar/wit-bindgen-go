@@ -48,25 +48,21 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	var deps []wit.Node
+	if face := cmd.String("interface"); face != "" {
+		i := findInterface(res, face)
+		if i == nil {
+			return fmt.Errorf("interface %s not found", face)
+		}
+		res = filter(res, i)
+	}
 
 	if world := cmd.String("world"); world != "" {
 		w := findWorld(res, world)
 		if w == nil {
 			return fmt.Errorf("world %s not found", world)
 		}
-		deps = append(deps, w)
+		res = filter(res, w)
 	}
-
-	if face := cmd.String("interface"); face != "" {
-		i := findInterface(res, face)
-		if i == nil {
-			return fmt.Errorf("interface %s not found", face)
-		}
-		deps = append(deps, i)
-	}
-
-	res = filter(res, deps...)
 
 	fmt.Print(res.WIT(nil, ""))
 	return nil
@@ -90,32 +86,44 @@ func findInterface(r *wit.Resolve, pattern string) *wit.Interface {
 	return nil
 }
 
-func filter(res *wit.Resolve, deps ...wit.Node) *wit.Resolve {
-	if len(deps) == 0 {
-		return res
-	}
-
+func filter(res *wit.Resolve, node wit.Node) *wit.Resolve {
 	state := &clone.State{}
 	res = clone.Clone(state, res)
-	deps = clone.Slice(state, deps)
+	node = *clone.Clone(state, &node)
 
 	packages := slices.Clone(res.Packages)
 	res.Packages = nil
 	for _, pkg := range packages {
-		if !dependsOn(pkg, deps...) {
+		if !wit.DependsOn(node, pkg) && !wit.DependsOn(pkg, node) {
 			continue
 		}
 		res.Packages = append(res.Packages, pkg)
 
 		pkg.Worlds.All()(func(name string, w *wit.World) bool {
-			if !dependsOn(w, deps...) {
+			if !wit.DependsOn(w, node) {
 				pkg.Worlds.Delete(name)
+				return true
 			}
+
+			w.Imports.All()(func(name string, i wit.WorldItem) bool {
+				if !wit.DependsOn(node, i) {
+					w.Imports.Delete(name)
+				}
+				return true
+			})
+
+			w.Exports.All()(func(name string, i wit.WorldItem) bool {
+				if !wit.DependsOn(node, i) {
+					w.Exports.Delete(name)
+				}
+				return true
+			})
+
 			return true
 		})
 
 		pkg.Interfaces.All()(func(name string, i *wit.Interface) bool {
-			if !dependsOn(i, deps...) {
+			if !wit.DependsOn(node, i) {
 				pkg.Interfaces.Delete(name)
 			}
 			return true
@@ -126,14 +134,4 @@ func filter(res *wit.Resolve, deps ...wit.Node) *wit.Resolve {
 	// 	len(res.Worlds), len(res.Interfaces), len(res.TypeDefs), len(res.Packages))
 
 	return res
-}
-
-func dependsOn(node wit.Node, deps ...wit.Node) bool {
-	for _, dep := range deps {
-		// fmt.Printf("Does %T depend on %T?\n", node, dep)
-		if wit.DependsOn(node, dep) || wit.DependsOn(dep, node) {
-			return true
-		}
-	}
-	return false
 }
