@@ -56,16 +56,13 @@ func Clone[T any](state *State, v *T) *T {
 	}
 
 	// Check if T implements Clonable
-	var clone *T
 	if clonable, ok := any(*v).(Clonable); ok {
-		c := any(clonable.Clone(state)).(T)
-		clone = &c
-	} else {
-		// Otherwise make shallow copy
-		clone = Shallow(state, v)
+		clone := any(clonable.Clone(state)).(T)
+		return &clone
 	}
 
-	return clone
+	// Otherwise make shallow copy
+	return Shallow(state, v)
 }
 
 // Slice returns a clone of slice s.
