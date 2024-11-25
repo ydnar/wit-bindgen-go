@@ -42,6 +42,30 @@ func (r *Resolve) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
+func (r *Resolve) dependsOn(dep Node) bool {
+	for _, w := range r.Worlds {
+		if DependsOn(w, dep) {
+			return true
+		}
+	}
+	for _, i := range r.Interfaces {
+		if DependsOn(i, dep) {
+			return true
+		}
+	}
+	for _, t := range r.TypeDefs {
+		if DependsOn(t, dep) {
+			return true
+		}
+	}
+	for _, p := range r.Packages {
+		if DependsOn(p, dep) {
+			return true
+		}
+	}
+	return false
+}
+
 // AllFunctions returns a [sequence] that yields each [Function] in a [Resolve].
 // The sequence stops if yield returns false.
 //
@@ -84,13 +108,13 @@ func (w *World) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (w *World) dependsOn(pkg *Package) bool {
-	if w.Package == pkg {
+func (w *World) dependsOn(dep Node) bool {
+	if dep == w || dep == w.Package {
 		return true
 	}
 	var done bool
 	w.AllItems()(func(_ string, i WorldItem) bool {
-		done = DependsOn(i, pkg)
+		done = DependsOn(i, dep)
 		return !done
 	})
 	return done
@@ -220,9 +244,7 @@ func (ref *InterfaceRef) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (ref *InterfaceRef) dependsOn(pkg *Package) bool {
-	return DependsOn(ref.Interface, pkg)
-}
+func (ref *InterfaceRef) dependsOn(dep Node) bool { return dep == ref || DependsOn(ref.Interface, dep) }
 
 // An Interface represents a [collection of types and functions], which are imported into
 // or exported from a [WebAssembly component].
@@ -252,20 +274,20 @@ func (i *Interface) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (i *Interface) dependsOn(pkg *Package) bool {
-	if i.Package == pkg {
+func (i *Interface) dependsOn(dep Node) bool {
+	if dep == i || dep == i.Package {
 		return true
 	}
 	var done bool
 	i.TypeDefs.All()(func(_ string, t *TypeDef) bool {
-		done = DependsOn(t, pkg)
+		done = DependsOn(t, dep)
 		return !done
 	})
 	if done {
 		return true
 	}
 	i.Functions.All()(func(_ string, f *Function) bool {
-		done = DependsOn(f, pkg)
+		done = DependsOn(f, dep)
 		return !done
 	})
 	return done
@@ -326,6 +348,12 @@ func (t *TypeDef) Clone(state *clone.State) clone.Clonable {
 	c.Owner = *clone.Clone(state, &t.Owner)
 	c.Stability = *clone.Clone(state, &t.Stability)
 	return c
+}
+
+func (t *TypeDef) dependsOn(dep Node) bool {
+	return dep == t || dep == t.Owner ||
+		(t.Owner != nil && dep == t.Owner.WITPackage()) ||
+		DependsOn(t.Kind, dep)
 }
 
 // TypeName returns the [WIT] type name for t.
@@ -428,13 +456,6 @@ func (t *TypeDef) Flat() []Type {
 	return t.Kind.Flat()
 }
 
-func (t *TypeDef) dependsOn(pkg *Package) bool {
-	if t.Owner != nil && t.Owner.WITPackage() == pkg {
-		return true
-	}
-	return DependsOn(t.Kind, pkg)
-}
-
 func (t *TypeDef) hasPointer() bool  { return HasPointer(t.Kind) }
 func (t *TypeDef) hasBorrow() bool   { return HasBorrow(t.Kind) }
 func (t *TypeDef) hasResource() bool { return HasResource(t.Kind) }
@@ -485,6 +506,8 @@ func (p *Pointer) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
+func (p *Pointer) dependsOn(dep Node) bool { return dep == p || DependsOn(p.Type, dep) }
+
 // Size returns the [ABI byte size] for [Pointer].
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
@@ -500,10 +523,9 @@ func (*Pointer) Align() uintptr { return 4 }
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (p *Pointer) Flat() []Type { return []Type{PointerTo(p.Type)} }
 
-func (p *Pointer) dependsOn(pkg *Package) bool { return DependsOn(p.Type, pkg) }
-func (*Pointer) hasPointer() bool              { return true }
-func (p *Pointer) hasBorrow() bool             { return HasBorrow(p.Type) }
-func (p *Pointer) hasResource() bool           { return HasResource(p.Type) }
+func (*Pointer) hasPointer() bool    { return true }
+func (p *Pointer) hasBorrow() bool   { return HasBorrow(p.Type) }
+func (p *Pointer) hasResource() bool { return HasResource(p.Type) }
 
 // Record represents a WIT [record type], akin to a struct.
 // It implements the [Node], [ABI], and [TypeDefKind] interfaces.
@@ -519,6 +541,18 @@ func (r *Record) Clone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, r)
 	c.Fields = clone.Slice(state, r.Fields)
 	return c
+}
+
+func (r *Record) dependsOn(dep Node) bool {
+	if dep == r {
+		return true
+	}
+	for _, f := range r.Fields {
+		if DependsOn(f.Type, dep) {
+			return true
+		}
+	}
+	return false
 }
 
 // Size returns the [ABI byte size] for [Record] r.
@@ -553,15 +587,6 @@ func (r *Record) Flat() []Type {
 		flat = append(flat, f.Type.Flat()...)
 	}
 	return flat
-}
-
-func (r *Record) dependsOn(pkg *Package) bool {
-	for _, f := range r.Fields {
-		if DependsOn(f.Type, pkg) {
-			return true
-		}
-	}
-	return false
 }
 
 func (r *Record) hasPointer() bool {
@@ -679,8 +704,8 @@ func (o *Own) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (o *Own) dependsOn(pkg *Package) bool { return DependsOn(o.Type, pkg) }
-func (o *Own) hasResource() bool           { return HasResource(o.Type) }
+func (o *Own) dependsOn(dep Node) bool { return dep == o || DependsOn(o.Type, dep) }
+func (o *Own) hasResource() bool       { return HasResource(o.Type) }
 
 // Borrow represents a WIT [borrowed handle].
 // It implements the [Handle], [Node], [ABI], and [TypeDefKind] interfaces.
@@ -698,9 +723,9 @@ func (b *Borrow) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (b *Borrow) dependsOn(pkg *Package) bool { return DependsOn(b.Type, pkg) }
-func (b *Borrow) hasBorrow() bool             { return true }
-func (b *Borrow) hasResource() bool           { return HasResource(b.Type) }
+func (b *Borrow) dependsOn(dep Node) bool { return dep == b || DependsOn(b.Type, dep) }
+func (b *Borrow) hasBorrow() bool         { return true }
+func (b *Borrow) hasResource() bool       { return HasResource(b.Type) }
 
 // Flags represents a WIT [flags type], stored as a bitfield.
 // It implements the [Node], [ABI], and [TypeDefKind] interfaces.
@@ -855,6 +880,18 @@ func (v *Variant) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
+func (v *Variant) dependsOn(dep Node) bool {
+	if dep == v {
+		return true
+	}
+	for _, t := range v.Types() {
+		if DependsOn(t, dep) {
+			return true
+		}
+	}
+	return false
+}
+
 // Enum attempts to represent [Variant] v as an [Enum].
 // This will only succeed if v has no associated types. If v has
 // associated types, then it will return nil.
@@ -952,15 +989,6 @@ func (v *Variant) maxCaseAlign() uintptr {
 	return a
 }
 
-func (v *Variant) dependsOn(pkg *Package) bool {
-	for _, t := range v.Types() {
-		if DependsOn(t, pkg) {
-			return true
-		}
-	}
-	return false
-}
-
 func (v *Variant) hasPointer() bool {
 	for _, t := range v.Types() {
 		if HasPointer(t) {
@@ -1003,9 +1031,7 @@ func (c *Case) Clone(state *clone.State) clone.Clonable {
 	return cl
 }
 
-func (c *Case) dependsOn(pkg *Package) bool {
-	return DependsOn(c.Type, pkg)
-}
+func (c *Case) dependsOn(dep Node) bool { return dep == c || DependsOn(c.Type, dep) }
 
 // Enum represents a WIT [enum type], which is a [Variant] without associated data.
 // The equivalent in Go is a set of const identifiers declared with iota.
@@ -1214,6 +1240,8 @@ func (l *List) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
+func (l *List) dependsOn(dep Node) bool { return dep == l || DependsOn(l.Type, dep) }
+
 // Size returns the [ABI byte size] for a [List].
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
@@ -1229,10 +1257,9 @@ func (*List) Align() uintptr { return 8 } // [2]int32
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (l *List) Flat() []Type { return []Type{PointerTo(l.Type), U32{}} }
 
-func (l *List) dependsOn(p *Package) bool { return DependsOn(l.Type, p) }
-func (*List) hasPointer() bool            { return true }
-func (l *List) hasBorrow() bool           { return HasBorrow(l.Type) }
-func (l *List) hasResource() bool         { return HasResource(l.Type) }
+func (*List) hasPointer() bool    { return true }
+func (l *List) hasBorrow() bool   { return HasBorrow(l.Type) }
+func (l *List) hasResource() bool { return HasResource(l.Type) }
 
 // Future represents a WIT [future type], expected to be part of [WASI Preview 3].
 // It implements the [Node], [ABI], and [TypeDefKind] interfaces.
@@ -1250,6 +1277,8 @@ func (f *Future) Clone(state *clone.State) clone.Clonable {
 	c.Type = *clone.Clone(state, &f.Type)
 	return c
 }
+
+func (f *Future) dependsOn(dep Node) bool { return dep == f || DependsOn(f.Type, dep) }
 
 // Size returns the [ABI byte size] for a [Future].
 // TODO: what is the ABI size of a future?
@@ -1269,10 +1298,9 @@ func (*Future) Align() uintptr { return 0 }
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (*Future) Flat() []Type { return nil }
 
-func (f *Future) dependsOn(p *Package) bool { return DependsOn(f.Type, p) }
-func (f *Future) hasPointer() bool          { return HasPointer(f.Type) }
-func (f *Future) hasBorrow() bool           { return HasBorrow(f.Type) }
-func (f *Future) hasResource() bool         { return HasResource(f.Type) }
+func (f *Future) hasPointer() bool  { return HasPointer(f.Type) }
+func (f *Future) hasBorrow() bool   { return HasBorrow(f.Type) }
+func (f *Future) hasResource() bool { return HasResource(f.Type) }
 
 // Stream represents a WIT [stream type], expected to be part of [WASI Preview 3].
 // It implements the [Node], [ABI], and [TypeDefKind] interfaces.
@@ -1293,6 +1321,10 @@ func (s *Stream) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
+func (s *Stream) dependsOn(dep Node) bool {
+	return dep == s || DependsOn(s.Element, dep) || DependsOn(s.End, dep)
+}
+
 // Size returns the [ABI byte size] for a [Stream].
 // TODO: what is the ABI size of a stream?
 //
@@ -1311,10 +1343,9 @@ func (*Stream) Align() uintptr { return 0 }
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (*Stream) Flat() []Type { return nil }
 
-func (s *Stream) dependsOn(p *Package) bool { return DependsOn(s.Element, p) || DependsOn(s.End, p) }
-func (s *Stream) hasPointer() bool          { return HasPointer(s.Element) || HasPointer(s.End) }
-func (s *Stream) hasBorrow() bool           { return HasBorrow(s.Element) || HasBorrow(s.End) }
-func (s *Stream) hasResource() bool         { return HasResource(s.Element) || HasResource(s.End) }
+func (s *Stream) hasPointer() bool  { return HasPointer(s.Element) || HasPointer(s.End) }
+func (s *Stream) hasBorrow() bool   { return HasBorrow(s.Element) || HasBorrow(s.End) }
+func (s *Stream) hasResource() bool { return HasResource(s.Element) || HasResource(s.End) }
 
 // TypeOwner is the interface implemented by any type that can own a TypeDef,
 // currently [World] and [Interface].
@@ -1598,14 +1629,17 @@ func (f *Function) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (f *Function) dependsOn(pkg *Package) bool {
+func (f *Function) dependsOn(dep Node) bool {
+	if dep == f {
+		return true
+	}
 	for _, p := range f.Params {
-		if DependsOn(p.Type, pkg) {
+		if DependsOn(p.Type, dep) {
 			return true
 		}
 	}
 	for _, r := range f.Results {
-		if DependsOn(r.Type, pkg) {
+		if DependsOn(r.Type, dep) {
 			return true
 		}
 	}
@@ -1806,41 +1840,45 @@ func (p *Package) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (p *Package) dependsOn(pkg *Package) bool {
-	if pkg == p {
+func (p *Package) dependsOn(dep Node) bool {
+	if dep == p {
 		return true
 	}
 	var done bool
 	p.Interfaces.All()(func(_ string, i *Interface) bool {
-		done = DependsOn(i, pkg)
+		done = DependsOn(i, dep)
 		return !done
 	})
 	if done {
 		return true
 	}
 	p.Worlds.All()(func(_ string, w *World) bool {
-		done = DependsOn(w, pkg)
+		done = DependsOn(w, dep)
 		return !done
 	})
 	return done
 }
 
-// DependsOn returns true if [Node] node depends on [Package] p.
-// Because a package implicitly depends on itself, this returns true if node == p.
-func DependsOn(node Node, p *Package) bool {
-	if node == nil {
+// Returns true if node == dep.
+// Returns false if node or dep are nil.
+func DependsOn(node, dep Node) bool {
+	if node == nil || dep == nil {
 		return false
 	}
-	if node == p {
+	if node == dep {
 		return true
 	}
 	if k, ok := node.(TypeDefKind); ok {
 		node = Despecialize(k)
 	}
-	if d, ok := node.(interface{ dependsOn(*Package) bool }); ok {
-		return d.dependsOn(p)
+	if d, ok := node.(dependent); ok {
+		return d.dependsOn(dep)
 	}
 	return false
+}
+
+type dependent interface {
+	dependsOn(dep Node) bool
 }
 
 func comparePackages(a, b *Package) int {
