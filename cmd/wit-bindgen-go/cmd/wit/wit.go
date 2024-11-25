@@ -95,20 +95,31 @@ func filter(res *wit.Resolve, deps ...wit.Node) *wit.Resolve {
 		return res
 	}
 
-	// Clone Resolve and dependencies
 	state := &clone.State{}
 	res = clone.Clone(state, res)
-	for i := range deps {
-		deps[i] = *clone.Clone(state, &deps[i])
-	}
+	deps = clone.Slice(state, deps)
 
-	// Filter all packages in Resolve
 	packages := slices.Clone(res.Packages)
 	res.Packages = nil
 	for _, pkg := range packages {
-		if dependsOn(pkg, deps...) {
-			res.Packages = append(res.Packages, pkg)
+		if !dependsOn(pkg, deps...) {
+			continue
 		}
+		res.Packages = append(res.Packages, pkg)
+
+		pkg.Worlds.All()(func(name string, w *wit.World) bool {
+			if !dependsOn(w, deps...) {
+				pkg.Worlds.Delete(name)
+			}
+			return true
+		})
+
+		pkg.Interfaces.All()(func(name string, i *wit.Interface) bool {
+			if !dependsOn(i, deps...) {
+				pkg.Interfaces.Delete(name)
+			}
+			return true
+		})
 	}
 
 	// fmt.Printf("Resolve: %d %d %d %d\n\n",
@@ -125,39 +136,4 @@ func dependsOn(node wit.Node, deps ...wit.Node) bool {
 		}
 	}
 	return false
-}
-
-func DELETE_ME() {
-	var res *wit.Resolve
-	var w *wit.World
-	var i *wit.Interface
-
-	// TODO: generalize this
-	if w != nil || i != nil {
-		res2 := &wit.Resolve{}
-		res2.Worlds = []*wit.World{res.Worlds[0]}
-		for _, dependent := range res.Worlds {
-			if (w == nil || wit.DependsOn(dependent, w)) && (i == nil || wit.DependsOn(dependent, i)) {
-				fmt.Printf("world %v\n...depends on interface %v\n\n", dependent, i)
-				res2.Worlds = append(res2.Worlds, dependent)
-			}
-		}
-		for _, dependent := range res.Interfaces {
-			if (w == nil || wit.DependsOn(dependent, w)) && (i == nil || wit.DependsOn(dependent, i)) {
-				res2.Interfaces = append(res2.Interfaces, dependent)
-			}
-		}
-		for _, dependent := range res.TypeDefs {
-			if (w == nil || wit.DependsOn(dependent, w)) && (i == nil || wit.DependsOn(dependent, i)) {
-				res2.TypeDefs = append(res2.TypeDefs, dependent)
-			}
-		}
-		for _, pkg := range res.Packages {
-			if (w == nil || wit.DependsOn(w, pkg)) && (i == nil || wit.DependsOn(i, pkg)) {
-				res2.Packages = append(res2.Packages, pkg)
-			}
-		}
-		fmt.Printf("Resolve: %v\n", res2)
-		res = res2
-	}
 }
