@@ -244,7 +244,9 @@ func (ref *InterfaceRef) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (ref *InterfaceRef) dependsOn(dep Node) bool { return dep == ref || DependsOn(ref.Interface, dep) }
+func (ref *InterfaceRef) dependsOn(dep Node) bool {
+	return dep == ref || DependsOn(ref.Interface, dep)
+}
 
 // An Interface represents a [collection of types and functions], which are imported into
 // or exported from a [WebAssembly component].
@@ -1867,6 +1869,10 @@ func DependsOn(node, dep Node) bool {
 	}
 	if node == dep {
 		return true
+	}
+	// Dereference InterfaceRefs
+	if rep, ok := dep.(*InterfaceRef); ok {
+		dep = rep.Interface
 	}
 	if k, ok := node.(TypeDefKind); ok {
 		node = Despecialize(k)
