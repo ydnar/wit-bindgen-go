@@ -3,11 +3,13 @@ package wit
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	"github.com/urfave/cli/v3"
 
 	"go.bytecodealliance.org/internal/witcli"
 	"go.bytecodealliance.org/wit"
+	"go.bytecodealliance.org/wit/clone"
 )
 
 // Command is the CLI command for wit.
@@ -46,26 +48,27 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	var w *wit.World
-	world := cmd.String("world")
-	if world != "" {
-		w = findWorld(res, world)
+	var deps []wit.Node
+
+	if world := cmd.String("world"); world != "" {
+		w := findWorld(res, world)
 		if w == nil {
 			return fmt.Errorf("world %s not found", world)
 		}
+		deps = append(deps, w)
 	}
 
-	var i *wit.Interface
-	iface := cmd.String("interface")
-	if iface != "" {
-		i = findInterface(res, iface)
+	if face := cmd.String("interface"); face != "" {
+		i := findInterface(res, face)
 		if i == nil {
-			return fmt.Errorf("interface %s not found", iface)
+			return fmt.Errorf("interface %s not found", face)
 		}
+		deps = append(deps, i)
 	}
-	_ = i
 
-	fmt.Print(res.WIT(wit.Filter(w, i), ""))
+	res = filter(res, deps...)
+
+	fmt.Print(res.WIT(nil, ""))
 	return nil
 }
 
@@ -85,4 +88,76 @@ func findInterface(r *wit.Resolve, pattern string) *wit.Interface {
 		}
 	}
 	return nil
+}
+
+func filter(res *wit.Resolve, deps ...wit.Node) *wit.Resolve {
+	if len(deps) == 0 {
+		return res
+	}
+
+	// Clone Resolve and dependencies
+	state := &clone.State{}
+	res = clone.Clone(state, res)
+	for i := range deps {
+		deps[i] = *clone.Clone(state, &deps[i])
+	}
+
+	// Filter all packages in Resolve
+	packages := slices.Clone(res.Packages)
+	res.Packages = nil
+	for _, pkg := range packages {
+		if dependsOn(pkg, deps...) {
+			res.Packages = append(res.Packages, pkg)
+		}
+	}
+
+	// fmt.Printf("Resolve: %d %d %d %d\n\n",
+	// 	len(res.Worlds), len(res.Interfaces), len(res.TypeDefs), len(res.Packages))
+
+	return res
+}
+
+func dependsOn(node wit.Node, deps ...wit.Node) bool {
+	for _, dep := range deps {
+		// fmt.Printf("Does %T depend on %T?\n", node, dep)
+		if wit.DependsOn(node, dep) || wit.DependsOn(dep, node) {
+			return true
+		}
+	}
+	return false
+}
+
+func DELETE_ME() {
+	var res *wit.Resolve
+	var w *wit.World
+	var i *wit.Interface
+
+	// TODO: generalize this
+	if w != nil || i != nil {
+		res2 := &wit.Resolve{}
+		res2.Worlds = []*wit.World{res.Worlds[0]}
+		for _, dependent := range res.Worlds {
+			if (w == nil || wit.DependsOn(dependent, w)) && (i == nil || wit.DependsOn(dependent, i)) {
+				fmt.Printf("world %v\n...depends on interface %v\n\n", dependent, i)
+				res2.Worlds = append(res2.Worlds, dependent)
+			}
+		}
+		for _, dependent := range res.Interfaces {
+			if (w == nil || wit.DependsOn(dependent, w)) && (i == nil || wit.DependsOn(dependent, i)) {
+				res2.Interfaces = append(res2.Interfaces, dependent)
+			}
+		}
+		for _, dependent := range res.TypeDefs {
+			if (w == nil || wit.DependsOn(dependent, w)) && (i == nil || wit.DependsOn(dependent, i)) {
+				res2.TypeDefs = append(res2.TypeDefs, dependent)
+			}
+		}
+		for _, pkg := range res.Packages {
+			if (w == nil || wit.DependsOn(w, pkg)) && (i == nil || wit.DependsOn(i, pkg)) {
+				res2.Packages = append(res2.Packages, pkg)
+			}
+		}
+		fmt.Printf("Resolve: %v\n", res2)
+		res = res2
+	}
 }
