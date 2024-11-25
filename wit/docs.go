@@ -41,3 +41,8 @@
 // [WebAssembly Interface Type]: https://component-model.bytecodealliance.org/design/wit.html
 // [Component]: https://component-model.bytecodealliance.org/introduction.html
 package wit
+
+// Docs represent WIT documentation text extracted from comments.
+type Docs struct {
+	Contents string // may be empty
+}
