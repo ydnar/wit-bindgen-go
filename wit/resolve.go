@@ -34,12 +34,12 @@ type Resolve struct {
 // Clone implements [clone.Clonable].
 // The resulting [Resolve] and its contents may be freely modified.
 func (r *Resolve) Clone(state *clone.State) clone.Clonable {
-	c := *r
+	c := clone.Shallow(state, r)
 	c.Worlds = clone.Slice(state, r.Worlds)
 	c.Interfaces = clone.Slice(state, r.Interfaces)
 	c.TypeDefs = clone.Slice(state, r.TypeDefs)
 	c.Packages = clone.Slice(state, r.Packages)
-	return &c
+	return c
 }
 
 // AllFunctions returns a [sequence] that yields each [Function] in a [Resolve].
@@ -76,12 +76,12 @@ type World struct {
 
 // Clone implements [clone.Clonable].
 func (w *World) Clone(state *clone.State) clone.Clonable {
-	c := *w
+	c := clone.Shallow(state, w)
 	c.Imports = *clone.Clone(state, &w.Imports)
 	c.Exports = *clone.Clone(state, &w.Exports)
 	c.Package = *clone.Clone(state, &c.Package)
 	c.Stability = *clone.Clone(state, &c.Stability)
-	return &c
+	return c
 }
 
 func (w *World) dependsOn(pkg *Package) bool {
@@ -214,10 +214,10 @@ type InterfaceRef struct {
 
 // Clone implements [clone.Clonable].
 func (ref *InterfaceRef) Clone(state *clone.State) clone.Clonable {
-	c := *ref
+	c := clone.Shallow(state, ref)
 	c.Interface = clone.Clone(state, ref.Interface)
 	c.Stability = *clone.Clone(state, &c.Stability)
-	return &c
+	return c
 }
 
 func (ref *InterfaceRef) dependsOn(pkg *Package) bool {
@@ -243,13 +243,13 @@ type Interface struct {
 
 // Clone implements [clone.Clonable].
 func (i *Interface) Clone(state *clone.State) clone.Clonable {
-	c := *i
+	c := clone.Shallow(state, i)
 	c.Name = clone.Clone(state, c.Name)
 	c.TypeDefs = *clone.Clone(state, &i.TypeDefs)
 	c.Functions = *clone.Clone(state, &i.Functions)
 	c.Package = clone.Clone(state, i.Package)
 	c.Stability = *clone.Clone(state, &i.Stability)
-	return &c
+	return c
 }
 
 func (i *Interface) dependsOn(pkg *Package) bool {
@@ -321,11 +321,11 @@ type TypeDef struct {
 
 // Clone implements [clone.Clonable].
 func (t *TypeDef) Clone(state *clone.State) clone.Clonable {
-	c := *t
+	c := clone.Shallow(state, t)
 	c.Kind = *clone.Clone(state, &t.Kind)
 	c.Owner = *clone.Clone(state, &t.Owner)
 	c.Stability = *clone.Clone(state, &t.Stability)
-	return &c
+	return c
 }
 
 // TypeName returns the [WIT] type name for t.
@@ -480,9 +480,9 @@ type Pointer struct {
 
 // Clone implements [clone.Clonable].
 func (p *Pointer) Clone(state *clone.State) clone.Clonable {
-	c := *p
+	c := clone.Shallow(state, p)
 	c.Type = *clone.Clone(state, &p.Type)
-	return &c
+	return c
 }
 
 // Size returns the [ABI byte size] for [Pointer].
@@ -516,9 +516,9 @@ type Record struct {
 
 // Clone implements [clone.Clonable].
 func (r *Record) Clone(state *clone.State) clone.Clonable {
-	c := *r
+	c := clone.Shallow(state, r)
 	c.Fields = clone.Slice(state, r.Fields)
-	return &c
+	return c
 }
 
 // Size returns the [ABI byte size] for [Record] r.
@@ -600,9 +600,9 @@ type Field struct {
 
 // Clone implements [clone.Clonable].
 func (f *Field) Clone(state *clone.State) clone.Clonable {
-	c := *f
+	c := clone.Shallow(state, f)
 	c.Type = *clone.Clone(state, &f.Type)
-	return &c
+	return c
 }
 
 // Resource represents a WIT [resource type].
@@ -674,9 +674,9 @@ type Own struct {
 
 // Clone implements [clone.Clonable].
 func (o *Own) Clone(state *clone.State) clone.Clonable {
-	c := *o
+	c := clone.Shallow(state, o)
 	c.Type = *clone.Clone(state, &o.Type)
-	return &c
+	return c
 }
 
 func (o *Own) dependsOn(pkg *Package) bool { return DependsOn(o.Type, pkg) }
@@ -693,9 +693,9 @@ type Borrow struct {
 
 // Clone implements [clone.Clonable].
 func (b *Borrow) Clone(state *clone.State) clone.Clonable {
-	c := *b
+	c := clone.Shallow(state, b)
 	c.Type = *clone.Clone(state, &b.Type)
-	return &c
+	return c
 }
 
 func (b *Borrow) dependsOn(pkg *Package) bool { return DependsOn(b.Type, pkg) }
@@ -713,9 +713,9 @@ type Flags struct {
 
 // Clone implements [clone.Clonable].
 func (f *Flags) Clone(state *clone.State) clone.Clonable {
-	c := *f
+	c := clone.Shallow(state, f)
 	c.Flags = clone.Slice(state, f.Flags)
-	return &c
+	return c
 }
 
 // Size returns the [ABI byte size] of [Flags] f.
@@ -777,9 +777,9 @@ type Tuple struct {
 
 // Clone implements [clone.Clonable].
 func (t *Tuple) Clone(state *clone.State) clone.Clonable {
-	c := *t
+	c := clone.Shallow(state, t)
 	c.Types = clone.Slice(state, t.Types)
-	return &c
+	return c
 }
 
 // Type returns a non-nil [Type] if all types in t
@@ -850,9 +850,9 @@ type Variant struct {
 
 // Clone implements [clone.Clonable].
 func (v *Variant) Clone(state *clone.State) clone.Clonable {
-	c := *v
+	c := clone.Shallow(state, v)
 	c.Cases = clone.Slice(state, v.Cases)
-	return &c
+	return c
 }
 
 // Enum attempts to represent [Variant] v as an [Enum].
@@ -998,9 +998,9 @@ type Case struct {
 
 // Clone implements [clone.Clonable].
 func (c *Case) Clone(state *clone.State) clone.Clonable {
-	cl := *c
+	cl := clone.Shallow(state, c)
 	cl.Type = *clone.Clone(state, &c.Type)
-	return &cl
+	return cl
 }
 
 func (c *Case) dependsOn(pkg *Package) bool {
@@ -1019,9 +1019,9 @@ type Enum struct {
 
 // Clone implements [clone.Clonable].
 func (e *Enum) Clone(state *clone.State) clone.Clonable {
-	c := *e
+	c := clone.Shallow(state, e)
 	c.Cases = clone.Slice(state, e.Cases)
-	return &c
+	return c
 }
 
 // Despecialize despecializes [Enum] e into a [Variant] with no associated types.
@@ -1085,9 +1085,9 @@ type Option struct {
 
 // Clone implements [clone.Clonable].
 func (o *Option) Clone(state *clone.State) clone.Clonable {
-	c := *o
+	c := clone.Shallow(state, o)
 	c.Type = *clone.Clone(state, &o.Type)
-	return &c
+	return c
 }
 
 // Despecialize despecializes [Option] o into a [Variant] with two cases, "none" and "some".
@@ -1142,10 +1142,10 @@ type Result struct {
 
 // Clone implements [clone.Clonable].
 func (r *Result) Clone(state *clone.State) clone.Clonable {
-	c := *r
+	c := clone.Shallow(state, r)
 	c.OK = *clone.Clone(state, &r.OK)
 	c.Err = *clone.Clone(state, &r.Err)
-	return &c
+	return c
 }
 
 // Despecialize despecializes [Result] o into a [Variant] with two cases, "ok" and "error".
@@ -1209,9 +1209,9 @@ type List struct {
 
 // Clone implements [clone.Clonable].
 func (l *List) Clone(state *clone.State) clone.Clonable {
-	c := *l
+	c := clone.Shallow(state, l)
 	c.Type = *clone.Clone(state, &l.Type)
-	return &c
+	return c
 }
 
 // Size returns the [ABI byte size] for a [List].
@@ -1246,9 +1246,9 @@ type Future struct {
 
 // Clone implements [clone.Clonable].
 func (f *Future) Clone(state *clone.State) clone.Clonable {
-	c := *f
+	c := clone.Shallow(state, f)
 	c.Type = *clone.Clone(state, &f.Type)
-	return &c
+	return c
 }
 
 // Size returns the [ABI byte size] for a [Future].
@@ -1287,10 +1287,10 @@ type Stream struct {
 
 // Clone implements [clone.Clonable].
 func (s *Stream) Clone(state *clone.State) clone.Clonable {
-	c := *s
+	c := clone.Shallow(state, s)
 	c.Element = *clone.Clone(state, &s.Element)
 	c.End = *clone.Clone(state, &s.End)
-	return &c
+	return c
 }
 
 // Size returns the [ABI byte size] for a [Stream].
@@ -1590,12 +1590,12 @@ type Function struct {
 
 // Clone implements [clone.Clonable].
 func (f *Function) Clone(state *clone.State) clone.Clonable {
-	c := *f
+	c := clone.Shallow(state, f)
 	c.Kind = *clone.Clone(state, &f.Kind)
 	c.Params = clone.Slice(state, f.Params)
 	c.Results = clone.Slice(state, f.Results)
 	c.Stability = *clone.Clone(state, &f.Stability)
-	return &c
+	return c
 }
 
 func (f *Function) dependsOn(pkg *Package) bool {
@@ -1738,9 +1738,9 @@ type Method struct {
 
 // Clone implements [clone.Clonable].
 func (m *Method) Clone(state *clone.State) clone.Clonable {
-	c := *m
+	c := clone.Shallow(state, m)
 	c.Type = *clone.Clone(state, &m.Type)
-	return &c
+	return c
 }
 
 // Static represents a function that is a static method of its associated [Type].
@@ -1751,9 +1751,9 @@ type Static struct {
 
 // Clone implements [clone.Clonable].
 func (s *Static) Clone(state *clone.State) clone.Clonable {
-	c := *s
+	c := clone.Shallow(state, s)
 	c.Type = *clone.Clone(state, &s.Type)
-	return &c
+	return c
 }
 
 // Constructor represents a function that is a constructor for its associated [Type].
@@ -1764,9 +1764,9 @@ type Constructor struct {
 
 // Clone implements [clone.Clonable].
 func (c *Constructor) Clone(state *clone.State) clone.Clonable {
-	cl := *c
+	cl := clone.Shallow(state, c)
 	cl.Type = *clone.Clone(state, &c.Type)
-	return &cl
+	return cl
 }
 
 // Param represents a parameter to or the result of a [Function].
@@ -1778,9 +1778,9 @@ type Param struct {
 
 // Clone implements [clone.Clonable].
 func (p *Param) Clone(state *clone.State) clone.Clonable {
-	c := *p
+	c := clone.Shallow(state, p)
 	c.Type = *clone.Clone(state, &p.Type)
-	return &c
+	return c
 }
 
 // Package represents a [WIT package] within a [Resolve].
@@ -1800,10 +1800,10 @@ type Package struct {
 
 // Clone implements [clone.Clonable].
 func (p *Package) Clone(state *clone.State) clone.Clonable {
-	c := *p
+	c := clone.Shallow(state, p)
 	c.Interfaces = *clone.Clone(state, &p.Interfaces)
 	c.Worlds = *clone.Clone(state, &p.Worlds)
-	return &c
+	return c
 }
 
 func (p *Package) dependsOn(pkg *Package) bool {
@@ -1880,9 +1880,9 @@ type Stable struct {
 
 // Clone implements [clone.Clonable].
 func (s *Stable) Clone(state *clone.State) clone.Clonable {
-	c := *s
+	c := clone.Shallow(state, s)
 	c.Deprecated = clone.Clone(state, s.Deprecated)
-	return &c
+	return c
 }
 
 // Unstable represents an unstable WIT feature defined by name.
@@ -1894,9 +1894,9 @@ type Unstable struct {
 
 // Clone implements [clone.Clonable].
 func (u *Unstable) Clone(state *clone.State) clone.Clonable {
-	c := *u
+	c := clone.Shallow(state, u)
 	c.Deprecated = clone.Clone(state, u.Deprecated)
-	return &c
+	return c
 }
 
 // Docs represent WIT documentation text extracted from comments.

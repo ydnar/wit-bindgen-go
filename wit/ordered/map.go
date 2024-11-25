@@ -17,12 +17,9 @@ type Map[K comparable, V any] struct {
 
 // Clone implements [clone.Clonable].
 func (m *Map[K, V]) Clone(state *clone.State) clone.Clonable {
-	// c := *m
-	// c.l = *clone.Clone(state, &m.l)
-	// c.m = clone.Map(state, m.m)
 	var c Map[K, V]
 	m.All()(func(k K, v V) bool {
-		// c.Set(*clone.Clone(state, &k), *clone.Clone(state, &v))
+		c.Set(*clone.Clone(state, &k), *clone.Clone(state, &v))
 		return true
 	})
 	return &c

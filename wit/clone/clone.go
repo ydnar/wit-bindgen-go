@@ -4,6 +4,19 @@ import (
 	"unsafe"
 )
 
+// Shallow returns a shallow clone of pointer v, and
+// records the cloned pointer in state.
+// This is typically the first call in a Clone method.
+func Shallow[T any](state *State, v *T) *T {
+	if clone := state.load(v); clone != nil {
+		return clone.(*T)
+	}
+	c := *v
+	clone := &c
+	state.store(v, clone)
+	return clone
+}
+
 // Clone returns a clone of pointer v.
 // If v was previously cloned, the earlier copy will be returned.
 // If *T implements [Clonable], the value of Clone will be returned.
@@ -24,9 +37,6 @@ func Clone[T any](state *State, v *T) *T {
 	// Check if *T implements Clonable
 	if clonable, ok := any(v).(Clonable); ok {
 		clone := any(clonable.Clone(state)).(*T)
-		if memoizable(v) {
-			state.store(v, clone)
-		}
 		return clone
 	}
 
@@ -39,25 +49,23 @@ func Clone[T any](state *State, v *T) *T {
 
 	// Check if T was cloned
 	if memoizable(*v) {
-		if clone := state.load(*v); clone != nil {
-			clone := clone.(T)
+		if c := state.load(*v); c != nil {
+			clone := c.(T)
 			return &clone
 		}
 	}
 
 	// Check if T implements Clonable
-	var clone T
+	var clone *T
 	if clonable, ok := any(*v).(Clonable); ok {
-		clone = clonable.Clone(state).(T)
+		c := any(clonable.Clone(state)).(T)
+		clone = &c
 	} else {
 		// Otherwise make shallow copy
-		clone = *v
+		clone = Shallow(state, v)
 	}
 
-	if memoizable(*v) {
-		state.store(*v, clone)
-	}
-	return &clone
+	return clone
 }
 
 // Slice returns a clone of slice s.
