@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"go.bytecodealliance.org/internal/relpath"
+	"go.bytecodealliance.org/wit/clone"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
@@ -51,6 +52,28 @@ func loadTestdata(f func(path string, res *Resolve) error) error {
 		}
 		return f(path, res)
 	}, "*.wit.json", "*.wit.md.json")
+}
+
+func TestClone(t *testing.T) {
+	err := loadTestdata(func(path string, res *Resolve) error {
+		t.Run(path, func(t *testing.T) {
+			want := res.WIT(nil, "")
+			c := clone.Clone(&clone.State{}, res)
+			got := c.WIT(nil, "")
+			if got != want {
+				// t.Errorf("clone %p != original %p", c, res)
+
+				dmp := diffmatchpatch.New()
+				dmp.PatchMargin = 3
+				diffs := dmp.DiffMain(want, got, false)
+				t.Errorf("value for clone did not match expected:\n%v", dmp.DiffPrettyText(diffs))
+			}
+		})
+		return nil
+	})
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 func TestGoldenWITFiles(t *testing.T) {

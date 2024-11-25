@@ -1,7 +1,6 @@
 package clone
 
 import (
-	"slices"
 	"unsafe"
 )
 
@@ -25,7 +24,9 @@ func Clone[T any](state *State, v *T) *T {
 	// Check if *T implements Clonable
 	if clonable, ok := any(v).(Clonable); ok {
 		clone := any(clonable.Clone(state)).(*T)
-		state.store(v, clone)
+		if memoizable(v) {
+			state.store(v, clone)
+		}
 		return clone
 	}
 
@@ -37,9 +38,11 @@ func Clone[T any](state *State, v *T) *T {
 	}
 
 	// Check if T was cloned
-	if clone := state.load(*v); clone != nil {
-		clone := clone.(T)
-		return &clone
+	if memoizable(*v) {
+		if clone := state.load(*v); clone != nil {
+			clone := clone.(T)
+			return &clone
+		}
 	}
 
 	// Check if T implements Clonable
@@ -51,8 +54,9 @@ func Clone[T any](state *State, v *T) *T {
 		clone = *v
 	}
 
-	state.store(*v, clone)
-
+	if memoizable(*v) {
+		state.store(*v, clone)
+	}
 	return &clone
 }
 
@@ -63,9 +67,24 @@ func Slice[S ~[]T, T any](state *State, s S) S {
 	if s == nil {
 		return s
 	}
-	clone := slices.Clone(s)
-	for i := range clone {
-		clone[i] = *Clone(state, &clone[i])
+	clone := make(S, len(s))
+	for i := range s {
+		clone[i] = *Clone(state, &s[i])
+	}
+	return clone
+}
+
+// Map returns a clone of map m.
+// Both keys and values of m will be passed to [Clone].
+// Note: if  K is not a value type (e.g. int, string), the cloned map may not have identical keys to m.
+// The supplied [State] must not be nil.
+func Map[M ~map[K]V, K comparable, V any](state *State, m M) M {
+	if m == nil {
+		return nil
+	}
+	clone := make(M, len(m))
+	for k, v := range m {
+		clone[*Clone(state, &k)] = *Clone(state, &v)
 	}
 	return clone
 }
@@ -86,20 +105,20 @@ type State struct {
 }
 
 func (state *State) load(v any) any {
-	if !memoizable(v) {
-		return nil
+	clone, ok := state.clones[v]
+	if ok {
+		// fmt.Printf("loaded clone of type %T (%p -> %p)\n", v, v, clone)
 	}
-	return state.clones[v]
+	return clone
 }
 
 func (state *State) store(v, clone any) {
-	if !memoizable(v) {
-		return
-	}
 	if state.clones == nil {
 		state.clones = make(map[any]any)
 	}
+	// fmt.Printf("stored clone of type %T (%p -> %p)\n", v, v, clone)
 	state.clones[v] = clone
+	state.clones[clone] = clone // handle circular data structures
 }
 
 func memoizable[T any](v T) bool {

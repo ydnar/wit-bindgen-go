@@ -2,6 +2,7 @@ package ordered
 
 import (
 	"go.bytecodealliance.org/internal/codec"
+	"go.bytecodealliance.org/wit/clone"
 	"go.bytecodealliance.org/wit/iterate"
 )
 
@@ -12,6 +13,19 @@ import (
 type Map[K comparable, V any] struct {
 	l list[K, V]
 	m map[K]*element[K, V]
+}
+
+// Clone implements [clone.Clonable].
+func (m *Map[K, V]) Clone(state *clone.State) clone.Clonable {
+	// c := *m
+	// c.l = *clone.Clone(state, &m.l)
+	// c.m = clone.Map(state, m.m)
+	var c Map[K, V]
+	m.All()(func(k K, v V) bool {
+		// c.Set(*clone.Clone(state, &k), *clone.Clone(state, &v))
+		return true
+	})
+	return &c
 }
 
 // Get returns a value of type V if it exists in the map, otherwise the zero value.

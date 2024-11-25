@@ -1,9 +1,18 @@
 package ordered
 
-import "go.bytecodealliance.org/wit/iterate"
+import (
+	"go.bytecodealliance.org/wit/clone"
+	"go.bytecodealliance.org/wit/iterate"
+)
 
 type list[K, V any] struct {
 	root element[K, V]
+}
+
+func (l *list[K, V]) Clone(state *clone.State) clone.Clonable {
+	c := *l
+	c.root = *clone.Clone(state, &l.root)
+	return &c
 }
 
 func (l *list[K, V]) all() iterate.Seq2[K, V] {
@@ -55,4 +64,13 @@ type element[K, V any] struct {
 	prev, next *element[K, V]
 	k          K
 	v          V
+}
+
+func (e *element[K, V]) Clone(state *clone.State) clone.Clonable {
+	c := *e
+	c.prev = clone.Clone(state, e.prev)
+	c.next = clone.Clone(state, e.next)
+	c.k = *clone.Clone(state, &e.k)
+	c.v = *clone.Clone(state, &e.v)
+	return &c
 }
