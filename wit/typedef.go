@@ -19,12 +19,12 @@ type TypeDef struct {
 	Docs      Docs
 }
 
-// DeepClone implements [clone.Clonable].
-func (t *TypeDef) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, t)
-	c.Kind = *clone.Clone(state, &t.Kind)
-	c.Owner = *clone.Clone(state, &t.Owner)
-	c.Stability = *clone.Clone(state, &t.Stability)
+// DeepClone implements [clone.DeepClonable].
+func (t *TypeDef) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, t)
+	c.Kind = *clone.DeepClone(state, &t.Kind)
+	c.Owner = *clone.DeepClone(state, &t.Owner)
+	c.Stability = *clone.DeepClone(state, &t.Stability)
 	return c
 }
 

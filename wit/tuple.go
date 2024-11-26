@@ -17,9 +17,9 @@ type Tuple struct {
 	Types []Type
 }
 
-// DeepClone implements [clone.Clonable].
-func (t *Tuple) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, t)
+// DeepClone implements [clone.DeepClonable].
+func (t *Tuple) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, t)
 	c.Types = clone.Slice(state, t.Types)
 	return c
 }

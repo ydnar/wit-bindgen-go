@@ -11,9 +11,9 @@ type Flags struct {
 	Flags []Flag
 }
 
-// DeepClone implements [clone.Clonable].
-func (f *Flags) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, f)
+// DeepClone implements [clone.DeepClonable].
+func (f *Flags) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, f)
 	c.Flags = clone.Slice(state, f.Flags)
 	return c
 }

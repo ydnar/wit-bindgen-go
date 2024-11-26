@@ -34,10 +34,10 @@ func (r *Resolve) Clone() *Resolve {
 	return &c
 }
 
-// DeepClone implements [clone.Clonable].
+// DeepClone implements [clone.DeepClonable].
 // The resulting [Resolve] and its contents may be freely modified.
-func (r *Resolve) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, r)
+func (r *Resolve) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, r)
 	c.Worlds = clone.Slice(state, r.Worlds)
 	c.Interfaces = clone.Slice(state, r.Interfaces)
 	c.TypeDefs = clone.Slice(state, r.TypeDefs)

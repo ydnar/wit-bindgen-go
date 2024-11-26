@@ -22,11 +22,19 @@ type Package struct {
 	Docs       Docs
 }
 
-// DeepClone implements [clone.Clonable].
-func (p *Package) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, p)
-	c.Interfaces = *clone.Clone(state, &p.Interfaces)
-	c.Worlds = *clone.Clone(state, &p.Worlds)
+// Clone returns a shallow clone of p.
+func (p *Package) Clone() *Package {
+	c := *p
+	c.Interfaces = *p.Interfaces.Clone()
+	c.Worlds = *p.Worlds.Clone()
+	return &c
+}
+
+// DeepClone implements [clone.DeepClonable].
+func (p *Package) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, p)
+	c.Interfaces = *clone.DeepClone(state, &p.Interfaces)
+	c.Worlds = *clone.DeepClone(state, &p.Worlds)
 	return c
 }
 

@@ -11,9 +11,9 @@ type Record struct {
 	Fields []Field
 }
 
-// DeepClone implements [clone.Clonable].
-func (r *Record) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, r)
+// DeepClone implements [clone.DeepClonable].
+func (r *Record) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, r)
 	c.Fields = clone.Slice(state, r.Fields)
 	return c
 }
@@ -98,9 +98,9 @@ type Field struct {
 	Docs Docs
 }
 
-// DeepClone implements [clone.Clonable].
-func (f *Field) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, f)
-	c.Type = *clone.Clone(state, &f.Type)
+// DeepClone implements [clone.DeepClonable].
+func (f *Field) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, f)
+	c.Type = *clone.DeepClone(state, &f.Type)
 	return c
 }

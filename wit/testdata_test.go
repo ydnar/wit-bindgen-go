@@ -58,7 +58,7 @@ func TestClone(t *testing.T) {
 	err := loadTestdata(func(path string, res *Resolve) error {
 		t.Run(path, func(t *testing.T) {
 			want := res.WIT(nil, "")
-			c := clone.Clone(&clone.State{}, res)
+			c := clone.DeepClone(&clone.State{}, res)
 			got := c.WIT(nil, "")
 			if got != want {
 				// t.Errorf("clone %p != original %p", c, res)

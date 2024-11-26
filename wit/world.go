@@ -29,13 +29,13 @@ func (w *World) Clone() *World {
 	return &c
 }
 
-// DeepClone implements [clone.Clonable].
-func (w *World) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, w)
-	c.Imports = *clone.Clone(state, &w.Imports)
-	c.Exports = *clone.Clone(state, &w.Exports)
-	c.Package = *clone.Clone(state, &c.Package)
-	c.Stability = *clone.Clone(state, &c.Stability)
+// DeepClone implements [clone.DeepClonable].
+func (w *World) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, w)
+	c.Imports = *clone.DeepClone(state, &w.Imports)
+	c.Exports = *clone.DeepClone(state, &w.Exports)
+	c.Package = *clone.DeepClone(state, &c.Package)
+	c.Stability = *clone.DeepClone(state, &c.Stability)
 	return c
 }
 

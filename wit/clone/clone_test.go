@@ -29,7 +29,7 @@ func pointerTo[T any](v T) *T {
 }
 
 func roundTrip[T any](t *testing.T, state *State, v *T) {
-	c := Clone(state, v)
+	c := DeepClone(state, v)
 	// fmt.Printf("Clone(%T): %T\n", v, c)
 	if !reflect.DeepEqual(v, c) {
 		t.Errorf("Clone(%#v): %#v", v, c)
@@ -44,7 +44,7 @@ func (e *Example1) String() string {
 	return e.s
 }
 
-func (e *Example1) DeepClone(*State) Clonable {
+func (e *Example1) DeepClone(*State) DeepClonable {
 	dst := *e
 	return &dst
 }
@@ -62,7 +62,7 @@ type Ints struct {
 	a, b int
 }
 
-func (i *Ints) DeepClone(state *State) Clonable {
+func (i *Ints) DeepClone(state *State) DeepClonable {
 	c := *i
 	return &c
 }

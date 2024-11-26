@@ -13,10 +13,10 @@ type Option struct {
 	Type Type
 }
 
-// DeepClone implements [clone.Clonable].
-func (o *Option) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, o)
-	c.Type = *clone.Clone(state, &o.Type)
+// DeepClone implements [clone.DeepClonable].
+func (o *Option) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, o)
+	c.Type = *clone.DeepClone(state, &o.Type)
 	return c
 }
 

@@ -14,10 +14,10 @@ type Pointer struct {
 	Type Type
 }
 
-// DeepClone implements [clone.Clonable].
-func (p *Pointer) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, p)
-	c.Type = *clone.Clone(state, &p.Type)
+// DeepClone implements [clone.DeepClonable].
+func (p *Pointer) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, p)
+	c.Type = *clone.DeepClone(state, &p.Type)
 	return c
 }
 

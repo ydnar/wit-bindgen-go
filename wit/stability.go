@@ -25,10 +25,10 @@ type Stable struct {
 	Deprecated *semver.Version
 }
 
-// DeepClone implements [clone.Clonable].
-func (s *Stable) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, s)
-	c.Deprecated = clone.Clone(state, s.Deprecated)
+// DeepClone implements [clone.DeepClonable].
+func (s *Stable) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, s)
+	c.Deprecated = clone.DeepClone(state, s.Deprecated)
 	return c
 }
 
@@ -39,9 +39,9 @@ type Unstable struct {
 	Deprecated *semver.Version
 }
 
-// DeepClone implements [clone.Clonable].
-func (u *Unstable) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, u)
-	c.Deprecated = clone.Clone(state, u.Deprecated)
+// DeepClone implements [clone.DeepClonable].
+func (u *Unstable) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, u)
+	c.Deprecated = clone.DeepClone(state, u.Deprecated)
 	return c
 }

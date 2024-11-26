@@ -11,10 +11,10 @@ type List struct {
 	Type Type
 }
 
-// DeepClone implements [clone.Clonable].
-func (l *List) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, l)
-	c.Type = *clone.Clone(state, &l.Type)
+// DeepClone implements [clone.DeepClonable].
+func (l *List) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, l)
+	c.Type = *clone.DeepClone(state, &l.Type)
 	return c
 }
 

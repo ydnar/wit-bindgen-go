@@ -235,8 +235,8 @@ func (g *generator) defineWorld(w *wit.World) error {
 	{
 		witFile := g.witFileFor(w)
 		state := &clone.State{}
-		clonedRes := clone.Clone(state, g.res)
-		clonedWorld := *clone.Clone(state, &w)
+		clonedRes := clone.DeepClone(state, g.res)
+		clonedWorld := *clone.DeepClone(state, &w)
 		clonedRes.ConstrainTo(clonedWorld)
 		witFile.WriteString(clonedRes.WIT(nil, ""))
 	}

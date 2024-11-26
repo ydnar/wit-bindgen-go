@@ -13,9 +13,9 @@ type Variant struct {
 	Cases []Case
 }
 
-// DeepClone implements [clone.Clonable].
-func (v *Variant) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, v)
+// DeepClone implements [clone.DeepClonable].
+func (v *Variant) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, v)
 	c.Cases = clone.Slice(state, v.Cases)
 	return c
 }
@@ -164,10 +164,10 @@ type Case struct {
 	Docs Docs
 }
 
-// DeepClone implements [clone.Clonable].
-func (c *Case) DeepClone(state *clone.State) clone.Clonable {
-	cl := clone.Shallow(state, c)
-	cl.Type = *clone.Clone(state, &c.Type)
+// DeepClone implements [clone.DeepClonable].
+func (c *Case) DeepClone(state *clone.State) clone.DeepClonable {
+	cl := clone.Clone(state, c)
+	cl.Type = *clone.DeepClone(state, &c.Type)
 	return cl
 }
 

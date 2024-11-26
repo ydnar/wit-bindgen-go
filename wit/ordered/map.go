@@ -25,11 +25,11 @@ func (m *Map[K, V]) Clone() *Map[K, V] {
 	return &c
 }
 
-// DeepClone implements [clone.Clonable].
-func (m *Map[K, V]) DeepClone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.DeepClonable].
+func (m *Map[K, V]) DeepClone(state *clone.State) clone.DeepClonable {
 	var c Map[K, V]
 	m.All()(func(k K, v V) bool {
-		c.Set(*clone.Clone(state, &k), *clone.Clone(state, &v))
+		c.Set(*clone.DeepClone(state, &k), *clone.DeepClone(state, &v))
 		return true
 	})
 	return &c

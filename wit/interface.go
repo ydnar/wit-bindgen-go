@@ -23,14 +23,14 @@ type Interface struct {
 	Docs      Docs
 }
 
-// DeepClone implements [clone.Clonable].
-func (i *Interface) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, i)
-	c.Name = clone.Clone(state, c.Name)
-	c.TypeDefs = *clone.Clone(state, &i.TypeDefs)
-	c.Functions = *clone.Clone(state, &i.Functions)
-	c.Package = clone.Clone(state, i.Package)
-	c.Stability = *clone.Clone(state, &i.Stability)
+// DeepClone implements [clone.DeepClonable].
+func (i *Interface) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, i)
+	c.Name = clone.DeepClone(state, c.Name)
+	c.TypeDefs = *clone.DeepClone(state, &i.TypeDefs)
+	c.Functions = *clone.DeepClone(state, &i.Functions)
+	c.Package = clone.DeepClone(state, i.Package)
+	c.Stability = *clone.DeepClone(state, &i.Stability)
 	return c
 }
 
@@ -97,11 +97,11 @@ type InterfaceRef struct {
 	Stability Stability
 }
 
-// DeepClone implements [clone.Clonable].
-func (ref *InterfaceRef) DeepClone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, ref)
-	c.Interface = clone.Clone(state, ref.Interface)
-	c.Stability = *clone.Clone(state, &c.Stability)
+// DeepClone implements [clone.DeepClonable].
+func (ref *InterfaceRef) DeepClone(state *clone.State) clone.DeepClonable {
+	c := clone.Clone(state, ref)
+	c.Interface = clone.DeepClone(state, ref.Interface)
+	c.Stability = *clone.DeepClone(state, &c.Stability)
 	return c
 }
 
