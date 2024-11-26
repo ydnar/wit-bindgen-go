@@ -20,18 +20,6 @@ func (v *Variant) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (v *Variant) dependsOn(dep Node) bool {
-	if dep == v {
-		return true
-	}
-	for _, t := range v.Types() {
-		if DependsOn(t, dep) {
-			return true
-		}
-	}
-	return false
-}
-
 // Enum attempts to represent [Variant] v as an [Enum].
 // This will only succeed if v has no associated types. If v has
 // associated types, then it will return nil.
@@ -150,6 +138,18 @@ func (v *Variant) hasBorrow() bool {
 func (v *Variant) hasResource() bool {
 	for _, t := range v.Types() {
 		if HasResource(t) {
+			return true
+		}
+	}
+	return false
+}
+
+func (v *Variant) dependsOn(dep Node) bool {
+	if dep == v {
+		return true
+	}
+	for _, t := range v.Types() {
+		if DependsOn(t, dep) {
 			return true
 		}
 	}

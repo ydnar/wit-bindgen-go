@@ -21,10 +21,6 @@ func (s *Stream) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (s *Stream) dependsOn(dep Node) bool {
-	return dep == s || DependsOn(s.Element, dep) || DependsOn(s.End, dep)
-}
-
 // Size returns the [ABI byte size] for a [Stream].
 // TODO: what is the ABI size of a stream?
 //
@@ -46,3 +42,6 @@ func (*Stream) Flat() []Type { return nil }
 func (s *Stream) hasPointer() bool  { return HasPointer(s.Element) || HasPointer(s.End) }
 func (s *Stream) hasBorrow() bool   { return HasBorrow(s.Element) || HasBorrow(s.End) }
 func (s *Stream) hasResource() bool { return HasResource(s.Element) || HasResource(s.End) }
+func (s *Stream) dependsOn(dep Node) bool {
+	return dep == s || DependsOn(s.Element, dep) || DependsOn(s.End, dep)
+}

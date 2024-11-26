@@ -33,6 +33,23 @@ func (r *Resolve) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
+// AllFunctions returns a [sequence] that yields each [Function] in a [Resolve].
+// The sequence stops if yield returns false.
+//
+// [sequence]: https://github.com/golang/go/issues/61897
+func (r *Resolve) AllFunctions() iterate.Seq[*Function] {
+	return func(yield func(*Function) bool) {
+		var done bool
+		yield = iterate.Done(iterate.Once(yield), func() { done = true })
+		for i := 0; i < len(r.Worlds) && !done; i++ {
+			r.Worlds[i].AllFunctions()(yield)
+		}
+		for i := 0; i < len(r.Interfaces) && !done; i++ {
+			r.Interfaces[i].AllFunctions()(yield)
+		}
+	}
+}
+
 func (r *Resolve) dependsOn(dep Node) bool {
 	for _, w := range r.Worlds {
 		if DependsOn(w, dep) {
@@ -55,21 +72,4 @@ func (r *Resolve) dependsOn(dep Node) bool {
 		}
 	}
 	return false
-}
-
-// AllFunctions returns a [sequence] that yields each [Function] in a [Resolve].
-// The sequence stops if yield returns false.
-//
-// [sequence]: https://github.com/golang/go/issues/61897
-func (r *Resolve) AllFunctions() iterate.Seq[*Function] {
-	return func(yield func(*Function) bool) {
-		var done bool
-		yield = iterate.Done(iterate.Once(yield), func() { done = true })
-		for i := 0; i < len(r.Worlds) && !done; i++ {
-			r.Worlds[i].AllFunctions()(yield)
-		}
-		for i := 0; i < len(r.Interfaces) && !done; i++ {
-			r.Interfaces[i].AllFunctions()(yield)
-		}
-	}
 }

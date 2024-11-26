@@ -18,8 +18,6 @@ func (l *List) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (l *List) dependsOn(dep Node) bool { return dep == l || DependsOn(l.Type, dep) }
-
 // Size returns the [ABI byte size] for a [List].
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
@@ -35,6 +33,7 @@ func (*List) Align() uintptr { return 8 } // [2]int32
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (l *List) Flat() []Type { return []Type{PointerTo(l.Type), U32{}} }
 
-func (*List) hasPointer() bool    { return true }
-func (l *List) hasBorrow() bool   { return HasBorrow(l.Type) }
-func (l *List) hasResource() bool { return HasResource(l.Type) }
+func (*List) hasPointer() bool          { return true }
+func (l *List) hasBorrow() bool         { return HasBorrow(l.Type) }
+func (l *List) hasResource() bool       { return HasResource(l.Type) }
+func (l *List) dependsOn(dep Node) bool { return dep == l || DependsOn(l.Type, dep) }

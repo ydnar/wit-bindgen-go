@@ -31,6 +31,8 @@ func DependsOn(node, dep Node) bool {
 	if rep, ok := dep.(*InterfaceRef); ok {
 		dep = rep.Interface
 	}
+	// TODO: is it harmful to despecialize before doing dependency check?
+	// e.g. it breaks the node == dep check?
 	if k, ok := node.(TypeDefKind); ok {
 		node = Despecialize(k)
 	}

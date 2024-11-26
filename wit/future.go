@@ -19,8 +19,6 @@ func (f *Future) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (f *Future) dependsOn(dep Node) bool { return dep == f || DependsOn(f.Type, dep) }
-
 // Size returns the [ABI byte size] for a [Future].
 // TODO: what is the ABI size of a future?
 //
@@ -39,6 +37,7 @@ func (*Future) Align() uintptr { return 0 }
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (*Future) Flat() []Type { return nil }
 
-func (f *Future) hasPointer() bool  { return HasPointer(f.Type) }
-func (f *Future) hasBorrow() bool   { return HasBorrow(f.Type) }
-func (f *Future) hasResource() bool { return HasResource(f.Type) }
+func (f *Future) hasPointer() bool        { return HasPointer(f.Type) }
+func (f *Future) hasBorrow() bool         { return HasBorrow(f.Type) }
+func (f *Future) hasResource() bool       { return HasResource(f.Type) }
+func (f *Future) dependsOn(dep Node) bool { return dep == f || DependsOn(f.Type, dep) }

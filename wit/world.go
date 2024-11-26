@@ -31,18 +31,6 @@ func (w *World) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (w *World) dependsOn(dep Node) bool {
-	if dep == w || dep == w.Package {
-		return true
-	}
-	var done bool
-	w.AllItems()(func(_ string, i WorldItem) bool {
-		done = DependsOn(i, dep)
-		return !done
-	})
-	return done
-}
-
 // WITPackage returns the [Package] that [World] w belongs to.
 func (w *World) WITPackage() *Package {
 	return w.Package
@@ -135,6 +123,18 @@ func (w *World) AllItems() iterate.Seq2[string, WorldItem] {
 		}
 		w.Exports.All()(f)
 	}
+}
+
+func (w *World) dependsOn(dep Node) bool {
+	if dep == w || dep == w.Package {
+		return true
+	}
+	var done bool
+	w.AllItems()(func(_ string, i WorldItem) bool {
+		done = DependsOn(i, dep)
+		return !done
+	})
+	return done
 }
 
 // A WorldItem is any item that can be exported from or imported into a [World],

@@ -76,8 +76,8 @@ func (o *Own) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (o *Own) dependsOn(dep Node) bool { return dep == o || DependsOn(o.Type, dep) }
 func (o *Own) hasResource() bool       { return HasResource(o.Type) }
+func (o *Own) dependsOn(dep Node) bool { return dep == o || DependsOn(o.Type, dep) }
 
 // Borrow represents a WIT [borrowed handle].
 // It implements the [Handle], [Node], [ABI], and [TypeDefKind] interfaces.
@@ -95,6 +95,6 @@ func (b *Borrow) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (b *Borrow) dependsOn(dep Node) bool { return dep == b || DependsOn(b.Type, dep) }
-func (b *Borrow) hasBorrow() bool         { return true }
+func (*Borrow) hasBorrow() bool           { return true }
 func (b *Borrow) hasResource() bool       { return HasResource(b.Type) }
+func (b *Borrow) dependsOn(dep Node) bool { return dep == b || DependsOn(b.Type, dep) }

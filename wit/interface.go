@@ -34,25 +34,6 @@ func (i *Interface) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (i *Interface) dependsOn(dep Node) bool {
-	if dep == i || dep == i.Package {
-		return true
-	}
-	var done bool
-	i.TypeDefs.All()(func(_ string, t *TypeDef) bool {
-		done = DependsOn(t, dep)
-		return !done
-	})
-	if done {
-		return true
-	}
-	i.Functions.All()(func(_ string, f *Function) bool {
-		done = DependsOn(f, dep)
-		return !done
-	})
-	return done
-}
-
 // WITPackage returns the [Package] this [Interface] belongs to.
 func (i *Interface) WITPackage() *Package {
 	return i.Package
@@ -86,6 +67,25 @@ func (i *Interface) AllFunctions() iterate.Seq[*Function] {
 			return yield(f)
 		})
 	}
+}
+
+func (i *Interface) dependsOn(dep Node) bool {
+	if dep == i || dep == i.Package {
+		return true
+	}
+	var done bool
+	i.TypeDefs.All()(func(_ string, t *TypeDef) bool {
+		done = DependsOn(t, dep)
+		return !done
+	})
+	if done {
+		return true
+	}
+	i.Functions.All()(func(_ string, f *Function) bool {
+		done = DependsOn(f, dep)
+		return !done
+	})
+	return done
 }
 
 // An InterfaceRef represents a reference to an [Interface] with a [Stability] attribute.

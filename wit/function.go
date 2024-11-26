@@ -31,23 +31,6 @@ func (f *Function) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (f *Function) dependsOn(dep Node) bool {
-	if dep == f {
-		return true
-	}
-	for _, p := range f.Params {
-		if DependsOn(p.Type, dep) {
-			return true
-		}
-	}
-	for _, r := range f.Results {
-		if DependsOn(r.Type, dep) {
-			return true
-		}
-	}
-	return false
-}
-
 // BaseName returns the base name of [Function] f.
 // For static functions, this returns the function name unchanged.
 // For constructors, this removes the [constructor] and type prefix.
@@ -149,6 +132,41 @@ func (f *Function) IsStatic() bool {
 	return ok && kind.Type != nil
 }
 
+func (f *Function) dependsOn(dep Node) bool {
+	if dep == f {
+		return true
+	}
+	for _, p := range f.Params {
+		if DependsOn(p.Type, dep) {
+			return true
+		}
+	}
+	for _, r := range f.Results {
+		if DependsOn(r.Type, dep) {
+			return true
+		}
+	}
+	return false
+}
+
+func compareFunctions(a, b *Function) int {
+	return strings.Compare(a.Name, b.Name)
+}
+
+// Param represents a parameter to or the result of a [Function].
+// A Param can be unnamed.
+type Param struct {
+	Name string
+	Type Type
+}
+
+// Clone implements [clone.Clonable].
+func (p *Param) Clone(state *clone.State) clone.Clonable {
+	c := clone.Shallow(state, p)
+	c.Type = *clone.Clone(state, &p.Type)
+	return c
+}
+
 // FunctionKind represents the kind of a WIT [function], which can be one of
 // [Freestanding], [Method], [Static], or [Constructor].
 //
@@ -203,18 +221,4 @@ func (c *Constructor) Clone(state *clone.State) clone.Clonable {
 	cl := clone.Shallow(state, c)
 	cl.Type = *clone.Clone(state, &c.Type)
 	return cl
-}
-
-// Param represents a parameter to or the result of a [Function].
-// A Param can be unnamed.
-type Param struct {
-	Name string
-	Type Type
-}
-
-// Clone implements [clone.Clonable].
-func (p *Param) Clone(state *clone.State) clone.Clonable {
-	c := clone.Shallow(state, p)
-	c.Type = *clone.Clone(state, &p.Type)
-	return c
 }

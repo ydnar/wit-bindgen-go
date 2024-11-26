@@ -2,7 +2,6 @@ package wit
 
 import (
 	"slices"
-	"strings"
 
 	"go.bytecodealliance.org/wit/clone"
 )
@@ -27,12 +26,6 @@ func (t *TypeDef) Clone(state *clone.State) clone.Clonable {
 	c.Owner = *clone.Clone(state, &t.Owner)
 	c.Stability = *clone.Clone(state, &t.Stability)
 	return c
-}
-
-func (t *TypeDef) dependsOn(dep Node) bool {
-	return dep == t || dep == t.Owner ||
-		(t.Owner != nil && dep == t.Owner.WITPackage()) ||
-		DependsOn(t.Kind, dep)
 }
 
 // TypeName returns the [WIT] type name for t.
@@ -114,10 +107,6 @@ func (t *TypeDef) Methods() []*Function {
 	return methods
 }
 
-func compareFunctions(a, b *Function) int {
-	return strings.Compare(a.Name, b.Name)
-}
-
 // Size returns the byte size for values of type t.
 func (t *TypeDef) Size() uintptr {
 	return t.Kind.Size()
@@ -138,6 +127,11 @@ func (t *TypeDef) Flat() []Type {
 func (t *TypeDef) hasPointer() bool  { return HasPointer(t.Kind) }
 func (t *TypeDef) hasBorrow() bool   { return HasBorrow(t.Kind) }
 func (t *TypeDef) hasResource() bool { return HasResource(t.Kind) }
+func (t *TypeDef) dependsOn(dep Node) bool {
+	return dep == t || dep == t.Owner ||
+		(t.Owner != nil && dep == t.Owner.WITPackage()) ||
+		DependsOn(t.Kind, dep)
+}
 
 // TypeDefKind represents the underlying type in a [TypeDef], which can be one of
 // [Record], [Resource], [Handle], [Flags], [Tuple], [Variant], [Enum],

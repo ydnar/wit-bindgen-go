@@ -21,8 +21,6 @@ func (p *Pointer) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (p *Pointer) dependsOn(dep Node) bool { return dep == p || DependsOn(p.Type, dep) }
-
 // Size returns the [ABI byte size] for [Pointer].
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
@@ -38,6 +36,7 @@ func (*Pointer) Align() uintptr { return 4 }
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (p *Pointer) Flat() []Type { return []Type{PointerTo(p.Type)} }
 
-func (*Pointer) hasPointer() bool    { return true }
-func (p *Pointer) hasBorrow() bool   { return HasBorrow(p.Type) }
-func (p *Pointer) hasResource() bool { return HasResource(p.Type) }
+func (*Pointer) hasPointer() bool          { return true }
+func (p *Pointer) hasBorrow() bool         { return HasBorrow(p.Type) }
+func (p *Pointer) hasResource() bool       { return HasResource(p.Type) }
+func (p *Pointer) dependsOn(dep Node) bool { return dep == p || DependsOn(p.Type, dep) }

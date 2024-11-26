@@ -18,18 +18,6 @@ func (r *Record) Clone(state *clone.State) clone.Clonable {
 	return c
 }
 
-func (r *Record) dependsOn(dep Node) bool {
-	if dep == r {
-		return true
-	}
-	for _, f := range r.Fields {
-		if DependsOn(f.Type, dep) {
-			return true
-		}
-	}
-	return false
-}
-
 // Size returns the [ABI byte size] for [Record] r.
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
@@ -85,6 +73,18 @@ func (r *Record) hasBorrow() bool {
 func (r *Record) hasResource() bool {
 	for _, f := range r.Fields {
 		if HasResource(f.Type) {
+			return true
+		}
+	}
+	return false
+}
+
+func (r *Record) dependsOn(dep Node) bool {
+	if dep == r {
+		return true
+	}
+	for _, f := range r.Fields {
+		if DependsOn(f.Type, dep) {
 			return true
 		}
 	}
