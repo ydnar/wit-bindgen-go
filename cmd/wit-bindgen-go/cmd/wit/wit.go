@@ -46,20 +46,20 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	if face := cmd.String("interface"); face != "" {
-		i := findInterface(res, face)
-		if i == nil {
-			return fmt.Errorf("interface %s not found", face)
-		}
-		res.ConstrainTo(i)
-	}
-
 	if world := cmd.String("world"); world != "" {
 		w := findWorld(res, world)
 		if w == nil {
 			return fmt.Errorf("world %s not found", world)
 		}
-		res.ConstrainTo(w)
+		res = wit.PruneToWorld(res, w)
+	}
+
+	if face := cmd.String("interface"); face != "" {
+		i := findInterface(res, face)
+		if i == nil {
+			return fmt.Errorf("interface %s not found", face)
+		}
+		res = wit.PruneToInterface(res, i)
 	}
 
 	fmt.Print(res.WIT(nil, ""))
