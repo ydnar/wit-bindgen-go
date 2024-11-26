@@ -21,8 +21,8 @@ type Function struct {
 	Docs      Docs
 }
 
-// Clone implements [clone.Clonable].
-func (f *Function) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (f *Function) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, f)
 	c.Kind = *clone.Clone(state, &f.Kind)
 	c.Params = clone.Slice(state, f.Params)
@@ -160,8 +160,8 @@ type Param struct {
 	Type Type
 }
 
-// Clone implements [clone.Clonable].
-func (p *Param) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (p *Param) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, p)
 	c.Type = *clone.Clone(state, &p.Type)
 	return c
@@ -190,8 +190,8 @@ type Method struct {
 	Type Type
 }
 
-// Clone implements [clone.Clonable].
-func (m *Method) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (m *Method) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, m)
 	c.Type = *clone.Clone(state, &m.Type)
 	return c
@@ -203,8 +203,8 @@ type Static struct {
 	Type Type
 }
 
-// Clone implements [clone.Clonable].
-func (s *Static) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (s *Static) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, s)
 	c.Type = *clone.Clone(state, &s.Type)
 	return c
@@ -216,8 +216,8 @@ type Constructor struct {
 	Type Type
 }
 
-// Clone implements [clone.Clonable].
-func (c *Constructor) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (c *Constructor) DeepClone(state *clone.State) clone.Clonable {
 	cl := clone.Shallow(state, c)
 	cl.Type = *clone.Clone(state, &c.Type)
 	return cl

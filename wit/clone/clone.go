@@ -36,7 +36,7 @@ func Clone[T any](state *State, v *T) *T {
 
 	// Check if *T implements Clonable
 	if clonable, ok := any(v).(Clonable); ok {
-		clone := any(clonable.Clone(state)).(*T)
+		clone := any(clonable.DeepClone(state)).(*T)
 		return clone
 	}
 
@@ -57,7 +57,7 @@ func Clone[T any](state *State, v *T) *T {
 
 	// Check if T implements Clonable
 	if clonable, ok := any(*v).(Clonable); ok {
-		clone := any(clonable.Clone(state)).(T)
+		clone := any(clonable.DeepClone(state)).(T)
 		return &clone
 	}
 
@@ -97,10 +97,10 @@ func Map[M ~map[K]V, K comparable, V any](state *State, m M) M {
 // Cloneable represents any type that can be cloned.
 // The returned value must be identical to the receiver type.
 //
-//	func (*T) Clone(*State) Clonable // returns *T
-//	func (T) Clone(*State) Clonable // returns T
+//	func (*T) DeepClone(*State) Clonable // returns *T
+//	func (T) DeepClone(*State) Clonable // returns T
 type Clonable interface {
-	Clone(*State) Clonable
+	DeepClone(*State) Clonable
 }
 
 // State tracks previously cloned values to enable cloning of circular data structures.

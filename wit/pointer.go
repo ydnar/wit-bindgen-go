@@ -14,8 +14,8 @@ type Pointer struct {
 	Type Type
 }
 
-// Clone implements [clone.Clonable].
-func (p *Pointer) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (p *Pointer) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, p)
 	c.Type = *clone.Clone(state, &p.Type)
 	return c

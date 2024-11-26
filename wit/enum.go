@@ -12,8 +12,8 @@ type Enum struct {
 	Cases []EnumCase
 }
 
-// Clone implements [clone.Clonable].
-func (e *Enum) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (e *Enum) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, e)
 	c.Cases = clone.Slice(state, e.Cases)
 	return c

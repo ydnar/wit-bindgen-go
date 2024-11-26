@@ -23,8 +23,8 @@ type Interface struct {
 	Docs      Docs
 }
 
-// Clone implements [clone.Clonable].
-func (i *Interface) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (i *Interface) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, i)
 	c.Name = clone.Clone(state, c.Name)
 	c.TypeDefs = *clone.Clone(state, &i.TypeDefs)
@@ -97,8 +97,8 @@ type InterfaceRef struct {
 	Stability Stability
 }
 
-// Clone implements [clone.Clonable].
-func (ref *InterfaceRef) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (ref *InterfaceRef) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, ref)
 	c.Interface = clone.Clone(state, ref.Interface)
 	c.Stability = *clone.Clone(state, &c.Stability)

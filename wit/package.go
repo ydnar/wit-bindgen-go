@@ -22,8 +22,8 @@ type Package struct {
 	Docs       Docs
 }
 
-// Clone implements [clone.Clonable].
-func (p *Package) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (p *Package) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, p)
 	c.Interfaces = *clone.Clone(state, &p.Interfaces)
 	c.Worlds = *clone.Clone(state, &p.Worlds)

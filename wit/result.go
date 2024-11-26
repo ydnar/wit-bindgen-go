@@ -14,8 +14,8 @@ type Result struct {
 	Err Type // optional associated [Type] (can be nil)
 }
 
-// Clone implements [clone.Clonable].
-func (r *Result) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (r *Result) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, r)
 	c.OK = *clone.Clone(state, &r.OK)
 	c.Err = *clone.Clone(state, &r.Err)

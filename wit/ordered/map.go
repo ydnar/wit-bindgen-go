@@ -15,8 +15,18 @@ type Map[K comparable, V any] struct {
 	m map[K]*element[K, V]
 }
 
-// Clone implements [clone.Clonable].
-func (m *Map[K, V]) Clone(state *clone.State) clone.Clonable {
+// Clone returns a shallow clone of m.
+func (m *Map[K, V]) Clone() *Map[K, V] {
+	var c Map[K, V]
+	m.All()(func(k K, v V) bool {
+		c.Set(k, v)
+		return true
+	})
+	return &c
+}
+
+// DeepClone implements [clone.Clonable].
+func (m *Map[K, V]) DeepClone(state *clone.State) clone.Clonable {
 	var c Map[K, V]
 	m.All()(func(k K, v V) bool {
 		c.Set(*clone.Clone(state, &k), *clone.Clone(state, &v))

@@ -19,8 +19,8 @@ type TypeDef struct {
 	Docs      Docs
 }
 
-// Clone implements [clone.Clonable].
-func (t *TypeDef) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (t *TypeDef) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, t)
 	c.Kind = *clone.Clone(state, &t.Kind)
 	c.Owner = *clone.Clone(state, &t.Owner)

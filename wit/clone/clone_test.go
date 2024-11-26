@@ -44,7 +44,7 @@ func (e *Example1) String() string {
 	return e.s
 }
 
-func (e *Example1) Clone(*State) Clonable {
+func (e *Example1) DeepClone(*State) Clonable {
 	dst := *e
 	return &dst
 }
@@ -62,7 +62,7 @@ type Ints struct {
 	a, b int
 }
 
-func (i *Ints) Clone(state *State) Clonable {
+func (i *Ints) DeepClone(state *State) Clonable {
 	c := *i
 	return &c
 }

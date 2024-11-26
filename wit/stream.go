@@ -13,8 +13,8 @@ type Stream struct {
 	End     Type // optional associated Type (can be nil)
 }
 
-// Clone implements [clone.Clonable].
-func (s *Stream) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (s *Stream) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, s)
 	c.Element = *clone.Clone(state, &s.Element)
 	c.End = *clone.Clone(state, &s.End)

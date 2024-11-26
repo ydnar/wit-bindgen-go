@@ -11,8 +11,8 @@ type List struct {
 	Type Type
 }
 
-// Clone implements [clone.Clonable].
-func (l *List) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (l *List) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, l)
 	c.Type = *clone.Clone(state, &l.Type)
 	return c

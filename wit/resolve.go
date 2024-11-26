@@ -24,9 +24,19 @@ type Resolve struct {
 	Packages   []*Package
 }
 
-// Clone implements [clone.Clonable].
+// Clone returns a shallow clone of r.
+func (r *Resolve) Clone() *Resolve {
+	c := *r
+	c.Worlds = slices.Clone(r.Worlds)
+	c.Interfaces = slices.Clone(r.Interfaces)
+	c.TypeDefs = slices.Clone(r.TypeDefs)
+	c.Packages = slices.Clone(r.Packages)
+	return &c
+}
+
+// DeepClone implements [clone.Clonable].
 // The resulting [Resolve] and its contents may be freely modified.
-func (r *Resolve) Clone(state *clone.State) clone.Clonable {
+func (r *Resolve) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, r)
 	c.Worlds = clone.Slice(state, r.Worlds)
 	c.Interfaces = clone.Slice(state, r.Interfaces)

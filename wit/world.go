@@ -21,8 +21,16 @@ type World struct {
 	Docs      Docs
 }
 
-// Clone implements [clone.Clonable].
-func (w *World) Clone(state *clone.State) clone.Clonable {
+// Clone returns a shallow clone of w.
+func (w *World) Clone() *World {
+	c := *w
+	c.Imports = *w.Imports.Clone()
+	c.Exports = *w.Exports.Clone()
+	return &c
+}
+
+// DeepClone implements [clone.Clonable].
+func (w *World) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, w)
 	c.Imports = *clone.Clone(state, &w.Imports)
 	c.Exports = *clone.Clone(state, &w.Exports)

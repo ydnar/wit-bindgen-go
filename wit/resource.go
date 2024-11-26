@@ -69,8 +69,8 @@ type Own struct {
 	Type *TypeDef
 }
 
-// Clone implements [clone.Clonable].
-func (o *Own) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (o *Own) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, o)
 	c.Type = *clone.Clone(state, &o.Type)
 	return c
@@ -88,8 +88,8 @@ type Borrow struct {
 	Type *TypeDef
 }
 
-// Clone implements [clone.Clonable].
-func (b *Borrow) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (b *Borrow) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, b)
 	c.Type = *clone.Clone(state, &b.Type)
 	return c

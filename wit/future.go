@@ -12,8 +12,8 @@ type Future struct {
 	Type Type // optional associated Type (can be nil)
 }
 
-// Clone implements [clone.Clonable].
-func (f *Future) Clone(state *clone.State) clone.Clonable {
+// DeepClone implements [clone.Clonable].
+func (f *Future) DeepClone(state *clone.State) clone.Clonable {
 	c := clone.Shallow(state, f)
 	c.Type = *clone.Clone(state, &f.Type)
 	return c
