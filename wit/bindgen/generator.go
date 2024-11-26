@@ -21,6 +21,7 @@ import (
 	"go.bytecodealliance.org/internal/go/gen"
 	"go.bytecodealliance.org/internal/stringio"
 	"go.bytecodealliance.org/wit"
+	"go.bytecodealliance.org/wit/clone"
 	"go.bytecodealliance.org/wit/logging"
 )
 
@@ -231,8 +232,15 @@ func (g *generator) defineWorld(w *wit.World) error {
 	}
 
 	// Write WIT file for this world
-	witFile := g.witFileFor(w)
-	witFile.WriteString(g.res.WIT(w, ""))
+	{
+		witFile := g.witFileFor(w)
+		state := &clone.State{}
+		res := clone.Clone(state, g.res)
+		res.ConstrainTo(*clone.Clone(state, &w))
+		fmt.Printf("g.res.Worlds = %d, res.Worlds = %d, res.Packages = %d\n",
+			len(g.res.Worlds), len(res.Worlds), len(res.Packages))
+		witFile.WriteString(res.WIT(nil, ""))
+	}
 
 	// Write Go package docs
 	file := g.fileFor(w)

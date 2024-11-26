@@ -49,6 +49,24 @@ func (p *Package) dependsOn(dep Node) bool {
 	return done
 }
 
+// constrainTo destructively constrains p to node.
+func (p *Package) constrainTo(node Node) {
+	p.Worlds.All()(func(name string, w *World) bool {
+		if !DependsOn(w, node) {
+			p.Worlds.Delete(name)
+			return true
+		}
+		w.constrainTo(node)
+		return true
+	})
+	p.Interfaces.All()(func(name string, i *Interface) bool {
+		if !DependsOn(node, i) {
+			p.Interfaces.Delete(name)
+		}
+		return true
+	})
+}
+
 func comparePackages(a, b *Package) int {
 	switch {
 	case a == b:

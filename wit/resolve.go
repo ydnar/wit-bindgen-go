@@ -1,6 +1,8 @@
 package wit
 
 import (
+	"slices"
+
 	"go.bytecodealliance.org/wit/clone"
 	"go.bytecodealliance.org/wit/iterate"
 )
@@ -31,6 +33,38 @@ func (r *Resolve) Clone(state *clone.State) clone.Clonable {
 	c.TypeDefs = clone.Slice(state, r.TypeDefs)
 	c.Packages = clone.Slice(state, r.Packages)
 	return c
+}
+
+// ConstrainTo destructively modifies the contents of r to only include
+// the package(s), world(s), interface(s), and type(s) necessary to
+// represent node. The resulting [Resolve] may be used to generate
+// minimal WIT to represent node.
+// The node argument must be a member of r.
+// To preserve data, call Clone first.
+func (r *Resolve) ConstrainTo(node Node) {
+	r.Packages = slices.DeleteFunc(r.Packages, func(pkg *Package) bool {
+		if !DependsOn(node, pkg) && !DependsOn(pkg, node) {
+			return true // delete
+		}
+		pkg.constrainTo(node)
+		return false
+	})
+
+	r.Worlds = slices.DeleteFunc(r.Worlds, func(w *World) bool {
+		if !DependsOn(w, node) {
+			return true // delete
+		}
+		w.constrainTo(node)
+		return false
+	})
+
+	r.Interfaces = slices.DeleteFunc(r.Interfaces, func(i *Interface) bool {
+		return !DependsOn(node, i)
+	})
+
+	r.TypeDefs = slices.DeleteFunc(r.TypeDefs, func(t *TypeDef) bool {
+		return !DependsOn(node, t)
+	})
 }
 
 // AllFunctions returns a [sequence] that yields each [Function] in a [Resolve].

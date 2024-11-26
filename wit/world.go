@@ -137,6 +137,22 @@ func (w *World) dependsOn(dep Node) bool {
 	return done
 }
 
+// constrainTo destructively constrains w to node.
+func (w *World) constrainTo(node Node) {
+	w.Imports.All()(func(name string, i WorldItem) bool {
+		if !DependsOn(node, i) {
+			w.Imports.Delete(name)
+		}
+		return true
+	})
+	w.Exports.All()(func(name string, i WorldItem) bool {
+		if !DependsOn(node, i) {
+			w.Exports.Delete(name)
+		}
+		return true
+	})
+}
+
 // A WorldItem is any item that can be exported from or imported into a [World],
 // currently either an [InterfaceRef], [TypeDef], or [Function].
 // Any WorldItem is also a [Node].
