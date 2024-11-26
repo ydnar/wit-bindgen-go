@@ -235,11 +235,10 @@ func (g *generator) defineWorld(w *wit.World) error {
 	{
 		witFile := g.witFileFor(w)
 		state := &clone.State{}
-		res := clone.Clone(state, g.res)
-		res.ConstrainTo(*clone.Clone(state, &w))
-		fmt.Printf("g.res.Worlds = %d, res.Worlds = %d, res.Packages = %d\n",
-			len(g.res.Worlds), len(res.Worlds), len(res.Packages))
-		witFile.WriteString(res.WIT(nil, ""))
+		clonedRes := clone.Clone(state, g.res)
+		clonedWorld := *clone.Clone(state, &w)
+		clonedRes.ConstrainTo(clonedWorld)
+		witFile.WriteString(clonedRes.WIT(nil, ""))
 	}
 
 	// Write Go package docs
