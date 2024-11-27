@@ -28,8 +28,8 @@ func DependsOn(node, dep Node) bool {
 		return true
 	}
 	// Dereference InterfaceRefs
-	if rep, ok := dep.(*InterfaceRef); ok {
-		dep = rep.Interface
+	if ref, ok := dep.(*InterfaceRef); ok {
+		dep = ref.Interface
 	}
 	// TODO: is it harmful to despecialize before doing dependency check?
 	// e.g. it breaks the node == dep check?
@@ -44,6 +44,44 @@ func DependsOn(node, dep Node) bool {
 
 type dependent interface {
 	dependsOn(dep Node) bool
+}
+
+// Filter returns a [Node] suitable to passing to (Resolve).WIT to filter
+// the emitted WIT to a specific [World] and/or [Interface].
+func Filter(w *World, i *Interface) Node {
+	if w == nil && i == nil {
+		return nil
+	}
+	return &witFilter{
+		w: w,
+		i: i,
+	}
+}
+
+type witFilter struct {
+	w *World
+	i *Interface
+}
+
+func (*witFilter) WITKind() string             { panic("BUG: WITKind called on filter") }
+func (*witFilter) WIT(_ Node, _ string) string { panic("BUG: WIT called on filter") }
+
+// filter returns true if the supplied [Node] should be filtered out.
+func (f *witFilter) filter(node Node) bool {
+	if f == nil {
+		return false // allow for nil receiver
+	}
+	return (f.w != nil && filterNode(f.w, node)) || (f.i != nil && filterNode(f.i, node))
+}
+
+func filterNode(target, node Node) bool {
+	switch node := node.(type) {
+	case *Package:
+		return !DependsOn(node, target) && !DependsOn(target, node)
+	case *World:
+		return !DependsOn(node, target)
+	}
+	return !DependsOn(target, node)
 }
 
 func indent(s string) string {
@@ -205,13 +243,14 @@ func (*World) WITKind() string { return "world" }
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 func (w *World) WIT(ctx Node, name string) string {
+	filter, _ := ctx.(*witFilter)
 	if name == "" {
 		name = w.Name
 	}
 	var b strings.Builder
-	b.WriteString(w.Docs.WIT(ctx, ""))
+	b.WriteString(w.Docs.WIT(nil, ""))
 	if w.Stability != nil {
-		b.WriteString(w.Stability.WIT(ctx, ""))
+		b.WriteString(w.Stability.WIT(nil, ""))
 		b.WriteRune('\n')
 	}
 	b.WriteString("world ")
@@ -219,6 +258,10 @@ func (w *World) WIT(ctx Node, name string) string {
 	b.WriteString(" {")
 	n := 0
 	w.Imports.All()(func(name string, i WorldItem) bool {
+		if filter.filter(i) {
+			print("!")
+			return true
+		}
 		if f, ok := i.(*Function); ok {
 			if !f.IsFreestanding() {
 				return true
@@ -233,6 +276,10 @@ func (w *World) WIT(ctx Node, name string) string {
 		return true
 	})
 	w.Exports.All()(func(name string, i WorldItem) bool {
+		if filter.filter(i) {
+			print("!")
+			return true
+		}
 		if n == 0 {
 			b.WriteRune('\n')
 		}
@@ -1057,6 +1104,7 @@ func (*Package) WITKind() string { return "package" }
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 func (p *Package) WIT(ctx Node, name string) string {
+	filter, _ := ctx.(*witFilter)
 	multi := name != ""
 	var b strings.Builder
 	b.WriteString(p.Docs.WIT(ctx, ""))
@@ -1069,6 +1117,9 @@ func (p *Package) WIT(ctx Node, name string) string {
 	}
 	i := 0
 	p.Interfaces.All()(func(name string, face *Interface) bool {
+		if filter.filter(face) {
+			return true
+		}
 		b.WriteRune('\n')
 		if multi {
 			b.WriteString(indent(face.WIT(p, name)))
@@ -1080,11 +1131,14 @@ func (p *Package) WIT(ctx Node, name string) string {
 		return true
 	})
 	p.Worlds.All()(func(name string, w *World) bool {
+		if filter.filter(w) {
+			return true
+		}
 		b.WriteRune('\n')
 		if multi {
-			b.WriteString(indent(w.WIT(p, name)))
+			b.WriteString(indent(w.WIT(filter, name)))
 		} else {
-			b.WriteString(w.WIT(p, name))
+			b.WriteString(w.WIT(filter, name))
 		}
 		b.WriteRune('\n')
 		i++

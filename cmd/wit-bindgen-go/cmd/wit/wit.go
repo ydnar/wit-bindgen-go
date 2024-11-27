@@ -46,23 +46,24 @@ func action(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	var w *wit.World
 	if world := cmd.String("world"); world != "" {
-		w := findWorld(res, world)
+		w = findWorld(res, world)
 		if w == nil {
 			return fmt.Errorf("world %s not found", world)
 		}
-		res = wit.PruneToWorld(res, w)
 	}
 
+	var i *wit.Interface
 	if face := cmd.String("interface"); face != "" {
-		i := findInterface(res, face)
+		i = findInterface(res, face)
 		if i == nil {
 			return fmt.Errorf("interface %s not found", face)
 		}
-		res = wit.PruneToInterface(res, i)
 	}
 
-	fmt.Print(res.WIT(nil, ""))
+	filter := wit.Filter(w, i)
+	fmt.Print(res.WIT(filter, ""))
 	return nil
 }
 

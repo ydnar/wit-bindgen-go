@@ -232,8 +232,7 @@ func (g *generator) defineWorld(w *wit.World) error {
 
 	// Write WIT file for this world
 	witFile := g.witFileFor(w)
-	pruned := wit.PruneToWorld(g.res, w)
-	witFile.WriteString(pruned.WIT(nil, ""))
+	witFile.WriteString(g.res.WIT(wit.Filter(w, nil), ""))
 
 	// Write Go package docs
 	file := g.fileFor(w)
