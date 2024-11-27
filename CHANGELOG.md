@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `wit-bindgen-go wit` now accepts an `--interface` argument in the form of `monotonic-clock`, `wasi:clocks/monotonic-clock`, or `wasi:clocks/monotonic-clock@0.2.0`. This filters the serialized WIT to a specific interface and the other interface(s) it references. This can be used to generate focused WIT with a minimal set of dependencies, and can be combined with the `--world` argument to filter serialized WIT to the intersection of a specific world and interface.
+
 ### Fixed
 
 - [#240](https://github.com/bytecodealliance/go-modules/issues/240): correctly handle cyclical data structures when generating variant lowering code.
