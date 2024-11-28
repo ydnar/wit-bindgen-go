@@ -32,6 +32,9 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Set up wams-tools.wasm
+        run: make internal/wasmtools/wasm-tools.wasm
+
       - name: Run Go tests
         run: go test ${{ env.go-modules }}
 

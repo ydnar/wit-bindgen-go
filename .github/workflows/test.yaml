@@ -34,8 +34,13 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Set up wams-tools.wasm
+        run: make internal/wasmtools/wasm-tools.wasm
+
       - name: Vet Go code
-        run: go vet ${{ env.go-modules }} ./tests/...
+        run: |
+          make build
+          go vet ${{ env.go-modules }} ./tests/...
 
   # Test with Go
   test-go:
@@ -60,6 +65,9 @@ jobs:
         uses: bytecodealliance/actions/wasm-tools/setup@v1
         with:
           version: ${{ env.wasm-tools-version }}
+
+      - name: Set up wams-tools.wasm
+        run: make internal/wasmtools/wasm-tools.wasm
 
       - name: Run Go tests
         run: go test -v ${{ env.go-modules }}
@@ -140,6 +148,9 @@ jobs:
         uses: bytecodealliance/actions/wasm-tools/setup@v1
         with:
           version: ${{ env.wasm-tools-version }}
+
+      - name: Set up wams-tools.wasm
+        run: make internal/wasmtools/wasm-tools.wasm
 
       - name: Set up Wasmtime
         uses: bytecodealliance/actions/wasmtime/setup@v1

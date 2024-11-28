@@ -1,0 +1,14 @@
+[package]
+name = "wasm-tools-go"
+
+[dependencies]
+wasm-tools = { version = "1.221.0", default-features = false, features = [
+	"component",
+] }
+
+[profile.release]
+lto = true # compile with link-time optimization
+codegen-units = 1 # compile with a single codegen unit
+opt-level = "z" # optimize for size
+panic = "abort" # panic=abort will remove the panic code
+strip = true # strip the debug information

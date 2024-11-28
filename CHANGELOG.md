@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- `internal/wasmtools` now loads compiled `wasm-tools` Wasm module from the `wasm-tools` crate and executes it using wazero. This allows `wit-bindgen-go` to run on any platform without needing to install `wasm-tools` natively.
+
 ### Changed
 
 - Dropped support for TinyGo v0.32.0.
