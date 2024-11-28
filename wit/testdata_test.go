@@ -1,7 +1,7 @@
 package wit
 
 import (
-	"bytes"
+	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"go.bytecodealliance.org/internal/relpath"
+	"go.bytecodealliance.org/internal/wasmtools"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
@@ -78,23 +79,23 @@ func TestGoldenWITRoundTrip(t *testing.T) {
 		// t.Skip is not available in TinyGo, requires runtime.Goexit()
 		return
 	}
-	if !canWasmTools() {
-		t.Log("skipping test: wasm-tools not installed or cannot fork/exec (TinyGo)")
+	ctx := context.Background()
+	wasmTools, err := wasmtools.NewWasmTools(ctx)
+	if err != nil {
+		t.Skipf("wasm-tools not available: %v", err)
 		return
 	}
-	err := loadTestdata(func(path string, res *Resolve) error {
+
+	err = loadTestdata(func(path string, res *Resolve) error {
 		data := res.WIT(nil, "")
 		t.Run(path, func(t *testing.T) {
-			// Run the generated WIT through wasm-tools to generate JSON.
-			cmd := exec.Command("wasm-tools", "component", "wit", "-j", "--all-features")
-			cmd.Stdin = strings.NewReader(data)
-			stdout := &bytes.Buffer{}
-			stderr := &bytes.Buffer{}
-			cmd.Stdout = stdout
-			cmd.Stderr = stderr
-			err := cmd.Run()
+			args := []string{"component", "wit", "-j", "--all-features"}
+			stdin := strings.NewReader(data)
+
+			fsMap := make(map[string]string)
+			stdout, stderr, err := wasmTools.Run(ctx, args, stdin, fsMap, &path)
 			if err != nil {
-				t.Error(err, stderr.String())
+				t.Errorf("Error executing wasm-tools: %v\nStderr: %s", err, stderr.String())
 				return
 			}
 

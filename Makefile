@@ -5,8 +5,8 @@ wit_files = $(sort $(shell find testdata -name '*.wit' ! -name '*.golden.*'))
 json: $(wit_files)
 
 .PHONY: $(wit_files)
-$(wit_files):
-	wasm-tools component wit -j --all-features $@ > $@.json
+$(wit_files): internal/wasmtools/wasm-tools.wasm
+	wasmtime --dir testdata internal/wasmtools/wasm-tools.wasm component wit -j --all-features $@ > $@.json
 
 # golden recompiles the .golden.wit test files.
 .PHONY: golden
@@ -26,6 +26,16 @@ clean:
 .PHONY: tests/generated
 tests/generated: json
 	go generate ./tests
+
+# build builds the cmd/wit-bindgen-go binary
+.PHONY: build
+build: internal/wasmtools/wasm-tools.wasm
+	go build -o wit-bindgen-go ./cmd/wit-bindgen-go
+
+internal/wasmtools/wasm-tools.wasm:
+	cd internal/wasmtools && \
+	cargo build --target wasm32-wasip1 --release -p wasm-tools
+	mv internal/wasmtools/target/wasm32-wasip1/release/wasm-tools.wasm $@
 
 # test runs Go and TinyGo tests
 GOTESTARGS :=

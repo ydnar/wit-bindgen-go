@@ -1,0 +1,7 @@
+[package]
+name = "wasm-tools-go"
+
+[dependencies]
+wasm-tools = { version = "1.221.0", default-features = false, features = [
+	"component",
+] }
