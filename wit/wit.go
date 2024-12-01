@@ -57,22 +57,25 @@ func (r *Resolve) WIT(ctx Node, _ string) string {
 	// Sort packages topologically by dependency
 	packages := slices.Clone(r.Packages)
 	slices.SortFunc(packages, comparePackages)
+	slices.Reverse(packages)
 
 	var b strings.Builder
 	var hasContent bool
-	for i, p := range packages {
+	i := 0
+	for _, p := range packages {
 		var name string
 		if i != 0 {
 			// Write subsequent packages with explicit name, which renders the package WIT with nested braces.
 			name = p.Name.WIT(p, "")
 		}
 		wit := p.WIT(ctx, name)
-		if wit != "" {
+		if len(packages) == 1 || strings.Count(wit, "\n") > 1 {
 			if hasContent {
 				b.WriteString("\n")
 			}
 			hasContent = true
 			b.WriteString(wit)
+			i++
 		}
 	}
 	return b.String()
@@ -1087,10 +1090,10 @@ func (p *Package) WIT(ctx Node, name string) string {
 	if multi {
 		b.WriteString("}\n")
 	}
-	// Return empty string in multi-package mode if package has no contents
-	if multi && i == 0 {
-		return ""
-	}
+	// Return empty string if package has no contents
+	// if i == 0 {
+	// 	return ""
+	// }
 	return b.String()
 }
 
