@@ -1,6 +1,45 @@
-package foo:another-pkg;
+package foo:root;
 
-interface other-interface {}
+interface foo {
+	use foo:wasi/clocks.{timestamp};
+	use foo:wasi/filesystem.{stat};
+}
+
+interface bar {
+	use foo:some-pkg/the-default.{from-default};
+	use foo:some-pkg/some-interface.{another-type};
+	use foo:some-pkg/another-interface.{yet-another-type};
+}
+
+interface use1 {
+	use foo:foreign-pkg/the-default.{some-type};
+}
+
+interface use2 {
+	use foo:foreign-pkg/the-default.{some-type};
+}
+
+world my-world {
+	import foo:wasi/filesystem;
+	import foo:wasi/clocks;
+	export foo:corp/saas;
+}
+
+world my-world2 {
+	import foo:wasi/filesystem;
+	import foo:wasi/clocks;
+	export foo;
+	export foo:corp/saas;
+}
+
+world bars-world {
+	import foo:some-pkg/the-default;
+	import foo:another-pkg/other-interface;
+}
+
+package foo:another-pkg {
+	interface other-interface {}
+}
 
 package foo:corp {
 	interface saas {}
@@ -8,45 +47,6 @@ package foo:corp {
 
 package foo:different-pkg {
 	interface i {}
-}
-
-package foo:root {
-	interface foo {
-		use foo:wasi/clocks.{timestamp};
-		use foo:wasi/filesystem.{stat};
-	}
-
-	interface bar {
-		use foo:some-pkg/the-default.{from-default};
-		use foo:some-pkg/some-interface.{another-type};
-		use foo:some-pkg/another-interface.{yet-another-type};
-	}
-
-	interface use1 {
-		use foo:foreign-pkg/the-default.{some-type};
-	}
-
-	interface use2 {
-		use foo:foreign-pkg/the-default.{some-type};
-	}
-
-	world my-world {
-		import foo:wasi/filesystem;
-		import foo:wasi/clocks;
-		export foo:corp/saas;
-	}
-
-	world my-world2 {
-		import foo:wasi/filesystem;
-		import foo:wasi/clocks;
-		export foo;
-		export foo:corp/saas;
-	}
-
-	world bars-world {
-		import foo:some-pkg/the-default;
-		import foo:another-pkg/other-interface;
-	}
 }
 
 package foo:foreign-pkg {
