@@ -1622,18 +1622,19 @@ func DependsOn(node Node, p *Package) bool {
 }
 
 func comparePackages(a, b *Package) int {
+	// fmt.Fprintln(os.Stderr, "comparing "+b.Name.String()+" to "+a.Name.String())
 	switch {
 	case a == b:
 		return 0
-	case DependsOn(b, a):
-		// println(b.Name.String() + " depends on " + a.Name.String())
-		return 1
 	case DependsOn(a, b):
-		// println(a.Name.String() + " depends on " + b.Name.String())
+		// fmt.Fprintln(os.Stderr, a.Name.String()+" depends on "+b.Name.String())
+		return 1
+	case DependsOn(b, a):
+		// fmt.Fprintln(os.Stderr, b.Name.String()+" depends on "+a.Name.String())
 		return -1
 	}
-	// println(a.Name.String() + " does not depend on " + b.Name.String())
-	return strings.Compare(a.Name.String(), b.Name.String())
+	// fmt.Fprintln(os.Stderr, a.Name.String()+" does not depend on "+b.Name.String())
+	return -1 * strings.Compare(a.Name.String(), b.Name.String())
 }
 
 // Stability represents the version or feature-gated stability of a given feature.
