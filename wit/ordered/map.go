@@ -14,6 +14,16 @@ type Map[K comparable, V any] struct {
 	m map[K]*element[K, V]
 }
 
+// Clone returns a shallow clone of m.
+func (m *Map[K, V]) Clone() *Map[K, V] {
+	var c Map[K, V]
+	m.All()(func(k K, v V) bool {
+		c.Set(k, v)
+		return true
+	})
+	return &c
+}
+
 // Get returns a value of type V if it exists in the map, otherwise the zero value.
 func (m *Map[K, V]) Get(k K) (v V) {
 	if e, ok := m.m[k]; ok {

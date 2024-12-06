@@ -1,5 +1,11 @@
 package wasm
 
+import (
+	"bytes"
+
+	"go.bytecodealliance.org/internal/wasm/uleb128"
+)
+
 // SectionID represents a WebAssembly [section SectionID].
 //
 // [section SectionID]: https://webassembly.github.io/spec/core/binary/modules.html#sections
@@ -47,6 +53,34 @@ func (*CustomSection) SectionID() SectionID {
 
 // SectionContents implements the [Section] interface.
 func (s *CustomSection) SectionContents() ([]byte, error) {
-	// TODO: encode name correctly
-	return append([]byte(s.Name), s.Contents...), nil
+	var buf bytes.Buffer
+	_, err := WriteString(&buf, s.Name)
+	if err != nil {
+		return nil, err
+	}
+	_, err = buf.Write(s.Contents)
+	return buf.Bytes(), err
+}
+
+type LinkingSection struct{}
+
+// SectionID implements the [Section] interface.
+func (*LinkingSection) SectionID() SectionID {
+	return SectionCustom
+}
+
+// SectionContents implements the [Section] interface.
+func (s *LinkingSection) SectionContents() ([]byte, error) {
+	var buf bytes.Buffer
+	custom := &CustomSection{Name: "linking"}
+	contents, err := custom.SectionContents()
+	if err != nil {
+		return nil, err
+	}
+	_, err = buf.Write(contents)
+	if err != nil {
+		return nil, err
+	}
+	_, err = uleb128.Write(&buf, 2) // linking section version 2
+	return buf.Bytes(), err
 }

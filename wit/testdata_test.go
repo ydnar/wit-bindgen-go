@@ -67,7 +67,7 @@ func TestGoldenWITFiles(t *testing.T) {
 }
 
 var canWasmTools = sync.OnceValue[bool](func() bool {
-	// This is explicitly NOT using exec.LookPath so itfails to run on WebAssembly.
+	// This is explicitly NOT using exec.LookPath so it fails to run on WebAssembly.
 	// This disables tests that require wasm-tools.
 	err := exec.Command("wasm-tools", "--version").Run()
 	return err == nil

@@ -18,6 +18,75 @@ type Node interface {
 	WIT(ctx Node, name string) string
 }
 
+// Returns true if node == dep.
+// Returns false if node or dep are nil.
+func DependsOn(node, dep Node) bool {
+	if node == nil || dep == nil {
+		return false
+	}
+	if node == dep {
+		return true
+	}
+
+	// Dereference InterfaceRefs
+	if ref, ok := dep.(*InterfaceRef); ok {
+		dep = ref.Interface
+	}
+
+	// TODO: is it harmful to despecialize before doing dependency check?
+	// e.g. it breaks the node == dep check?
+	if k, ok := node.(TypeDefKind); ok {
+		node = Despecialize(k)
+	}
+	if d, ok := node.(dependent); ok {
+		return d.dependsOn(dep)
+	}
+
+	return false
+}
+
+type dependent interface {
+	dependsOn(dep Node) bool
+}
+
+// Filter returns a [Node] suitable to passing to (Resolve).WIT to filter
+// the emitted WIT to a specific [World] and/or [Interface].
+func Filter(w *World, i *Interface) Node {
+	if w == nil && i == nil {
+		return nil
+	}
+	return &witFilter{
+		w: w,
+		i: i,
+	}
+}
+
+type witFilter struct {
+	w *World
+	i *Interface
+}
+
+func (*witFilter) WITKind() string             { panic("BUG: WITKind called on filter") }
+func (*witFilter) WIT(_ Node, _ string) string { panic("BUG: WIT called on filter") }
+
+// filter returns true if the supplied [Node] should be filtered out.
+func (f *witFilter) filter(node Node) bool {
+	if f == nil {
+		return false // allow for nil receiver
+	}
+	return (f.w != nil && filterNode(f.w, node)) || (f.i != nil && filterNode(f.i, node))
+}
+
+func filterNode(target, node Node) bool {
+	switch node := node.(type) {
+	case *Package:
+		return !DependsOn(node, target) && !DependsOn(target, node)
+	case *World:
+		return !DependsOn(node, target)
+	}
+	return !DependsOn(target, node)
+}
+
 func indent(s string) string {
 	const ws = "\t"
 	return strings.ReplaceAll(strings.TrimSuffix(ws+strings.ReplaceAll(s, "\n", "\n"+ws), ws), ws+"\n", "\n")
@@ -66,7 +135,7 @@ func (r *Resolve) WIT(ctx Node, _ string) string {
 		var name string
 		if i != 0 {
 			// Write subsequent packages with explicit name, which renders the package WIT with nested braces.
-			name = p.Name.WIT(p, "")
+			name = p.Name.WIT(ctx, "")
 		}
 		wit := p.WIT(ctx, name)
 		if len(packages) == 1 || strings.Count(wit, "\n") > 1 {
@@ -180,13 +249,14 @@ func (*World) WITKind() string { return "world" }
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 func (w *World) WIT(ctx Node, name string) string {
+	filter, _ := ctx.(*witFilter)
 	if name == "" {
 		name = w.Name
 	}
 	var b strings.Builder
-	b.WriteString(w.Docs.WIT(ctx, ""))
+	b.WriteString(w.Docs.WIT(nil, ""))
 	if w.Stability != nil {
-		b.WriteString(w.Stability.WIT(ctx, ""))
+		b.WriteString(w.Stability.WIT(nil, ""))
 		b.WriteRune('\n')
 	}
 	b.WriteString("world ")
@@ -194,6 +264,9 @@ func (w *World) WIT(ctx Node, name string) string {
 	b.WriteString(" {")
 	n := 0
 	w.Imports.All()(func(name string, i WorldItem) bool {
+		if filter.filter(i) {
+			return true
+		}
 		if f, ok := i.(*Function); ok {
 			if !f.IsFreestanding() {
 				return true
@@ -202,17 +275,18 @@ func (w *World) WIT(ctx Node, name string) string {
 		if n == 0 {
 			b.WriteRune('\n')
 		}
-		// b.WriteString(indent(w.itemWIT("import", name, i)))
 		b.WriteString(indent(i.WIT(worldImport{w}, name)))
 		b.WriteRune('\n')
 		n++
 		return true
 	})
 	w.Exports.All()(func(name string, i WorldItem) bool {
+		if filter.filter(i) {
+			return true
+		}
 		if n == 0 {
 			b.WriteRune('\n')
 		}
-		// b.WriteString(indent(w.itemWIT("export", name, i)))
 		b.WriteString(indent(i.WIT(worldExport{w}, name)))
 		b.WriteRune('\n')
 		n++
@@ -226,16 +300,6 @@ type (
 	worldImport struct{ *World }
 	worldExport struct{ *World }
 )
-
-func (w *World) itemWIT(motion, name string, v WorldItem) string {
-	switch v := v.(type) {
-	case *InterfaceRef, *Function:
-		return motion + " " + v.WIT(w, name) // TODO: handle resource methods?
-	case *TypeDef:
-		return v.WIT(w, name) // no motion, in Imports only
-	}
-	panic("BUG: unknown WorldItem")
-}
 
 // WITKind returns the WIT kind.
 func (*InterfaceRef) WITKind() string { return "interface ref" }
@@ -257,6 +321,8 @@ func (*Interface) WITKind() string { return "interface" }
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 func (i *Interface) WIT(ctx Node, name string) string {
+	// filter, _ := ctx.(*witFilter)
+
 	if i.Name != nil && name == "" {
 		name = *i.Name
 	}
@@ -264,16 +330,6 @@ func (i *Interface) WIT(ctx Node, name string) string {
 	var b strings.Builder
 
 	switch ctx := ctx.(type) {
-	case *Package:
-		b.WriteString(i.Docs.WIT(ctx, ""))
-		if i.Stability != nil {
-			b.WriteString(i.Stability.WIT(ctx, ""))
-			b.WriteRune('\n')
-		}
-		b.WriteString("interface ")
-		b.WriteString(escape(name))
-		b.WriteRune(' ')
-
 	case worldImport:
 		rname := relativeName(i, ctx.Package)
 		if rname != "" {
@@ -297,6 +353,16 @@ func (i *Interface) WIT(ctx Node, name string) string {
 		b.WriteString("export ")
 		b.WriteString(escape(name))
 		b.WriteString(": interface ")
+
+	default: // e.g. *Package
+		b.WriteString(i.Docs.WIT(ctx, ""))
+		if i.Stability != nil {
+			b.WriteString(i.Stability.WIT(ctx, ""))
+			b.WriteRune('\n')
+		}
+		b.WriteString("interface ")
+		b.WriteString(escape(name))
+		b.WriteRune(' ')
 	}
 
 	b.WriteRune('{')
@@ -304,6 +370,9 @@ func (i *Interface) WIT(ctx Node, name string) string {
 
 	// Emit use statements first
 	i.TypeDefs.All()(func(name string, td *TypeDef) bool {
+		// if filter.filter(td) {
+		// 	return true
+		// }
 		if td.Root().Owner == td.Owner {
 			return true // Skip declarations
 		}
@@ -318,6 +387,9 @@ func (i *Interface) WIT(ctx Node, name string) string {
 
 	// Declarations
 	i.TypeDefs.All()(func(name string, td *TypeDef) bool {
+		// if filter.filter(td) {
+		// 	return true
+		// }
 		if td.Root().Owner != td.Owner {
 			return true // Skip use statements
 		}
@@ -332,6 +404,9 @@ func (i *Interface) WIT(ctx Node, name string) string {
 
 	// Functions
 	i.Functions.All()(func(name string, f *Function) bool {
+		// if filter.filter(f) {
+		// 	return true
+		// }
 		if !f.IsFreestanding() {
 			return true
 		}
@@ -1044,10 +1119,7 @@ func (*Package) WITKind() string { return "package" }
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 func (p *Package) WIT(ctx Node, name string) string {
-	var filter *World
-	if w, ok := ctx.(*World); ok {
-		filter = w
-	}
+	filter, _ := ctx.(*witFilter)
 	multi := name != ""
 	var b strings.Builder
 	b.WriteString(p.Docs.WIT(ctx, ""))
@@ -1060,28 +1132,28 @@ func (p *Package) WIT(ctx Node, name string) string {
 	}
 	i := 0
 	p.Interfaces.All()(func(name string, face *Interface) bool {
-		if filter != nil && !filter.HasInterface(face) {
+		if filter.filter(face) {
 			return true
 		}
 		b.WriteRune('\n')
 		if multi {
-			b.WriteString(indent(face.WIT(p, name)))
+			b.WriteString(indent(face.WIT(ctx, name)))
 		} else {
-			b.WriteString(face.WIT(p, name))
+			b.WriteString(face.WIT(ctx, name))
 		}
 		b.WriteRune('\n')
 		i++
 		return true
 	})
 	p.Worlds.All()(func(name string, w *World) bool {
-		if filter != nil && w != filter {
+		if filter.filter(w) {
 			return true
 		}
 		b.WriteRune('\n')
 		if multi {
-			b.WriteString(indent(w.WIT(p, name)))
+			b.WriteString(indent(w.WIT(ctx, name)))
 		} else {
-			b.WriteString(w.WIT(p, name))
+			b.WriteString(w.WIT(ctx, name))
 		}
 		b.WriteRune('\n')
 		i++
@@ -1103,7 +1175,7 @@ func (id *Ident) WITKind() string { return "ident" }
 // WIT returns the [WIT] text format of [Ident] id.
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
-func (id *Ident) WIT(ctx Node, _ string) string {
+func (id *Ident) WIT(_ Node, _ string) string {
 	ide := Ident{
 		Namespace: escape(id.Namespace),
 		Package:   escape(id.Package),

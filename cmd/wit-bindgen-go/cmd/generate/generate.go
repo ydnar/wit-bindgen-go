@@ -28,7 +28,7 @@ var Command = &cli.Command{
 			Value:    "",
 			OnlyOnce: true,
 			Config:   cli.StringConfig{TrimSpace: true},
-			Usage:    "WIT world to generate, otherwise generate all worlds",
+			Usage:    "WIT world to generate, otherwise generate the first world",
 		},
 		&cli.StringFlag{
 			Name:      "out",
@@ -52,11 +52,15 @@ var Command = &cli.Command{
 			Value:    "",
 			OnlyOnce: true,
 			Config:   cli.StringConfig{TrimSpace: true},
-			Usage:    "Import path for the Component Model utility package, e.g. go.bytecodealliance.org/cm",
+			Usage:    "import path for the Component Model utility package, e.g. go.bytecodealliance.org/cm",
 		},
 		&cli.BoolFlag{
 			Name:  "versioned",
-			Usage: "emit versioned Go package(s) for each WIT version",
+			Usage: "emit versioned Go package(s) corresponding to WIT package version",
+		},
+		&cli.BoolFlag{
+			Name:  "generate-wit",
+			Usage: "generate a WIT file for each generated Go package corresponding to each WIT world or interface",
 		},
 		&cli.BoolFlag{
 			Name:  "dry-run",
@@ -68,16 +72,17 @@ var Command = &cli.Command{
 
 // Config is the configuration for the `generate` command.
 type config struct {
-	logger    logging.Logger
-	dryRun    bool
-	out       string
-	outPerm   os.FileMode
-	pkgRoot   string
-	world     string
-	cm        string
-	versioned bool
-	forceWIT  bool
-	path      string
+	logger      logging.Logger
+	dryRun      bool
+	out         string
+	outPerm     os.FileMode
+	pkgRoot     string
+	world       string
+	cm          string
+	versioned   bool
+	generateWIT bool
+	forceWIT    bool
+	path        string
 }
 
 func action(ctx context.Context, cmd *cli.Command) error {
@@ -94,10 +99,11 @@ func action(ctx context.Context, cmd *cli.Command) error {
 	packages, err := bindgen.Go(res,
 		bindgen.GeneratedBy(cmd.Root().Name),
 		bindgen.Logger(cfg.logger),
-		bindgen.World(cfg.world),
 		bindgen.PackageRoot(cfg.pkgRoot),
-		bindgen.Versioned(cfg.versioned),
+		bindgen.World(cfg.world),
 		bindgen.CMPackage(cfg.cm),
+		bindgen.Versioned(cfg.versioned),
+		bindgen.WIT(cfg.generateWIT),
 	)
 	if err != nil {
 		return err
@@ -141,6 +147,7 @@ func parseFlags(_ context.Context, cmd *cli.Command) (*config, error) {
 		cmd.String("world"),
 		cmd.String("cm"),
 		cmd.Bool("versioned"),
+		cmd.Bool("generate-wit"),
 		cmd.Bool("force-wit"),
 		path,
 	}, nil
