@@ -34,7 +34,7 @@ jobs:
           go-version-file: go.mod
 
       - name: Vet Go code
-        run: go vet ./...
+        run: go vet ./... ./cm/... ./tests/...
 
   # Test with Go
   test-go:
@@ -61,15 +61,15 @@ jobs:
           version: ${{ env.wasm-tools-version }}
 
       - name: Run Go tests
-        run: go test -v ./...
+        run: go test -v ./... ./cm/...
 
       - name: Run Go tests with race detector
-        run: go test -v -race ./...
+        run: go test -v -race ./... ./cm/...
 
       - name: Test Go without cgo
         env:
           CGO_ENABLED: 0
-        run: go test -v ./...
+        run: go test -v ./... ./cm/...
 
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
@@ -108,7 +108,7 @@ jobs:
           version: ${{ env.wasm-tools-version }}
 
       - name: Test with TinyGo
-        run: tinygo test -v ./...
+        run: tinygo test -v ./... ./cm/...
 
       - name: Verify repo is unchanged
         run: git diff --exit-code HEAD
@@ -164,19 +164,19 @@ jobs:
         env:
           GOARCH: wasm
           GOOS: wasip1
-        run: go test -v ./...
+        run: go test -v ./... ./cm/...
 
       - name: Test wasm/wasip1 with TinyGo 0.32.0
         if: ${{ matrix.tinygo-version == '0.32.0' }}
-        run: tinygo test -v -target=wasi ./...
+        run: tinygo test -v -target=wasi ./... ./cm/...
 
       - name: Test wasm/wasip1 with TinyGo >= 0.33.0
         if: ${{ matrix.tinygo-version != '0.32.0' }}
-        run: tinygo test -v -target=wasip1 ./...
+        run: tinygo test -v -target=wasip1 ./... ./cm/...
 
       - name: Test wasm/wasip2 with TinyGo >= 0.33.0
         if: ${{ matrix.tinygo-version != '0.32.0' }}
-        run: tinygo test -v -target=wasip2 ./...
+        run: tinygo test -v -target=wasip2 ./... ./cm/...
 
       - name: Test generated Go with TinyGo >= 0.34.0
         if: ${{ matrix.tinygo-version != '0.32.0' && matrix.tinygo-version != '0.33.0' }}
