@@ -7,9 +7,10 @@ on:
 
 jobs:
   build:
+    name: Build binaries
+    needs: tag
     permissions:
       contents: write
-    name: Build Binaries
     runs-on: ubuntu-latest
 
     strategy:
@@ -21,7 +22,7 @@ jobs:
             goarch: arm64
 
     steps:
-      - name: Checkout Code
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Set up Go
@@ -32,14 +33,14 @@ jobs:
       - name: Run Go tests
         run: go test -v ./...
 
-      - name: Build Binary
+      - name: Build binary
         run: |
           mkdir -p build
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o wit-bindgen-go ./cmd/wit-bindgen-go
           tar -czvf build/wit-bindgen-go-${{ matrix.goos }}-${{ matrix.goarch }}.tgz wit-bindgen-go
           rm wit-bindgen-go
 
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: wit-bindgen-go_${{ matrix.goos }}_${{ matrix.goarch }}
@@ -47,11 +48,11 @@ jobs:
           retention-days: 1
 
   release:
-    name: Create GitHub Release
+    name: Create GitHub release
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Download Artifacts
@@ -60,14 +61,14 @@ jobs:
           path: build/
           merge-multiple: true # all artifacts are downloaded to this directory
 
-      - name: Extract Release Notes
+      - name: Extract release notes
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           cd $GITHUB_WORKSPACE
           ./scripts/extract-changelog.sh $TAG_NAME > RELEASE_NOTES.md
           cat RELEASE_NOTES.md
 
-      - name: Create Release
+      - name: Create release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
