@@ -4,8 +4,6 @@ import (
 	"runtime"
 	"testing"
 	"unsafe"
-
-	"go.bytecodealliance.org/internal/tinyunsafe"
 )
 
 func TestFieldAlignment(t *testing.T) {
@@ -18,7 +16,7 @@ func TestFieldAlignment(t *testing.T) {
 	if got, want := unsafe.Sizeof(v1), uintptr(16); got != want {
 		t.Errorf("unsafe.Sizeof(v1): %d, expected %d", got, want)
 	}
-	if got, want := tinyunsafe.OffsetOf(&v1, &v1.u64), uintptr(8); got != want {
+	if got, want := offsetOf(&v1, &v1.u64), uintptr(8); got != want {
 		t.Errorf("unsafe.Offsetof(v1.u64): %d, expected %d", got, want)
 	}
 
@@ -36,7 +34,7 @@ func TestFieldAlignment(t *testing.T) {
 	if got, want := unsafe.Sizeof(v2), uintptr(16); got != want {
 		t.Errorf("unsafe.Sizeof(v2): %d, expected %d", got, want)
 	}
-	if got, want := tinyunsafe.OffsetOf(&v2, &v2.u64), uintptr(8); got != want {
+	if got, want := offsetOf(&v2, &v2.u64), uintptr(8); got != want {
 		t.Errorf("unsafe.Offsetof(v2.u64): %d, expected %d", got, want)
 	}
 
@@ -49,7 +47,7 @@ func TestFieldAlignment(t *testing.T) {
 	if got, want := unsafe.Sizeof(v3), uintptr(1); got != want {
 		t.Errorf("unsafe.Sizeof(v3): %d, expected %d", got, want)
 	}
-	if got, want := tinyunsafe.OffsetOf(&v3, &v3.b), uintptr(0); got != want {
+	if got, want := offsetOf(&v3, &v3.b), uintptr(0); got != want {
 		t.Errorf("unsafe.Offsetof(v3.b): %d, expected %d", got, want)
 	}
 
@@ -62,7 +60,7 @@ func TestFieldAlignment(t *testing.T) {
 	if got, want := unsafe.Sizeof(v4), uintptr(4); got != want {
 		t.Errorf("unsafe.Sizeof(v4): %d, expected %d", got, want)
 	}
-	if got, want := tinyunsafe.OffsetOf(&v4, &v4.b), uintptr(0); got != want {
+	if got, want := offsetOf(&v4, &v4.b), uintptr(0); got != want {
 		t.Errorf("unsafe.Offsetof(v4.b): %d, expected %d", got, want)
 	}
 }
