@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     name: Build binaries
-    needs: tag
     permissions:
       contents: write
     runs-on: ubuntu-latest
