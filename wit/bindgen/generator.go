@@ -719,13 +719,13 @@ func (g *generator) recordRep(file *gen.File, dir wit.Direction, r *wit.Record, 
 	exported := len(goName) == 0 || token.IsExported(goName)
 	var b strings.Builder
 	b.WriteString("struct {\n")
-	stringio.Write(&b, "_ ", file.Import(g.opts.cmPackage), ".HostLayout")
+	stringio.Write(&b, "_ ", file.Import(g.opts.cmPackage), ".HostLayout `json:\"-\"`")
 	for i, f := range r.Fields {
 		if i == 0 || i > 0 && f.Docs.Contents != "" {
 			b.WriteRune('\n')
 		}
 		b.WriteString(formatDocComments(f.Docs.Contents, false))
-		stringio.Write(&b, fieldName(f.Name, exported), " ", g.typeRep(file, dir, f.Type), "\n")
+		stringio.Write(&b, fieldName(f.Name, exported), " ", g.typeRep(file, dir, f.Type), " `json:\"", f.Name, "\"`\n")
 	}
 	b.WriteRune('}')
 	return b.String()
