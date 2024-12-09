@@ -263,12 +263,12 @@ func (v IPAddress) String() string {
 //		address: ipv4-address,
 //	}
 type IPv4SocketAddress struct {
-	_ cm.HostLayout
+	_ cm.HostLayout `json:"-"`
 	// sin_port
-	Port uint16
+	Port uint16 `json:"port"`
 
 	// sin_addr
-	Address IPv4Address
+	Address IPv4Address `json:"address"`
 }
 
 // IPv6SocketAddress represents the record "wasi:sockets/network@0.2.0#ipv6-socket-address".
@@ -280,18 +280,18 @@ type IPv4SocketAddress struct {
 //		scope-id: u32,
 //	}
 type IPv6SocketAddress struct {
-	_ cm.HostLayout
+	_ cm.HostLayout `json:"-"`
 	// sin6_port
-	Port uint16
+	Port uint16 `json:"port"`
 
 	// sin6_flowinfo
-	FlowInfo uint32
+	FlowInfo uint32 `json:"flow-info"`
 
 	// sin6_addr
-	Address IPv6Address
+	Address IPv6Address `json:"address"`
 
 	// sin6_scope_id
-	ScopeID uint32
+	ScopeID uint32 `json:"scope-id"`
 }
 
 // IPSocketAddress represents the variant "wasi:sockets/network@0.2.0#ip-socket-address".

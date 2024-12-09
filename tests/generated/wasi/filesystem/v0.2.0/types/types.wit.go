@@ -246,34 +246,34 @@ type LinkCount uint64
 //		status-change-timestamp: option<datetime>,
 //	}
 type DescriptorStat struct {
-	_ cm.HostLayout
+	_ cm.HostLayout `json:"-"`
 	// File type.
-	Type DescriptorType
+	Type DescriptorType `json:"type"`
 
 	// Number of hard links to the file.
-	LinkCount LinkCount
+	LinkCount LinkCount `json:"link-count"`
 
 	// For regular files, the file size in bytes. For symbolic links, the
 	// length in bytes of the pathname contained in the symbolic link.
-	Size FileSize
+	Size FileSize `json:"size"`
 
 	// Last data access timestamp.
 	//
 	// If the `option` is none, the platform doesn't maintain an access
 	// timestamp for this file.
-	DataAccessTimestamp cm.Option[DateTime]
+	DataAccessTimestamp cm.Option[DateTime] `json:"data-access-timestamp"`
 
 	// Last data modification timestamp.
 	//
 	// If the `option` is none, the platform doesn't maintain a
 	// modification timestamp for this file.
-	DataModificationTimestamp cm.Option[DateTime]
+	DataModificationTimestamp cm.Option[DateTime] `json:"data-modification-timestamp"`
 
 	// Last file status-change timestamp.
 	//
 	// If the `option` is none, the platform doesn't maintain a
 	// status-change timestamp for this file.
-	StatusChangeTimestamp cm.Option[DateTime]
+	StatusChangeTimestamp cm.Option[DateTime] `json:"status-change-timestamp"`
 }
 
 // NewTimestamp represents the variant "wasi:filesystem/types@0.2.0#new-timestamp".
@@ -346,12 +346,12 @@ func (v NewTimestamp) String() string {
 //		name: string,
 //	}
 type DirectoryEntry struct {
-	_ cm.HostLayout
+	_ cm.HostLayout `json:"-"`
 	// The type of the file referred to by this directory entry.
-	Type DescriptorType
+	Type DescriptorType `json:"type"`
 
 	// The name of the object.
-	Name string
+	Name string `json:"name"`
 }
 
 // ErrorCode represents the enum "wasi:filesystem/types@0.2.0#error-code".
@@ -625,12 +625,12 @@ func (e Advice) String() string {
 //		upper: u64,
 //	}
 type MetadataHashValue struct {
-	_ cm.HostLayout
+	_ cm.HostLayout `json:"-"`
 	// 64 bits of a 128-bit hash value.
-	Lower uint64
+	Lower uint64 `json:"lower"`
 
 	// Another 64 bits of a 128-bit hash value.
-	Upper uint64
+	Upper uint64 `json:"upper"`
 }
 
 // Descriptor represents the imported resource "wasi:filesystem/types@0.2.0#descriptor".

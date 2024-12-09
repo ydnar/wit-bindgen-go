@@ -31,9 +31,9 @@ import (
 //		nanoseconds: u32,
 //	}
 type DateTime struct {
-	_           cm.HostLayout
-	Seconds     uint64
-	Nanoseconds uint32
+	_           cm.HostLayout `json:"-"`
+	Seconds     uint64        `json:"seconds"`
+	Nanoseconds uint32        `json:"nanoseconds"`
 }
 
 // Now represents the imported function "now".
