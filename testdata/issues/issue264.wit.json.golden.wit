@@ -1,0 +1,10 @@
+package issues:issue264;
+
+interface i {
+	type boolean = bool;
+	f: func() -> boolean;
+}
+
+world w {
+	import i;
+}
