@@ -3,6 +3,8 @@ package cm
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"strings"
 	"unsafe"
 )
 
@@ -70,7 +72,22 @@ func (l list[T]) Len() uintptr {
 
 // MarshalJSON implements json.Marshaler.
 func (l list[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(l.Slice())
+	s := l.Slice()
+
+	if s == nil {
+		return nullLiteral, nil
+	}
+
+	// NOTE(lxf): Go JSON Encoder will serialize []byte as base64.
+	// We override that behavior so all int types have the same serialization format.
+	// []uint8{1,2,3} -> [1,2,3]
+	// []uint32{1,2,3} -> [1,2,3]
+	if byteArray, ok := any(s).([]byte); ok {
+		encoded := strings.Join(strings.Fields(fmt.Sprintf("%d", byteArray)), ",")
+		return []byte(encoded), nil
+	}
+
+	return json.Marshal(s)
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
