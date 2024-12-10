@@ -1456,7 +1456,7 @@ func (g *generator) cast(file *gen.File, dir wit.Direction, from, to wit.Type, i
 	if t != nil {
 		return g.cmCall(file, goKind(from)+"To"+goKind(to)+"["+g.typeRep(file, dir, t)+"]", input)
 	}
-	return g.cmCall(file, goKind(from)+"To"+goKind(to), input)
+	return "(" + g.typeRep(file, dir, to) + ")(" + g.cmCall(file, goKind(from)+"To"+goKind(to), input) + ")"
 }
 
 func goKind(t wit.Node) string {
