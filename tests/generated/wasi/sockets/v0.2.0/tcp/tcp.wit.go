@@ -241,7 +241,7 @@ func (self TCPSocket) HopLimit() (result cm.Result[uint8, uint8, ErrorCode]) {
 func (self TCPSocket) IsListening() (result bool) {
 	self0 := cm.Reinterpret[uint32](self)
 	result0 := wasmimport_TCPSocketIsListening((uint32)(self0))
-	result = cm.U32ToBool((uint32)(result0))
+	result = (bool)(cm.U32ToBool((uint32)(result0)))
 	return
 }
 
@@ -457,7 +457,7 @@ func (self TCPSocket) SetKeepAliveCount(value uint32) (result cm.Result[ErrorCod
 //go:nosplit
 func (self TCPSocket) SetKeepAliveEnabled(value bool) (result cm.Result[ErrorCode, struct{}, ErrorCode]) {
 	self0 := cm.Reinterpret[uint32](self)
-	value0 := cm.BoolToU32(value)
+	value0 := (uint32)(cm.BoolToU32(value))
 	wasmimport_TCPSocketSetKeepAliveEnabled((uint32)(self0), (uint32)(value0), &result)
 	return
 }

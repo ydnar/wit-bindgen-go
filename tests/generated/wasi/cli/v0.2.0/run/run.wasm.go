@@ -12,6 +12,6 @@ import (
 //export wasi:cli/run@0.2.0#run
 func wasmexport_Run() (result0 uint32) {
 	result := Exports.Run()
-	result0 = cm.BoolToU32(result)
+	result0 = (uint32)(cm.BoolToU32(result))
 	return
 }
