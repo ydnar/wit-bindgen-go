@@ -6,20 +6,6 @@ on:
       - 'v[0-9]+.[0-9]+.*'
 
 jobs:
-  tag:
-    name: Tag modules
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Tag module cm
-        run: |
-            git tag cm/${{ github.ref_name }} ${{ github.ref_name }}
-            git push origin cm/${{ github.ref_name }}
-
   build:
     name: Build binaries
     permissions:
