@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Breaking: package [`cm`](https://pkg.go.dev/go.bytecodealliance.org/cm) is now a separate [module](https://go.dev/ref/mod). This change was made in order to minimize the runtime dependencies of programs that depend on package `cm` but not the rest of the packages in this module. To update your code that depends on package `cm`, run `go get -u go.bytecodealliance.org/...`.
+
 ### Fixed
 
 - [#264](https://github.com/bytecodealliance/go-modules/issues/264): fix lowering for imported functions that return named `bool` types.
