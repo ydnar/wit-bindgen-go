@@ -1,6 +1,7 @@
 package wit
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -63,18 +64,20 @@ func loadWIT(path string, reader io.Reader) (*Resolve, error) {
 	} else {
 		stdin = reader
 	}
-	wasmTools, err := wasmtools.NewWasmTools(ctx)
+	wasmTools, err := wasmtools.New(ctx)
 	if err != nil {
 		return nil, err
 	}
 	stdout, stderr, err := wasmTools.Run(ctx, args, stdin, fsMap, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error executing wasm-tools: %w\nstderr: %s", err, stderr.String())
+		return nil, fmt.Errorf("error executing wasm-tools: %w", err)
 	}
-
-	if stderr.Len() > 0 {
-		fmt.Fprint(os.Stderr, stderr.String())
+	if stderr != nil {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(stderr)
+		if buf.Len() > 0 {
+			return nil, fmt.Errorf("%s", buf.String())
+		}
 	}
-
 	return DecodeJSON(stdout)
 }

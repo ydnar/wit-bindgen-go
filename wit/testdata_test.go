@@ -1,6 +1,7 @@
 package wit
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
@@ -81,7 +82,7 @@ func TestGoldenWITRoundTrip(t *testing.T) {
 		return
 	}
 	ctx := context.Background()
-	wasmTools, err := wasmtools.NewWasmTools(ctx)
+	wasmTools, err := wasmtools.New(ctx)
 	if err != nil {
 		t.Skipf("wasm-tools not available: %v", err)
 		return
@@ -96,11 +97,17 @@ func TestGoldenWITRoundTrip(t *testing.T) {
 			fsMap := make(map[fs.FS]string)
 			stdout, stderr, err := wasmTools.Run(ctx, args, stdin, fsMap, &path)
 			if err != nil {
-				t.Error(stderr.String())
 				t.Errorf("wasm-tools: %v", err)
 				return
 			}
-
+			if stderr != nil {
+				buf := new(bytes.Buffer)
+				buf.ReadFrom(stderr)
+				if buf.Len() > 0 {
+					t.Error(buf.String())
+					return
+				}
+			}
 			// Parse the JSON into a Resolve.
 			res2, err := DecodeJSON(stdout)
 			if err != nil {
