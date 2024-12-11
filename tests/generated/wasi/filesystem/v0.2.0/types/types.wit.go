@@ -761,7 +761,7 @@ func (self Descriptor) IsSameObject(other Descriptor) (result bool) {
 	self0 := cm.Reinterpret[uint32](self)
 	other0 := cm.Reinterpret[uint32](other)
 	result0 := wasmimport_DescriptorIsSameObject((uint32)(self0), (uint32)(other0))
-	result = cm.U32ToBool((uint32)(result0))
+	result = (bool)(cm.U32ToBool((uint32)(result0)))
 	return
 }
 

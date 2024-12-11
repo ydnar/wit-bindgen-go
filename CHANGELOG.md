@@ -2,6 +2,12 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- [#264](https://github.com/bytecodealliance/go-modules/issues/264): fix lowering for imported functions that return named `bool` types.
+
 ## [v0.4.1] — 2024-12-09
 
 ### Added
