@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"math"
 	"reflect"
+	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -169,6 +171,12 @@ func TestListMarshalJSON(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// NOTE(lxf): skip marshal errors in tinygo as it uses 'defer'
+			// needs tinygo 0.35-dev
+			if tt.w.wantErr() && runtime.Compiler == "tinygo" && strings.Contains(runtime.GOARCH, "wasm") {
+				return
+			}
+
 			data, err := json.Marshal(tt.w.outer())
 			if err != nil {
 				if tt.w.wantErr() {

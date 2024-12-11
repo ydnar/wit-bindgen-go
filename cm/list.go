@@ -3,8 +3,6 @@ package cm
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"strings"
 	"unsafe"
 )
 
@@ -82,12 +80,7 @@ func (l list[T]) MarshalJSON() ([]byte, error) {
 	// We override that behavior so all int types have the same serialization format.
 	// []uint8{1,2,3} -> [1,2,3]
 	// []uint32{1,2,3} -> [1,2,3]
-	if byteArray, ok := any(s).([]byte); ok {
-		encoded := strings.Join(strings.Fields(fmt.Sprintf("%d", byteArray)), ",")
-		return []byte(encoded), nil
-	}
-
-	return json.Marshal(s)
+	return json.Marshal(sliceOf(s))
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
@@ -106,4 +99,16 @@ func (l *list[T]) UnmarshalJSON(data []byte) error {
 	l.len = uintptr(len(s))
 
 	return nil
+}
+
+type entry[T any] [1]T
+
+func (v entry[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v[0])
+}
+
+type slice[T any] []entry[T]
+
+func sliceOf[S ~[]E, E any](s S) slice[E] {
+	return *(*slice[E])(unsafe.Pointer(&s))
 }
