@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 
@@ -52,13 +53,13 @@ func loadWIT(path string, reader io.Reader) (*Resolve, error) {
 
 	ctx := context.Background()
 	args := []string{"component", "wit", "-j", "--all-features"}
-	fsMap := make(map[string]string)
+	fsMap := make(map[fs.FS]string)
 	var stdin io.Reader
 
 	if path != "" {
 		args = append(args, path)
 		dir := filepath.Dir(path)
-		fsMap[dir] = dir
+		fsMap[os.DirFS(dir)] = dir
 	} else {
 		stdin = reader
 	}

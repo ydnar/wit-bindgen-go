@@ -7,6 +7,7 @@ import (
 	_ "embed"
 	"fmt"
 	"io"
+	"io/fs"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
@@ -17,7 +18,7 @@ var wasmTools []byte
 
 // Executor is an interface for running Wasm modules.
 type Executor interface {
-	Run(ctx context.Context, args []string, stdin io.Reader, fsMap map[string]string) (stdout *bytes.Buffer, stderr *bytes.Buffer, err error)
+	Run(ctx context.Context, args []string, stdin io.Reader, fsMap map[fs.FS]string, name *string) (stdout *bytes.Buffer, stderr *bytes.Buffer, err error)
 }
 
 type WasmTools struct {
@@ -43,7 +44,7 @@ func (w *WasmTools) Close(ctx context.Context) error {
 	return w.runtime.Close(ctx)
 }
 
-func (w *WasmTools) Run(ctx context.Context, args []string, stdin io.Reader, fsMap map[string]string, name *string) (stdout *bytes.Buffer, stderr *bytes.Buffer, err error) {
+func (w *WasmTools) Run(ctx context.Context, args []string, stdin io.Reader, fsMap map[fs.FS]string, name *string) (stdout *bytes.Buffer, stderr *bytes.Buffer, err error) {
 	stdout = &bytes.Buffer{}
 	stderr = &bytes.Buffer{}
 
@@ -63,8 +64,8 @@ func (w *WasmTools) Run(ctx context.Context, args []string, stdin io.Reader, fsM
 	}
 
 	fsConfig := wazero.NewFSConfig()
-	for hostPath, mountPath := range fsMap {
-		fsConfig = fsConfig.WithDirMount(hostPath, mountPath)
+	for f, guestPath := range fsMap {
+		fsConfig = fsConfig.WithFSMount(f, guestPath)
 	}
 	config = config.WithFSConfig(fsConfig)
 
