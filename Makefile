@@ -6,7 +6,7 @@ json: $(wit_files)
 
 .PHONY: $(wit_files)
 $(wit_files): internal/wasmtools/wasm-tools.wasm
-	wasmtime --dir testdata internal/wasmtools/wasm-tools.wasm component wit -j --all-features $@ > $@.json
+	wasmtime --dir . internal/wasmtools/wasm-tools.wasm component wit -j --all-features $@ > $@.json
 
 # golden recompiles the .golden.wit test files.
 .PHONY: golden
