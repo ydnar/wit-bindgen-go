@@ -95,7 +95,8 @@ func TestGoldenWITRoundTrip(t *testing.T) {
 			fsMap := make(map[string]string)
 			stdout, stderr, err := wasmTools.Run(ctx, args, stdin, fsMap, &path)
 			if err != nil {
-				t.Errorf("Error executing wasm-tools: %v\nStderr: %s", err, stderr.String())
+				t.Error(stderr.String())
+				t.Errorf("wasm-tools: %v", err)
 				return
 			}
 
