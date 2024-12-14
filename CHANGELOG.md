@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Breaking: package [`cm`](https://pkg.go.dev/go.bytecodealliance.org/cm) is now a separate [module](https://go.dev/ref/mod). This change was made in order to minimize the runtime dependencies of programs that depend on package `cm` but not the rest of the packages in this module. To update your code that depends on package `cm`, run `go get -u go.bytecodealliance.org/...`.
+
 ### Fixed
 
 - [#264](https://github.com/bytecodealliance/go-modules/issues/264): fix lowering for imported functions that return named `bool` types.
@@ -14,14 +18,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `wit-bindgen-go wit` now accepts an `--interface` argument in the form of `monotonic-clock`, `wasi:clocks/monotonic-clock`, or `wasi:clocks/monotonic-clock@0.2.0`. This filters the serialized WIT to a specific interface and the other interface(s) it references. This can be used to generate focused WIT with a minimal set of dependencies, and can be combined with the `--world` argument to filter serialized WIT to the intersection of a specific world and interface.
 
-### Fixed
-
-- [#240](https://github.com/bytecodealliance/go-modules/issues/240): correctly handle cyclical data structures when generating variant lowering code.
-
 ### Changed
 
 - Breaking: package `wit` no longer interprets `-` to read from stdin when loading JSON or WIT using `wit.LoadJSON` or `wit.LoadWIT`. Use `wit.DecodeJSON` or `wit.DecodeWIT` to read JSON or WIT from an `io.Reader`.
 - Breaking: `wit.ParseWIT` has been removed. Use `wit.DecodeWIT(bytes.NewReader(b))` instead.
+
+### Fixed
+
+- [#240](https://github.com/bytecodealliance/go-modules/issues/240): correctly handle cyclical data structures when generating variant lowering code.
 
 ## [v0.4.0] — 2024-11-05
 

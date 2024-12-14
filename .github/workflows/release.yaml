@@ -5,6 +5,9 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.*'
 
+env:
+  go-modules: ./... ./cm/...
+
 jobs:
   build:
     name: Build binaries
@@ -30,7 +33,7 @@ jobs:
           go-version-file: go.mod
 
       - name: Run Go tests
-        run: go test -v ./...
+        run: go test ${{ env.go-modules }}
 
       - name: Build binary
         run: |
