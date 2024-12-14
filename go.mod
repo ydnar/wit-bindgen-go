@@ -7,7 +7,7 @@ require (
 	github.com/regclient/regclient v0.7.2
 	github.com/sergi/go-diff v1.3.1
 	github.com/urfave/cli/v3 v3.0.0-beta1
-	go.bytecodealliance.org/cm v0.1.0-pre.1
+	go.bytecodealliance.org/cm v0.1.0
 	golang.org/x/mod v0.22.0
 	golang.org/x/tools v0.28.0
 )
