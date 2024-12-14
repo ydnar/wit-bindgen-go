@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/coreos/go-semver v0.3.1
-	github.com/regclient/regclient v0.7.2
+	github.com/regclient/regclient v0.8.0
 	github.com/sergi/go-diff v1.3.1
 	github.com/urfave/cli/v3 v3.0.0-beta1
 	go.bytecodealliance.org/cm v0.1.0
