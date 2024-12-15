@@ -21,6 +21,7 @@ generated: clean json
 .PHONY: clean
 clean:
 	rm -rf ./generated/*
+	rm -f internal/wasmtools/wasm-tools.wasm.gz
 
 # tests/generated writes generated Go code to the tests directory
 .PHONY: tests/generated
@@ -32,10 +33,13 @@ tests/generated: json
 build: internal/wasmtools/wasm-tools.wasm
 	go build -o wit-bindgen-go ./cmd/wit-bindgen-go
 
-internal/wasmtools/wasm-tools.wasm:
+internal/wasmtools/wasm-tools.wasm: internal/wasmtools/wasm-tools.wasm.gz
+	gzip -dc $< > $@
+
+internal/wasmtools/wasm-tools.wasm.gz:
 	cd internal/wasmtools && \
 	cargo build --target wasm32-wasip1 --release -p wasm-tools
-	mv internal/wasmtools/target/wasm32-wasip1/release/wasm-tools.wasm $@
+	gzip -c internal/wasmtools/target/wasm32-wasip1/release/wasm-tools.wasm > $@
 
 # test runs Go and TinyGo tests
 GOTESTARGS :=
