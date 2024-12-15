@@ -20,11 +20,13 @@ import (
 //go:embed wasm-tools.wasm
 var wasmTools []byte
 
+// Instance is a compiled wazero instance.
 type Instance struct {
 	runtime wazero.Runtime
 	module  wazero.CompiledModule
 }
 
+// New creates a new wazero instance.
 func New(ctx context.Context) (*Instance, error) {
 	c := wazero.NewRuntimeConfig().WithCloseOnContextDone(true)
 	r := wazero.NewRuntimeWithConfig(ctx, c)
@@ -32,7 +34,6 @@ func New(ctx context.Context) (*Instance, error) {
 		return nil, fmt.Errorf("error instantiating WASI: %w", err)
 	}
 
-	// Compile and instantiate the module
 	module, err := r.CompileModule(ctx, wasmTools)
 	if err != nil {
 		return nil, fmt.Errorf("error compiling wasm module: %w", err)
@@ -40,10 +41,14 @@ func New(ctx context.Context) (*Instance, error) {
 	return &Instance{runtime: r, module: module}, nil
 }
 
+// Close closes the wazero runtime resource.
 func (w *Instance) Close(ctx context.Context) error {
 	return w.runtime.Close(ctx)
 }
 
+// Run runs the wasm module with the context, arguments, stdin, filesystem map, and name.
+// It returns the stdout, stderr, and error.
+// The execution times out after 10 seconds.
 func (w *Instance) Run(ctx context.Context, args []string, stdin io.Reader, fsMap map[fs.FS]string, name *string) (stdout io.Reader, stderr io.Reader, err error) {
 	stdoutBuffer := &bytes.Buffer{}
 	stderrBuffer := &bytes.Buffer{}
