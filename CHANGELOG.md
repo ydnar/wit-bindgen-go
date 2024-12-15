@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- `internal/wasmtools` now loads compiled `wasm-tools` Wasm module from the `wasm-tools` crate and executes it using wazero. This allows `wit-bindgen-go` to run on any platform without needing to install `wasm-tools` natively.
+- [`wasm-tools`](https://crates.io/crates/wasm-tools) is now vendored as a WebAssembly module, executed using [Wazero](https://wazero.io/). This allows package `wit` and `wit-bindgen-go` to run on any supported platform without needing to separately install `wasm-tools`.
 
 ### Changed
 

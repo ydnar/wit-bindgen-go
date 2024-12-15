@@ -54,13 +54,13 @@ func loadWIT(path string, reader io.Reader) (*Resolve, error) {
 
 	ctx := context.Background()
 	args := []string{"component", "wit", "-j", "--all-features"}
-	fsMap := make(map[fs.FS]string)
+	fsMap := make(map[string]fs.FS)
 	var stdin io.Reader
 
 	if path != "" {
 		args = append(args, path)
 		dir := filepath.Dir(path)
-		fsMap[os.DirFS(dir)] = dir
+		fsMap[dir] = os.DirFS(dir)
 	} else {
 		stdin = reader
 	}
@@ -68,16 +68,10 @@ func loadWIT(path string, reader io.Reader) (*Resolve, error) {
 	if err != nil {
 		return nil, err
 	}
-	stdout, stderr, err := wasmTools.Run(ctx, args, stdin, fsMap, nil)
+	stdout := &bytes.Buffer{}
+	err = wasmTools.Run(ctx, stdin, stdout, nil, fsMap, args...)
 	if err != nil {
 		return nil, fmt.Errorf("error executing wasm-tools: %w", err)
-	}
-	if stderr != nil {
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(stderr)
-		if buf.Len() > 0 {
-			return nil, fmt.Errorf("%s", buf.String())
-		}
 	}
 	return DecodeJSON(stdout)
 }

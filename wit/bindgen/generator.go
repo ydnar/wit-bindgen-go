@@ -5,23 +5,27 @@ package bindgen
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"go/token"
 	"io"
-	"os/exec"
+	"io/fs"
 	"path"
 	"path/filepath"
 	"runtime"
 	"slices"
 	"strconv"
 	"strings"
+	"testing/fstest"
+	"time"
 
 	"go.bytecodealliance.org/cm"
 	"go.bytecodealliance.org/internal/codec"
 	"go.bytecodealliance.org/internal/go/gen"
 	"go.bytecodealliance.org/internal/stringio"
 	"go.bytecodealliance.org/internal/wasm"
+	"go.bytecodealliance.org/internal/wasmtools"
 	"go.bytecodealliance.org/wit"
 	"go.bytecodealliance.org/wit/logging"
 )
@@ -123,6 +127,8 @@ type generator struct {
 	// lowering and lifting functions for defined types.
 	lowerFunctions map[typeUse]function
 	liftFunctions  map[typeUse]function
+
+	wasmTools *wasmtools.Instance
 }
 
 func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
@@ -160,6 +166,10 @@ func newGenerator(res *wit.Resolve, opts ...Option) (*generator, error) {
 			break
 		}
 		// otherwise chose the last world
+	}
+	g.wasmTools, err = wasmtools.New(context.Background())
+	if err != nil {
+		return nil, err
 	}
 	return g, nil
 }
@@ -2370,16 +2380,21 @@ var replacer = strings.NewReplacer("/", "-", ":", "-", "@", "-v", ".", "")
 
 // componentEmbed runs generated WIT through wasm-tools to generate a wasm file with a component-type custom section.
 func (g *generator) componentEmbed(witData string) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// TODO: --all-features?
-	cmd := exec.Command("wasm-tools", "component", "embed", "--only-custom", "/dev/stdin")
-	cmd.Stdin = strings.NewReader(witData)
+	filename := "./component.wit"
+	args := []string{"component", "embed", "--only-custom", filename}
+	fsMap := map[string]fs.FS{
+		".": fstest.MapFS{
+			filename: &fstest.MapFile{Data: []byte(witData)},
+		},
+	}
 	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	cmd.Stdout = stdout
-	cmd.Stderr = stderr
-	err := cmd.Run()
+	err := g.wasmTools.Run(ctx, nil, stdout, nil, fsMap, args...)
 	if err != nil {
-		g.opts.logger.Errorf("wasm-tools: %s", stderr.String())
+		return nil, fmt.Errorf("wasm-tools: %w", err)
 	}
 	return stdout.Bytes(), err
 }

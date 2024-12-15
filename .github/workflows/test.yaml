@@ -8,7 +8,7 @@ on:
     paths-ignore:
         - '.prettier*'
         - '.vscode/**'
-        - '*.md'
+        - '**/*.md'
         - 'docs/**'
         - 'LICENSE'
 
@@ -34,13 +34,8 @@ jobs:
         with:
           go-version-file: go.mod
 
-      - name: Set up wams-tools.wasm
-        run: make internal/wasmtools/wasm-tools.wasm
-
       - name: Vet Go code
-        run: |
-          make build
-          go vet ${{ env.go-modules }} ./tests/...
+        run: go vet ${{ env.go-modules }} ./tests/...
 
   # Test with Go
   test-go:
@@ -60,14 +55,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-
-      - name: Set up wasm-tools
-        uses: bytecodealliance/actions/wasm-tools/setup@v1
-        with:
-          version: ${{ env.wasm-tools-version }}
-
-      - name: Set up wams-tools.wasm
-        run: make internal/wasmtools/wasm-tools.wasm
 
       - name: Run Go tests
         run: go test -v ${{ env.go-modules }}
@@ -108,11 +95,6 @@ jobs:
         with:
           tinygo-version: ${{ matrix.tinygo-version }}
 
-      - name: Set up wasm-tools
-        uses: bytecodealliance/actions/wasm-tools/setup@v1
-        with:
-          version: ${{ env.wasm-tools-version }}
-
       - name: Test with TinyGo
         run: tinygo test -v ${{ env.go-modules }}
 
@@ -144,13 +126,11 @@ jobs:
         with:
           tinygo-version: ${{ matrix.tinygo-version }}
 
+      # TinyGo needs wasm-tools for -target=wasip2
       - name: Set up wasm-tools
         uses: bytecodealliance/actions/wasm-tools/setup@v1
         with:
           version: ${{ env.wasm-tools-version }}
-
-      - name: Set up wams-tools.wasm
-        run: make internal/wasmtools/wasm-tools.wasm
 
       - name: Set up Wasmtime
         uses: bytecodealliance/actions/wasmtime/setup@v1

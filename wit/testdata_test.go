@@ -5,11 +5,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/fs"
 	"os"
-	"os/exec"
 	"strings"
-	"sync"
 	"testing"
 
 	"go.bytecodealliance.org/internal/relpath"
@@ -69,13 +66,6 @@ func TestGoldenWITFiles(t *testing.T) {
 	}
 }
 
-var canWasmTools = sync.OnceValue[bool](func() bool {
-	// This is explicitly NOT using exec.LookPath so it fails to run on WebAssembly.
-	// This disables tests that require wasm-tools.
-	err := exec.Command("wasm-tools", "--version").Run()
-	return err == nil
-})
-
 func TestGoldenWITRoundTrip(t *testing.T) {
 	if testing.Short() {
 		// t.Skip is not available in TinyGo, requires runtime.Goexit()
@@ -93,21 +83,13 @@ func TestGoldenWITRoundTrip(t *testing.T) {
 		t.Run(path, func(t *testing.T) {
 			args := []string{"component", "wit", "-j", "--all-features"}
 			stdin := strings.NewReader(data)
-
-			fsMap := make(map[fs.FS]string)
-			stdout, stderr, err := wasmTools.Run(ctx, args, stdin, fsMap, &path)
+			stdout := &bytes.Buffer{}
+			err := wasmTools.Run(ctx, stdin, stdout, nil, nil, args...)
 			if err != nil {
 				t.Errorf("wasm-tools: %v", err)
 				return
 			}
-			if stderr != nil {
-				buf := new(bytes.Buffer)
-				buf.ReadFrom(stderr)
-				if buf.Len() > 0 {
-					t.Error(buf.String())
-					return
-				}
-			}
+
 			// Parse the JSON into a Resolve.
 			res2, err := DecodeJSON(stdout)
 			if err != nil {

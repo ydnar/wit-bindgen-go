@@ -1,3 +1,5 @@
 .DS_Store
 /generated
+/internal/wasmtools/target
+/internal/wasmtools/wasm-tools.wasm
 go.work.sum

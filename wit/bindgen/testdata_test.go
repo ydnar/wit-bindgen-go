@@ -81,7 +81,7 @@ var canGo = sync.OnceValue[bool](func() bool {
 // validateGeneratedGo loads the Go package(s) generated
 func validateGeneratedGo(t *testing.T, res *wit.Resolve, origin string) {
 	if !canGo() {
-		t.Log("skipping test: can't run go (TinyGo without fork?)")
+		t.Log("skipping test: cannot run go command")
 		return
 	}
 
