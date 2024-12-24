@@ -1,0 +1,14 @@
+package foo:name;
+
+interface i1 {
+	type a = u32;
+}
+
+world w1 {
+	import i1;
+	import imp1: interface {
+		use i1.{a};
+	}
+}
+
+package foo:root {}

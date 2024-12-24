@@ -1,0 +1,27 @@
+package bar:name;
+
+interface i {
+	type a = u32;
+}
+
+world w {
+	import i;
+	import imp: interface {
+		use i.{a};
+	}
+}
+
+package foo:name {
+	interface i {
+		type a = u32;
+	}
+
+	world w {
+		import i;
+		import imp: interface {
+			use i.{a};
+		}
+	}
+}
+
+package foo:root {}
