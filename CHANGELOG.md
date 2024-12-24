@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- [`wasm-tools`](https://crates.io/crates/wasm-tools) is now vendored as a WebAssembly module, executed using [Wazero](https://wazero.io/). This allows package `wit` and `wit-bindgen-go` to run on any supported platform without needing to separately install `wasm-tools`.
+
 ### Changed
 
 - Dropped support for TinyGo v0.32.0.

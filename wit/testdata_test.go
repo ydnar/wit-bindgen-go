@@ -2,15 +2,15 @@ package wit
 
 import (
 	"bytes"
+	"context"
 	"flag"
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
-	"sync"
 	"testing"
 
 	"go.bytecodealliance.org/internal/relpath"
+	"go.bytecodealliance.org/internal/wasmtools"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
@@ -66,35 +66,27 @@ func TestGoldenWITFiles(t *testing.T) {
 	}
 }
 
-var canWasmTools = sync.OnceValue[bool](func() bool {
-	// This is explicitly NOT using exec.LookPath so it fails to run on WebAssembly.
-	// This disables tests that require wasm-tools.
-	err := exec.Command("wasm-tools", "--version").Run()
-	return err == nil
-})
-
 func TestGoldenWITRoundTrip(t *testing.T) {
 	if testing.Short() {
 		// t.Skip is not available in TinyGo, requires runtime.Goexit()
 		return
 	}
-	if !canWasmTools() {
-		t.Log("skipping test: wasm-tools not installed or cannot fork/exec (TinyGo)")
+	ctx := context.Background()
+	wasmTools, err := wasmtools.New(ctx)
+	if err != nil {
+		t.Logf("wasm-tools not available: %v", err)
 		return
 	}
-	err := loadTestdata(func(path string, res *Resolve) error {
+
+	err = loadTestdata(func(path string, res *Resolve) error {
 		data := res.WIT(nil, "")
 		t.Run(path, func(t *testing.T) {
-			// Run the generated WIT through wasm-tools to generate JSON.
-			cmd := exec.Command("wasm-tools", "component", "wit", "-j", "--all-features")
-			cmd.Stdin = strings.NewReader(data)
+			args := []string{"component", "wit", "-j", "--all-features"}
+			stdin := strings.NewReader(data)
 			stdout := &bytes.Buffer{}
-			stderr := &bytes.Buffer{}
-			cmd.Stdout = stdout
-			cmd.Stderr = stderr
-			err := cmd.Run()
+			err := wasmTools.Run(ctx, stdin, stdout, nil, nil, args...)
 			if err != nil {
-				t.Error(err, stderr.String())
+				t.Errorf("wasm-tools: %v", err)
 				return
 			}
 

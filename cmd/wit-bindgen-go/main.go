@@ -9,7 +9,7 @@ import (
 
 	"go.bytecodealliance.org/cmd/wit-bindgen-go/cmd/generate"
 	"go.bytecodealliance.org/cmd/wit-bindgen-go/cmd/wit"
-	"go.bytecodealliance.org/internal/witcli"
+	"go.bytecodealliance.org/internal/module"
 )
 
 func main() {
@@ -64,7 +64,7 @@ var version = &cli.Command{
 	Name:  "version",
 	Usage: "print the version",
 	Action: func(ctx context.Context, cmd *cli.Command) error {
-		fmt.Fprintf(cmd.Writer, "%s version %s\n", cmd.Root().Name, witcli.Version())
+		fmt.Fprintf(cmd.Writer, "%s version %s\n", cmd.Root().Name, module.Version())
 		return nil
 	},
 }

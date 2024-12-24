@@ -2,11 +2,15 @@ package wit
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
-	"os/exec"
+	"path/filepath"
+
+	"go.bytecodealliance.org/internal/wasmtools"
 )
 
 // LoadJSON loads a [WIT] JSON file from path.
@@ -48,27 +52,26 @@ func loadWIT(path string, reader io.Reader) (*Resolve, error) {
 		return nil, errors.New("cannot set both path and reader; provide only one")
 	}
 
-	wasmTools, err := exec.LookPath("wasm-tools")
+	ctx := context.Background()
+	args := []string{"component", "wit", "-j", "--all-features"}
+	fsMap := make(map[string]fs.FS)
+	var stdin io.Reader
+
+	if path != "" {
+		args = append(args, path)
+		dir := filepath.Dir(path)
+		fsMap[dir] = os.DirFS(dir)
+	} else {
+		stdin = reader
+	}
+	wasmTools, err := wasmtools.New(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	var stdout, stderr bytes.Buffer
-
-	cmdArgs := []string{"component", "wit", "-j", "--all-features"}
-	if path != "" {
-		cmdArgs = append(cmdArgs, path)
+	stdout := &bytes.Buffer{}
+	err = wasmTools.Run(ctx, stdin, stdout, nil, fsMap, args...)
+	if err != nil {
+		return nil, fmt.Errorf("error executing wasm-tools: %w", err)
 	}
-
-	cmd := exec.Command(wasmTools, cmdArgs...)
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	cmd.Stdin = reader
-
-	if err := cmd.Run(); err != nil {
-		fmt.Fprint(os.Stderr, stderr.String())
-		return nil, err
-	}
-
-	return DecodeJSON(&stdout)
+	return DecodeJSON(stdout)
 }
