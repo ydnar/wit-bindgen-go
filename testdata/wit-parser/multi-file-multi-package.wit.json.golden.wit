@@ -24,6 +24,8 @@ package baz:name {
 	}
 }
 
+package foo:main {}
+
 package foo:name {
 	interface i1 {
 		type a = u32;
