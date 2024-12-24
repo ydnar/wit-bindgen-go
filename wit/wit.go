@@ -944,20 +944,8 @@ func (s *Stream) WIT(_ Node, name string) string {
 		b.WriteString(escape(name))
 		b.WriteString(" = ")
 	}
-	b.WriteString("stream")
-	if s.Element == nil && s.End == nil {
-		return b.String()
-	}
-	b.WriteRune('<')
-	if s.Element != nil {
-		b.WriteString(s.Element.WIT(s, ""))
-	} else {
-		b.WriteRune('_')
-	}
-	if s.End != nil {
-		b.WriteString(", ")
-		b.WriteString(s.End.WIT(s, ""))
-	}
+	b.WriteString("stream<")
+	b.WriteString(s.Type.WIT(s, ""))
 	b.WriteRune('>')
 	return b.String()
 }
