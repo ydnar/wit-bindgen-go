@@ -138,7 +138,7 @@ func (r *Resolve) WIT(ctx Node, _ string) string {
 			name = p.Name.WIT(ctx, "")
 		}
 		wit := p.WIT(ctx, name)
-		if len(packages) == 1 || strings.Count(wit, "\n") > 1 {
+		if ctx == nil || len(packages) == 1 || strings.Count(wit, "\n") > 1 {
 			if hasContent {
 				b.WriteString("\n")
 			}
