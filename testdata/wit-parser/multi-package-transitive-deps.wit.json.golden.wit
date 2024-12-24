@@ -1,6 +1,7 @@
 package foo:bar;
 
 world w-bar {
+	import foo:nest/types;
 	import foo:dep2/types;
 	import foo:dep1/types;
 }
@@ -8,18 +9,28 @@ world w-bar {
 package foo:dep1 {
 	interface types {
 		use foo:dep2/types.{a};
-		record r { f: u8 }
+		record b { r: a }
 	}
 }
 
 package foo:qux {
 	world w-qux {
+		import foo:nest/types;
 		import foo:dep2/types;
 	}
 }
 
 package foo:dep2 {
 	interface types {
-		resource a;
+		use foo:nest/types.{t2};
+		record a { foo: t2 }
 	}
 }
+
+package foo:nest {
+	interface types {
+		type t2 = string;
+	}
+}
+
+package foo:root {}

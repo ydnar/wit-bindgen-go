@@ -377,7 +377,7 @@ func (c *typeDefKindCodec) DecodeField(dec codec.Decoder, name string) error {
 		*c.v = v
 	case "stream":
 		v := &Stream{}
-		err = dec.Decode(v)
+		err = dec.Decode(&v.Type)
 		*c.v = v
 	case "type":
 		var v Type
@@ -552,18 +552,6 @@ func (r *Result) DecodeField(dec codec.Decoder, name string) error {
 		return dec.Decode(&r.OK)
 	case "err":
 		return dec.Decode(&r.Err)
-	}
-	return nil
-}
-
-// DecodeField implements the [codec.FieldDecoder] interface
-// to decode a struct or JSON object.
-func (s *Stream) DecodeField(dec codec.Decoder, name string) error {
-	switch name {
-	case "element":
-		return dec.Decode(&s.Element)
-	case "end":
-		return dec.Decode(&s.End)
 	}
 	return nil
 }

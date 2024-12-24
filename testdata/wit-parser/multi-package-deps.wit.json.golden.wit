@@ -1,0 +1,28 @@
+package foo:root;
+
+interface i0 {
+	use foo:dep1/i1.{o};
+	use foo:nest/nesty.{l};
+	type r = result<o>;
+	type r1 = result<l>;
+}
+
+package foo:nest {
+	interface nesty {
+		use foo:dep1/i1.{o};
+		type l = list<o>;
+	}
+}
+
+package foo:dep1 {
+	interface i1 {
+		use foo:dep2/i2.{t};
+		type o = option<t>;
+	}
+}
+
+package foo:dep2 {
+	interface i2 {
+		type t = string;
+	}
+}

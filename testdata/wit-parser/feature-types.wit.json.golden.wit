@@ -1,0 +1,6 @@
+package a:b;
+
+interface foo {
+	variant bar { x, y }
+	my-stable: func(p: bar) -> result<_, bar>;
+}

@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Incremental support for Component Model async types `stream<T>` and `future<T>`.
 - Dropped support for TinyGo v0.32.0.
 
 ## [v0.5.0] — 2024-12-14

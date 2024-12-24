@@ -7,8 +7,7 @@ package wit
 // [WASI Preview 3]: https://bytecodealliance.org/articles/webassembly-the-updated-roadmap-for-developers
 type Stream struct {
 	_typeDefKind
-	Element Type // optional associated Type (can be nil)
-	End     Type // optional associated Type (can be nil)
+	Type Type // associated Type (must not be nil)
 }
 
 // Size returns the [ABI byte size] for a [Stream].
@@ -29,9 +28,9 @@ func (*Stream) Align() uintptr { return 0 }
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
 func (*Stream) Flat() []Type { return nil }
 
-func (s *Stream) hasPointer() bool  { return HasPointer(s.Element) || HasPointer(s.End) }
-func (s *Stream) hasBorrow() bool   { return HasBorrow(s.Element) || HasBorrow(s.End) }
-func (s *Stream) hasResource() bool { return HasResource(s.Element) || HasResource(s.End) }
+func (s *Stream) hasPointer() bool  { return HasPointer(s.Type) }
+func (s *Stream) hasBorrow() bool   { return HasBorrow(s.Type) }
+func (s *Stream) hasResource() bool { return HasResource(s.Type) }
 func (s *Stream) dependsOn(dep Node) bool {
-	return dep == s || DependsOn(s.Element, dep) || DependsOn(s.End, dep)
+	return dep == s || DependsOn(s.Type, dep)
 }

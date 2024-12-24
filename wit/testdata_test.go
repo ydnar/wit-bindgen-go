@@ -84,9 +84,10 @@ func TestGoldenWITRoundTrip(t *testing.T) {
 			args := []string{"component", "wit", "-j", "--all-features"}
 			stdin := strings.NewReader(data)
 			stdout := &bytes.Buffer{}
-			err := wasmTools.Run(ctx, stdin, stdout, nil, nil, args...)
+			stderr := &bytes.Buffer{}
+			err := wasmTools.Run(ctx, stdin, stdout, stderr, nil, args...)
 			if err != nil {
-				t.Errorf("wasm-tools: %v", err)
+				t.Errorf("wasm-tools: %v\n%s\n", err, stderr.String())
 				return
 			}
 
