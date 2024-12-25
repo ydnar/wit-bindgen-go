@@ -2257,7 +2257,7 @@ func (g *generator) exportsFileFor(owner wit.TypeOwner) *gen.File {
 
 func (g *generator) wasmFileFor(owner wit.TypeOwner) *gen.File {
 	pkg := g.packageFor(owner)
-	file := pkg.File(pkg.Name + ".wasm.go")
+	file := pkg.File(path.Base(pkg.Path) + ".wasm.go")
 	file.GeneratedBy = g.opts.generatedBy
 	if len(file.Header) == 0 {
 		file.Header = fmt.Sprintf("// This file contains wasmimport and wasmexport declarations for \"%s\".\n\n", owner.WITPackage().Name.String())
@@ -2267,7 +2267,7 @@ func (g *generator) wasmFileFor(owner wit.TypeOwner) *gen.File {
 
 func (g *generator) cgoFileFor(owner wit.TypeOwner) *gen.File {
 	pkg := g.packageFor(owner)
-	file := pkg.File(pkg.Name + ".cgo.go")
+	file := pkg.File(path.Base(pkg.Path) + ".cgo.go")
 	file.GeneratedBy = g.opts.generatedBy
 	if file.GoBuild == "" {
 		file.GoBuild = "tinygo.wasm"
