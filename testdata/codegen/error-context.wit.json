@@ -1,0 +1,105 @@
+{
+  "worlds": [
+    {
+      "name": "foo",
+      "imports": {
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "exports": {
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "error-contexts",
+      "types": {
+        "foo": 0
+      },
+      "functions": {
+        "bar": {
+          "name": "bar",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 0
+            },
+            {
+              "name": "y",
+              "type": 1
+            },
+            {
+              "name": "z",
+              "type": 2
+            }
+          ],
+          "results": [
+            {
+              "type": 4
+            }
+          ]
+        }
+      },
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "foo",
+      "kind": "error-context",
+      "owner": {
+        "interface": 0
+      }
+    },
+    {
+      "name": null,
+      "kind": "error-context",
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "future": 1
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 1
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "result": {
+          "ok": 3,
+          "err": 1
+        }
+      },
+      "owner": null
+    }
+  ],
+  "packages": [
+    {
+      "name": "foo:foo",
+      "interfaces": {
+        "error-contexts": 0
+      },
+      "worlds": {
+        "foo": 0
+      }
+    }
+  ]
+}
