@@ -11,22 +11,19 @@ type Future struct {
 }
 
 // Size returns the [ABI byte size] for a [Future].
-// TODO: what is the ABI size of a future?
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
-func (*Future) Size() uintptr { return 0 }
+func (*Future) Size() uintptr { return 4 }
 
 // Align returns the [ABI byte alignment] a [Future].
-// TODO: what is the ABI alignment of a future?
 //
 // [ABI byte alignment]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#alignment
-func (*Future) Align() uintptr { return 0 }
+func (*Future) Align() uintptr { return 4 }
 
 // Flat returns the [flattened] ABI representation of [Future].
-// TODO: what is the ABI representation of a stream?
 //
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
-func (*Future) Flat() []Type { return nil }
+func (*Future) Flat() []Type { return []Type{U32{}} }
 
 func (f *Future) hasPointer() bool        { return HasPointer(f.Type) }
 func (f *Future) hasBorrow() bool         { return HasBorrow(f.Type) }

@@ -11,22 +11,19 @@ type Stream struct {
 }
 
 // Size returns the [ABI byte size] for a [Stream].
-// TODO: what is the ABI size of a stream?
 //
 // [ABI byte size]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#size
-func (*Stream) Size() uintptr { return 0 }
+func (*Stream) Size() uintptr { return 4 }
 
 // Align returns the [ABI byte alignment] a [Stream].
-// TODO: what is the ABI alignment of a stream?
 //
 // [ABI byte alignment]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#alignment
-func (*Stream) Align() uintptr { return 0 }
+func (*Stream) Align() uintptr { return 4 }
 
 // Flat returns the [flattened] ABI representation of [Stream].
-// TODO: what is the ABI representation of a stream?
 //
 // [flattened]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#flattening
-func (*Stream) Flat() []Type { return nil }
+func (*Stream) Flat() []Type { return []Type{U32{}} }
 
 func (s *Stream) hasPointer() bool  { return HasPointer(s.Type) }
 func (s *Stream) hasBorrow() bool   { return HasBorrow(s.Type) }
