@@ -324,6 +324,9 @@ func (c *typeDefKindCodec) DecodeString(s string) error {
 	switch s {
 	case "resource":
 		*c.v = &Resource{}
+	case "errorcontext", // https://github.com/bytecodealliance/wasm-tools/pull/1964
+		"error-context":
+		*c.v = &ErrorContext{}
 	}
 	return nil
 }
@@ -331,17 +334,13 @@ func (c *typeDefKindCodec) DecodeString(s string) error {
 func (c *typeDefKindCodec) DecodeField(dec codec.Decoder, name string) error {
 	var err error
 	switch name {
+	case "type":
+		var v Type
+		err = dec.Decode(&v)
+		*c.v = v
 	case "record":
 		v := &Record{}
 		err = dec.Decode(v)
-		*c.v = v
-	case "resource": // TODO: this might not be necessary
-		v := &Resource{}
-		err = dec.Decode(v)
-		*c.v = v
-	case "handle":
-		var v Handle
-		err = dec.Decode(&v)
 		*c.v = v
 	case "flags":
 		v := &Flags{}
@@ -350,6 +349,10 @@ func (c *typeDefKindCodec) DecodeField(dec codec.Decoder, name string) error {
 	case "tuple":
 		v := &Tuple{}
 		err = dec.Decode(v)
+		*c.v = v
+	case "list":
+		v := &List{}
+		err = dec.Decode(&v.Type)
 		*c.v = v
 	case "variant":
 		v := &Variant{}
@@ -367,9 +370,9 @@ func (c *typeDefKindCodec) DecodeField(dec codec.Decoder, name string) error {
 		v := &Result{}
 		err = dec.Decode(v)
 		*c.v = v
-	case "list":
-		v := &List{}
-		err = dec.Decode(&v.Type)
+	case "handle":
+		var v Handle
+		err = dec.Decode(&v)
 		*c.v = v
 	case "future":
 		v := &Future{}
@@ -378,10 +381,6 @@ func (c *typeDefKindCodec) DecodeField(dec codec.Decoder, name string) error {
 	case "stream":
 		v := &Stream{}
 		err = dec.Decode(&v.Type)
-		*c.v = v
-	case "type":
-		var v Type
-		err = dec.Decode(&v)
 		*c.v = v
 	}
 	return err
