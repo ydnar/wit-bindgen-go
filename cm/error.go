@@ -1,5 +1,7 @@
 package cm
 
+import "unsafe"
+
 // ErrorContext represents the Component Model [error-context] type,
 // an immutable, non-deterministic, host-defined value meant to aid in debugging.
 //
@@ -26,13 +28,13 @@ func (err errorContext) String() string {
 // [error-context.debug-message]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/Explainer.md#error-contextdebug-message
 func (err errorContext) DebugMessage() string {
 	var s string
-	errorContextDebugMessage(err, &s)
+	errorContextDebugMessage(err, unsafe.Pointer(&s))
 	return s
 }
 
 //go:wasmimport canon error-context.debug-message
 //go:noescape
-func errorContextDebugMessage(err errorContext, msg *string)
+func errorContextDebugMessage(err errorContext, msg unsafe.Pointer)
 
 // Drop represents the Canonical ABI [error-context.drop] function.
 //
