@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- Initial support for Component Model async types `error-context`, `stream<T>`, and `future<T>`.
+- Initial support for Component Model [async](https://github.com/WebAssembly/component-model/blob/main/design/mvp/Async.md) types `stream`, `future`, and `error-context`.
 - Breaking: generated `*.wasm.go` files will now have correct WIT kebab-case base name. Interfaces or worlds with `-` in their name will require removal of the previous `*.wasm.go` files.
 - Dropped support for TinyGo v0.32.0.
 
