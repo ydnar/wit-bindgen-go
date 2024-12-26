@@ -56,14 +56,14 @@
   "types": [
     {
       "name": "foo",
-      "kind": "error-context",
+      "kind": "errorcontext",
       "owner": {
         "interface": 0
       }
     },
     {
       "name": null,
-      "kind": "error-context",
+      "kind": "errorcontext",
       "owner": null
     },
     {
