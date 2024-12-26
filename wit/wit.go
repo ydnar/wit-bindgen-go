@@ -511,48 +511,49 @@ func escape(name string) string {
 
 // A map of all [WIT keywords].
 //
-// [WIT keywords]: https://github.com/bytecodealliance/wasm-tools/blob/main/crates/wit-parser/src/ast/lex.rs#L524-L591
+// [WIT keywords]: https://github.com/bytecodealliance/wasm-tools/blob/main/crates/wit-parser/src/ast/lex.rs#L528-L578
 var witKeywords = map[string]bool{
-	"as":          true,
-	"bool":        true,
-	"borrow":      true,
-	"char":        true,
-	"constructor": true,
-	"enum":        true,
-	"export":      true,
-	"f32":         true,
-	"f64":         true,
-	"flags":       true,
-	"from":        true,
-	"func":        true,
-	"future":      true,
-	"import":      true,
-	"include":     true,
-	"interface":   true,
-	"list":        true,
-	"option":      true,
-	"own":         true,
-	"package":     true,
-	"record":      true,
-	"resource":    true,
-	"result":      true,
-	"s16":         true,
-	"s32":         true,
-	"s64":         true,
-	"s8":          true,
-	"static":      true,
-	"stream":      true,
-	"string":      true,
-	"tuple":       true,
-	"type":        true,
-	"u16":         true,
-	"u32":         true,
-	"u64":         true,
-	"u8":          true,
-	"use":         true,
-	"variant":     true,
-	"wit":         true,
-	"world":       true,
+	"as":            true,
+	"bool":          true,
+	"borrow":        true,
+	"char":          true,
+	"constructor":   true,
+	"enum":          true,
+	"error-context": true,
+	"export":        true,
+	"f32":           true,
+	"f64":           true,
+	"flags":         true,
+	"from":          true,
+	"func":          true,
+	"future":        true,
+	"import":        true,
+	"include":       true,
+	"interface":     true,
+	"list":          true,
+	"option":        true,
+	"own":           true,
+	"package":       true,
+	"record":        true,
+	"resource":      true,
+	"result":        true,
+	"s16":           true,
+	"s32":           true,
+	"s64":           true,
+	"s8":            true,
+	"static":        true,
+	"stream":        true,
+	"string":        true,
+	"tuple":         true,
+	"type":          true,
+	"u16":           true,
+	"u32":           true,
+	"u64":           true,
+	"u8":            true,
+	"use":           true,
+	"variant":       true,
+	"wit":           true,
+	"world":         true,
 }
 
 func relativeName(o TypeOwner, p *Package) string {
@@ -689,6 +690,23 @@ func (b *Borrow) WIT(ctx Node, name string) string {
 	s.WriteString(b.Type.WIT(b, ""))
 	s.WriteRune('>')
 	return s.String()
+}
+
+// WITKind returns the WIT kind.
+func (*ErrorContext) WITKind() string { return "error-context" }
+
+// WIT returns the [WIT] text format for [ErrorContext] r.
+//
+// [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
+func (*ErrorContext) WIT(_ Node, name string) string {
+	var b strings.Builder
+	if name != "" {
+		b.WriteString("type ")
+		b.WriteString(escape(name))
+		b.WriteString(" = ")
+	}
+	b.WriteString("error-context")
+	return b.String()
 }
 
 // WITKind returns the WIT kind.

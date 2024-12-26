@@ -656,10 +656,12 @@ func (g *generator) typeDefRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 		return g.ownRep(file, dir, kind)
 	case *wit.Borrow:
 		return g.borrowRep(file, dir, kind)
-	case *wit.Future:
-		return "any /* TODO: *wit.Future */"
+	case *wit.ErrorContext:
+		return g.errorContextRep(file, dir, kind)
 	case *wit.Stream:
-		return "any /* TODO: *wit.Stream */"
+		return g.streamRep(file, dir, kind)
+	case *wit.Future:
+		return g.futureRep(file, dir, kind)
 	default:
 		panic(fmt.Sprintf("BUG: unknown wit.TypeDefKind %T", kind)) // should never reach here
 	}
@@ -985,6 +987,22 @@ func (g *generator) borrowRep(file *gen.File, dir wit.Direction, b *wit.Borrow) 
 	}
 }
 
+func (g *generator) errorContextRep(file *gen.File, dir wit.Direction, e *wit.ErrorContext) string {
+	return file.Import(g.opts.cmPackage) + ".ErrorContext"
+}
+
+func (g *generator) streamRep(file *gen.File, dir wit.Direction, s *wit.Stream) string {
+	var b strings.Builder
+	stringio.Write(&b, file.Import(g.opts.cmPackage), ".Stream[", g.typeRep(file, dir, s.Type), "]")
+	return b.String()
+}
+
+func (g *generator) futureRep(file *gen.File, dir wit.Direction, f *wit.Future) string {
+	var b strings.Builder
+	stringio.Write(&b, file.Import(g.opts.cmPackage), ".Future[", g.typeRep(file, dir, f.Type), "]")
+	return b.String()
+}
+
 func (g *generator) typeShape(file *gen.File, dir wit.Direction, t wit.Type) string {
 	if !experimentCreateShapeTypes {
 		return g.typeRep(file, dir, t)
@@ -1013,8 +1031,10 @@ func (g *generator) typeDefShape(file *gen.File, dir wit.Direction, t *wit.TypeD
 			// Monotypic tuples have a packed memory layout.
 			return g.typeRep(file, dir, t)
 		}
-	case *wit.Resource, *wit.Own, *wit.Borrow, *wit.Enum, *wit.Flags, *wit.List:
-		// Resource handles, enum, flags, and list types do not need a custom shape.
+	case *wit.Enum, *wit.Flags, *wit.List,
+		*wit.Resource, *wit.Own, *wit.Borrow, *wit.ErrorContext, *wit.Stream, *wit.Future:
+		// Certain types do not need custom type shapes:
+		// own, borrow, error-context, stream, future, enum, flags, and list
 		return g.typeRep(file, dir, t)
 	}
 
@@ -1082,12 +1102,9 @@ func (g *generator) lowerTypeDef(file *gen.File, dir wit.Direction, t *wit.TypeD
 		return g.lowerOption(file, dir, t, input)
 	case *wit.List:
 		return g.cmCall(file, "LowerList", input)
-	case *wit.Resource, *wit.Own, *wit.Borrow:
+	case *wit.Resource, *wit.Own, *wit.Borrow,
+		*wit.ErrorContext, *wit.Stream, *wit.Future:
 		return g.cmCall(file, "Reinterpret["+g.typeRep(file, dir, flat[0])+"]", input)
-	case *wit.Future:
-		return "/* TODO: lower *wit.Future */"
-	case *wit.Stream:
-		return "/* TODO: lower *wit.Stream */"
 	default:
 		panic(fmt.Sprintf("BUG: unknown wit.TypeDef %T", kind)) // should never reach here
 	}
@@ -1299,12 +1316,9 @@ func (g *generator) liftTypeDef(file *gen.File, dir wit.Direction, t *wit.TypeDe
 		return g.liftOption(file, dir, t, input)
 	case *wit.List:
 		return g.cmCall(file, "LiftList["+g.typeRep(file, dir, t)+"]", input)
-	case *wit.Resource, *wit.Own, *wit.Borrow:
+	case *wit.Resource, *wit.Own, *wit.Borrow,
+		*wit.ErrorContext, *wit.Stream, *wit.Future:
 		return g.cmCall(file, "Reinterpret["+g.typeRep(file, dir, t)+"]", input)
-	case *wit.Future:
-		return "// TODO: lift *wit.Future */"
-	case *wit.Stream:
-		return "// TODO: lift *wit.Stream */"
 	default:
 		panic(fmt.Sprintf("BUG: unknown wit.TypeDef %T", kind)) // should never reach here
 	}
@@ -2243,7 +2257,7 @@ func (g *generator) exportsFileFor(owner wit.TypeOwner) *gen.File {
 
 func (g *generator) wasmFileFor(owner wit.TypeOwner) *gen.File {
 	pkg := g.packageFor(owner)
-	file := pkg.File(pkg.Name + ".wasm.go")
+	file := pkg.File(path.Base(pkg.Path) + ".wasm.go")
 	file.GeneratedBy = g.opts.generatedBy
 	if len(file.Header) == 0 {
 		file.Header = fmt.Sprintf("// This file contains wasmimport and wasmexport declarations for \"%s\".\n\n", owner.WITPackage().Name.String())
@@ -2253,7 +2267,7 @@ func (g *generator) wasmFileFor(owner wit.TypeOwner) *gen.File {
 
 func (g *generator) cgoFileFor(owner wit.TypeOwner) *gen.File {
 	pkg := g.packageFor(owner)
-	file := pkg.File(pkg.Name + ".cgo.go")
+	file := pkg.File(path.Base(pkg.Path) + ".cgo.go")
 	file.GeneratedBy = g.opts.generatedBy
 	if file.GoBuild == "" {
 		file.GoBuild = "tinygo.wasm"
