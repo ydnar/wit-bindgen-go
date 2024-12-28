@@ -3,7 +3,7 @@ package cm
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"math"
 	"reflect"
 	"runtime"
@@ -321,9 +321,9 @@ type errorEntry struct {
 }
 
 func (errorEntry) MarshalJSON() ([]byte, error) {
-	return nil, fmt.Errorf("can't encode")
+	return nil, errors.New("MarshalJSON")
 }
 
 func (*errorEntry) UnmarshalJSON(_ []byte) error {
-	return fmt.Errorf("can't decode")
+	return errors.New("UnmarshalJSON")
 }
