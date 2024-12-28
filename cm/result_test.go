@@ -1,7 +1,6 @@
 package cm
 
 import (
-	"fmt"
 	"runtime"
 	"testing"
 	"unsafe"
@@ -177,9 +176,9 @@ func TestIssue95String(t *testing.T) {
 	want := "hello"
 	res := OK[stringResult](want)
 	got := *res.OK()
-	fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
-	fmt.Printf("got: %v (%d) want: %v (%d)\n",
-		unsafe.StringData(got), len(got), unsafe.StringData(want), len(want))
+	// fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
+	// fmt.Printf("got: %v (%d) want: %v (%d)\n",
+	// 	unsafe.StringData(got), len(got), unsafe.StringData(want), len(want))
 	if got != want {
 		t.Errorf("*res.OK(): %v, expected %v", got, want)
 	}
@@ -196,8 +195,8 @@ func TestIssue95Uint64(t *testing.T) {
 	want := uint64(123)
 	res := OK[uint64Result](want)
 	got := *res.OK()
-	fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
-	fmt.Printf("got: %v want: %v\n", got, want)
+	// fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
+	// fmt.Printf("got: %v want: %v\n", got, want)
 	if got != want {
 		t.Errorf("*res.OK(): %v, expected %v", got, want)
 	}
@@ -221,8 +220,8 @@ func TestIssue95Struct(t *testing.T) {
 	want := stringStruct{s: "hello"}
 	res := OK[structResult](want)
 	got := *res.OK()
-	fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
-	fmt.Printf("got: %v want: %v\n", got, want)
+	// fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
+	// fmt.Printf("got: %v want: %v\n", got, want)
 	if got != want {
 		t.Errorf("*res.OK(): %v, expected %v", got, want)
 	}
@@ -233,8 +232,8 @@ func TestIssue95BoolInt64(t *testing.T) {
 	want := int64(1234567890)
 	res := Err[boolInt64Result](1234567890)
 	got := *res.Err()
-	fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
-	fmt.Printf("got: %v want: %v\n", got, want)
+	// fmt.Printf("unsafe.Sizeof(res): %d\n", unsafe.Sizeof(res))
+	// fmt.Printf("got: %v want: %v\n", got, want)
 	if got != want {
 		t.Errorf("*res.OK(): %v, expected %v", got, want)
 	}
