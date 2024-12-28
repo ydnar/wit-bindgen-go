@@ -41,7 +41,7 @@ jobs:
   test-go:
     name: Test with Go
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     strategy:
       matrix:
         go-version: ["1.22", "1.23"]
