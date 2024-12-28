@@ -39,8 +39,8 @@ func TestListMarshalJSON(t *testing.T) {
 			w:    newListEncoder(``, []float64{float64(math.NaN())}, true),
 		},
 		{
-			name: "null",
-			w:    newListEncoder[string](`null`, nil, false),
+			name: "nil",
+			w:    newListEncoder[string](`[]`, nil, false),
 		},
 		{
 			name: "empty",

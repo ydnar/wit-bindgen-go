@@ -65,9 +65,8 @@ func (l list[T]) Len() uintptr {
 
 // MarshalJSON implements json.Marshaler.
 func (l list[T]) MarshalJSON() ([]byte, error) {
-	if l.data == nil {
-		// This cannot return nullLiteral because the caller can mutate the slice.
-		return []byte("null"), nil
+	if l.len == 0 {
+		return []byte("[]"), nil
 	}
 
 	s := l.Slice()
