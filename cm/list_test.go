@@ -21,67 +21,6 @@ func TestListMethods(t *testing.T) {
 	}
 }
 
-type listTestItem struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
-
-type listTestInvalid struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
-
-type listTestWrapper[T comparable] struct {
-	raw       string
-	outerList List[T]
-	innerList []T
-	err       bool
-}
-
-func (w *listTestWrapper[T]) wantErr() bool {
-	return w.err
-}
-
-func (w *listTestWrapper[T]) outer() any {
-	return &w.outerList
-}
-
-func (w *listTestWrapper[T]) outerSlice() any {
-	return w.outerList.Slice()
-}
-
-func (w *listTestWrapper[T]) inner() any {
-	return w.innerList
-}
-
-func (w *listTestWrapper[T]) rawData() string {
-	return w.raw
-}
-
-func newListEncoder[T comparable](raw string, want []T, wantErr bool) *listTestWrapper[T] {
-	return &listTestWrapper[T]{raw: raw, outerList: ToList(want), err: wantErr}
-}
-
-func newListDecoder[T comparable](raw string, want []T, wantErr bool) *listTestWrapper[T] {
-	return &listTestWrapper[T]{raw: raw, innerList: want, err: wantErr}
-}
-
-type listTester interface {
-	outer() any
-	inner() any
-	outerSlice() any
-	wantErr() bool
-	rawData() string
-}
-
-func (_ listTestInvalid) MarshalJSON() ([]byte, error) {
-	return nil, fmt.Errorf("can't encode")
-}
-
-func (_ *listTestInvalid) UnmarshalJSON(_ []byte) error {
-	return fmt.Errorf("can't decode")
-}
-
 func TestListMarshalJSON(t *testing.T) {
 	tests := []struct {
 		name string
@@ -89,7 +28,7 @@ func TestListMarshalJSON(t *testing.T) {
 	}{
 		{
 			name: "encode error",
-			w:    newListEncoder(``, []listTestInvalid{{}}, true),
+			w:    newListEncoder(``, []errorEntry{{}}, true),
 		},
 		{
 			name: "f32 nan",
@@ -161,7 +100,7 @@ func TestListMarshalJSON(t *testing.T) {
 		},
 		{
 			name: "struct",
-			w:    newListEncoder(`[{"name":"joe","age":10},{"name":"jane","age":20}]`, []listTestItem{{Name: "joe", Age: 10}, {Name: "jane", Age: 20}}, false),
+			w:    newListEncoder(`[{"name":"joe","age":10},{"name":"jane","age":20}]`, []testEntry{{Name: "joe", Age: 10}, {Name: "jane", Age: 20}}, false),
 		},
 		{
 			name: "list",
@@ -204,7 +143,7 @@ func TestListUnmarshalJSON(t *testing.T) {
 	}{
 		{
 			name: "decode error",
-			w:    newListDecoder(`["joe"]`, []listTestInvalid{}, true),
+			w:    newListDecoder(`["joe"]`, []errorEntry{}, true),
 		},
 		{
 			name: "invalid json",
@@ -297,7 +236,7 @@ func TestListUnmarshalJSON(t *testing.T) {
 		},
 		{
 			name: "struct",
-			w:    newListDecoder(`[{"name":"joe","age":10},{"name":"jane","age":20}]`, []listTestItem{{Name: "joe", Age: 10}, {Name: "jane", Age: 20}}, false),
+			w:    newListDecoder(`[{"name":"joe","age":10},{"name":"jane","age":20}]`, []testEntry{{Name: "joe", Age: 10}, {Name: "jane", Age: 20}}, false),
 		},
 		{
 			name: "list",
@@ -326,4 +265,65 @@ func TestListUnmarshalJSON(t *testing.T) {
 			}
 		})
 	}
+}
+
+type listTester interface {
+	outer() any
+	inner() any
+	outerSlice() any
+	wantErr() bool
+	rawData() string
+}
+
+type listWrapper[T comparable] struct {
+	raw       string
+	outerList List[T]
+	innerList []T
+	err       bool
+}
+
+func (w *listWrapper[T]) wantErr() bool {
+	return w.err
+}
+
+func (w *listWrapper[T]) outer() any {
+	return &w.outerList
+}
+
+func (w *listWrapper[T]) outerSlice() any {
+	return w.outerList.Slice()
+}
+
+func (w *listWrapper[T]) inner() any {
+	return w.innerList
+}
+
+func (w *listWrapper[T]) rawData() string {
+	return w.raw
+}
+
+func newListEncoder[T comparable](raw string, want []T, wantErr bool) *listWrapper[T] {
+	return &listWrapper[T]{raw: raw, outerList: ToList(want), err: wantErr}
+}
+
+func newListDecoder[T comparable](raw string, want []T, wantErr bool) *listWrapper[T] {
+	return &listWrapper[T]{raw: raw, innerList: want, err: wantErr}
+}
+
+type testEntry struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
+type errorEntry struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
+func (errorEntry) MarshalJSON() ([]byte, error) {
+	return nil, fmt.Errorf("can't encode")
+}
+
+func (*errorEntry) UnmarshalJSON(_ []byte) error {
+	return fmt.Errorf("can't decode")
 }
