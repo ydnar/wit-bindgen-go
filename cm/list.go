@@ -70,11 +70,16 @@ func (l list[T]) MarshalJSON() ([]byte, error) {
 		return []byte("null"), nil
 	}
 
-	// NOTE(lxf): Go JSON Encoder will serialize []byte as base64.
-	// We override that behavior so all int types have the same serialization format.
-	// []uint8{1,2,3} -> [1,2,3]
-	// []uint32{1,2,3} -> [1,2,3]
-	return json.Marshal(sliceOf(l.Slice()))
+	s := l.Slice()
+	var zero T
+	if unsafe.Sizeof(zero) == 1 {
+		// The default Go json.Encoder will marshal []byte as base64.
+		// We override that behavior so all int types have the same serialization format.
+		// []uint8{1,2,3} -> [1,2,3]
+		// []uint32{1,2,3} -> [1,2,3]
+		return json.Marshal(sliceOf(s))
+	}
+	return json.Marshal(s)
 }
 
 type slice[T any] []entry[T]
