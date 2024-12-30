@@ -25,10 +25,13 @@ func MustIndex[I Discriminant, V comparable](values []V) IndexFunc[I, V] {
 // Index returns an [IndexFunc] that indexes the values slice.
 // Return an error if len(values) is too large to be indexed by I.
 func Index[I Discriminant, V comparable](values []V) (IndexFunc[I, V], error) {
-	max := 1<<(unsafe.Sizeof(I(0))*8) - 1
+	if len(values) == 0 {
+		return nil, errors.New("zero-length index")
+	}
 	if len(values) <= linearScanThreshold {
 		return linearIndex[I, V](values).indexOf, nil
 	}
+	max := 1<<(unsafe.Sizeof(I(0))*8) - 1
 	if len(values) > max {
 		return nil, errors.New("len(values) exceeded index type")
 	}
