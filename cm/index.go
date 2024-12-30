@@ -1,63 +1,43 @@
 package cm
 
-import (
-	"errors"
-	"unsafe"
-)
-
-// IndexFunc is a function that returns an integer index of v.
+// IndexFunc is a function that returns an integer index of s.
 // Used to reverse a string into a [variant] or [enum] case.
 //
 // [enum]: https://component-model.bytecodealliance.org/design/wit.html#enums
 // [variant]: https://component-model.bytecodealliance.org/design/wit.html#variants
-type IndexFunc[I Discriminant, V comparable] func(v V) (i I, ok bool)
+type IndexFunc func(s string) int
 
-// Index returns an [IndexFunc] that indexes the values slice.
-// Panics on error.
-func MustIndex[I Discriminant, V comparable](values []V) IndexFunc[I, V] {
-	f, err := Index[I, V](values)
-	if err != nil {
-		panic(err)
+// Index returns an [IndexFunc] that indexes the strings slice.
+func Index(strings []string) IndexFunc {
+	if len(strings) <= linearScanThreshold {
+		return linearIndex[string](strings).indexOf
 	}
-	return f
-}
-
-// Index returns an [IndexFunc] that indexes the values slice.
-// Return an error if len(values) is too large to be indexed by I.
-func Index[I Discriminant, V comparable](values []V) (IndexFunc[I, V], error) {
-	if len(values) == 0 {
-		return nil, errors.New("zero-length index")
+	m := make(mapIndex[string], len(strings))
+	for i, v := range strings {
+		m[v] = i
 	}
-	if len(values) <= linearScanThreshold {
-		return linearIndex[I, V](values).indexOf, nil
-	}
-	max := 1<<(unsafe.Sizeof(I(0))*8) - 1
-	if len(values) > max {
-		return nil, errors.New("len(values) exceeded index type")
-	}
-	m := make(mapIndex[I, V], len(values))
-	for i, v := range values {
-		m[v] = I(i)
-	}
-	return m.indexOf, nil
+	return m.indexOf
 }
 
 const linearScanThreshold = 16
 
-type linearIndex[I Discriminant, V comparable] []V
+type linearIndex[V comparable] []V
 
-func (idx linearIndex[I, V]) indexOf(v V) (i I, ok bool) {
+func (idx linearIndex[V]) indexOf(v V) int {
 	for i := 0; i < len(idx); i++ {
 		if idx[i] == v {
-			return I(i), true
+			return i
 		}
 	}
-	return 0, false
+	return -1
 }
 
-type mapIndex[I Discriminant, V comparable] map[V]I
+type mapIndex[V comparable] map[V]int
 
-func (idx mapIndex[I, V]) indexOf(v V) (i I, ok bool) {
-	i, ok = idx[v]
-	return
+func (idx mapIndex[V]) indexOf(v V) int {
+	i, ok := idx[v]
+	if !ok {
+		return -1
+	}
+	return i
 }
