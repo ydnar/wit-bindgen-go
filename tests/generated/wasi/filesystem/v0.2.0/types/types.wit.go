@@ -29,6 +29,7 @@
 package types
 
 import (
+	"errors"
 	"go.bytecodealliance.org/cm"
 	wallclock "tests/generated/wasi/clocks/v0.2.0/wall-clock"
 	"tests/generated/wasi/io/v0.2.0/streams"
@@ -120,6 +121,19 @@ var stringsDescriptorType = [8]string{
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e DescriptorType) String() string {
 	return stringsDescriptorType[e]
+}
+
+var indexDescriptorType = cm.Index(stringsDescriptorType[:])
+
+// UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
+// case. Returns an error if the supplied text is not one of the enum cases.
+func (e *DescriptorType) UnmarshalText(text []byte) error {
+	v := indexDescriptorType(string(text))
+	if v < 0 {
+		return errors.New("unknown enum case")
+	}
+	*e = DescriptorType(v)
+	return nil
 }
 
 // DescriptorFlags represents the flags "wasi:filesystem/types@0.2.0#descriptor-flags".
@@ -561,6 +575,19 @@ func (e ErrorCode) String() string {
 	return stringsErrorCode[e]
 }
 
+var indexErrorCode = cm.Index(stringsErrorCode[:])
+
+// UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
+// case. Returns an error if the supplied text is not one of the enum cases.
+func (e *ErrorCode) UnmarshalText(text []byte) error {
+	v := indexErrorCode(string(text))
+	if v < 0 {
+		return errors.New("unknown enum case")
+	}
+	*e = ErrorCode(v)
+	return nil
+}
+
 // Advice represents the enum "wasi:filesystem/types@0.2.0#advice".
 //
 // File or memory access pattern advisory information.
@@ -613,6 +640,19 @@ var stringsAdvice = [6]string{
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e Advice) String() string {
 	return stringsAdvice[e]
+}
+
+var indexAdvice = cm.Index(stringsAdvice[:])
+
+// UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
+// case. Returns an error if the supplied text is not one of the enum cases.
+func (e *Advice) UnmarshalText(text []byte) error {
+	v := indexAdvice(string(text))
+	if v < 0 {
+		return errors.New("unknown enum case")
+	}
+	*e = Advice(v)
+	return nil
 }
 
 // MetadataHashValue represents the record "wasi:filesystem/types@0.2.0#metadata-hash-value".

@@ -4,6 +4,7 @@
 package network
 
 import (
+	"errors"
 	"go.bytecodealliance.org/cm"
 )
 
@@ -182,6 +183,19 @@ func (e ErrorCode) String() string {
 	return stringsErrorCode[e]
 }
 
+var indexErrorCode = cm.Index(stringsErrorCode[:])
+
+// UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
+// case. Returns an error if the supplied text is not one of the enum cases.
+func (e *ErrorCode) UnmarshalText(text []byte) error {
+	v := indexErrorCode(string(text))
+	if v < 0 {
+		return errors.New("unknown enum case")
+	}
+	*e = ErrorCode(v)
+	return nil
+}
+
 // IPAddressFamily represents the enum "wasi:sockets/network@0.2.0#ip-address-family".
 //
 //	enum ip-address-family {
@@ -206,6 +220,19 @@ var stringsIPAddressFamily = [2]string{
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e IPAddressFamily) String() string {
 	return stringsIPAddressFamily[e]
+}
+
+var indexIPAddressFamily = cm.Index(stringsIPAddressFamily[:])
+
+// UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
+// case. Returns an error if the supplied text is not one of the enum cases.
+func (e *IPAddressFamily) UnmarshalText(text []byte) error {
+	v := indexIPAddressFamily(string(text))
+	if v < 0 {
+		return errors.New("unknown enum case")
+	}
+	*e = IPAddressFamily(v)
+	return nil
 }
 
 // IPv4Address represents the tuple "wasi:sockets/network@0.2.0#ipv4-address".
