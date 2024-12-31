@@ -85,6 +85,11 @@ func (e ShutdownType) String() string {
 
 var indexShutdownType = cm.Index(stringsShutdownType[:])
 
+// MarshalText implements [encoding.TextMarshaler].
+func (e ShutdownType) MarshalText() ([]byte, error) {
+	return []byte(e.String()), nil
+}
+
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.
 func (e *ShutdownType) UnmarshalText(text []byte) error {

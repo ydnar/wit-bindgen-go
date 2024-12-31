@@ -125,6 +125,11 @@ func (e DescriptorType) String() string {
 
 var indexDescriptorType = cm.Index(stringsDescriptorType[:])
 
+// MarshalText implements [encoding.TextMarshaler].
+func (e DescriptorType) MarshalText() ([]byte, error) {
+	return []byte(e.String()), nil
+}
+
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.
 func (e *DescriptorType) UnmarshalText(text []byte) error {
@@ -577,6 +582,11 @@ func (e ErrorCode) String() string {
 
 var indexErrorCode = cm.Index(stringsErrorCode[:])
 
+// MarshalText implements [encoding.TextMarshaler].
+func (e ErrorCode) MarshalText() ([]byte, error) {
+	return []byte(e.String()), nil
+}
+
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.
 func (e *ErrorCode) UnmarshalText(text []byte) error {
@@ -643,6 +653,11 @@ func (e Advice) String() string {
 }
 
 var indexAdvice = cm.Index(stringsAdvice[:])
+
+// MarshalText implements [encoding.TextMarshaler].
+func (e Advice) MarshalText() ([]byte, error) {
+	return []byte(e.String()), nil
+}
 
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.

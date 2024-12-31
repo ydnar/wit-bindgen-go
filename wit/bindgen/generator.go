@@ -853,6 +853,11 @@ func (g *generator) enumRep(file *gen.File, dir wit.Direction, e *wit.Enum, goNa
 	indexName := file.DeclareName("index" + GoName(goName, true))
 	stringio.Write(&b, "var ", indexName, " = ", file.Import(g.opts.cmPackage), ".Index(", stringsName, "[:])\n")
 
+	b.WriteString(formatDocComments("MarshalText implements [encoding.TextMarshaler].", true))
+	stringio.Write(&b, "func (e ", goName, ") MarshalText() ([]byte, error) {\n")
+	stringio.Write(&b, "return []byte(e.String()), nil\n")
+	b.WriteString("}\n\n")
+
 	b.WriteString(formatDocComments("UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum case. Returns an error if the supplied text is not one of the enum cases.", true))
 	stringio.Write(&b, "func (e *", goName, ") UnmarshalText(text []byte) error {\n")
 	stringio.Write(&b, "v := ", indexName, "(string(text))\n")
