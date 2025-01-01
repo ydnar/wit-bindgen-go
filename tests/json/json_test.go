@@ -7,6 +7,8 @@ import (
 
 	wallclock "tests/generated/wasi/clocks/v0.2.0/wall-clock"
 	"tests/generated/wasi/filesystem/v0.2.0/types"
+
+	"go.bytecodealliance.org/cm"
 )
 
 func TestJSON(t *testing.T) {
@@ -45,6 +47,27 @@ func TestJSON(t *testing.T) {
 			&wallclock.DateTime{Seconds: 1, Nanoseconds: 2},
 			false,
 		},
+		{
+			"empty list",
+			`[]`,
+			&cm.List[uint8]{},
+			&cm.List[uint8]{},
+			false,
+		},
+		{
+			"list of bool",
+			`[false,true,false]`,
+			&cm.List[bool]{},
+			ptr(cm.ToList([]bool{false, true, false})),
+			false,
+		},
+		{
+			"list of u32",
+			`[1,2,3]`,
+			&cm.List[uint32]{},
+			ptr(cm.ToList([]uint32{1, 2, 3})),
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -56,16 +79,15 @@ func TestJSON(t *testing.T) {
 				t.Errorf("json.Unmarshal(%q): expected no error, got error: %v", tt.json, err)
 				return
 			}
-			if !reflect.DeepEqual(tt.want, tt.into) {
-				t.Errorf("json.Unmarshal(%q): resulting value different (%v != %v)", tt.json, tt.into, tt.want)
-				return
-			}
 			got, err := json.Marshal(tt.into)
 			if err != nil {
 				t.Error(err)
 				return
 			}
 			if string(got) != tt.json {
+				if !reflect.DeepEqual(tt.want, tt.into) {
+					t.Errorf("json.Unmarshal(%q): resulting value different (%v != %v)", tt.json, tt.into, tt.want)
+				}
 				t.Errorf("json.Marshal(%v): %s, expected %s", tt.into, string(got), tt.json)
 			}
 		})
