@@ -29,7 +29,6 @@
 package types
 
 import (
-	"errors"
 	"go.bytecodealliance.org/cm"
 	wallclock "tests/generated/wasi/clocks/v0.2.0/wall-clock"
 	"tests/generated/wasi/io/v0.2.0/streams"
@@ -107,7 +106,7 @@ const (
 	DescriptorTypeSocket
 )
 
-var stringsDescriptorType = [8]string{
+var _DescriptorTypeStrings = [8]string{
 	"unknown",
 	"block-device",
 	"character-device",
@@ -120,10 +119,8 @@ var stringsDescriptorType = [8]string{
 
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e DescriptorType) String() string {
-	return stringsDescriptorType[e]
+	return _DescriptorTypeStrings[e]
 }
-
-var indexDescriptorType = cm.Index(stringsDescriptorType[:])
 
 // MarshalText implements [encoding.TextMarshaler].
 func (e DescriptorType) MarshalText() ([]byte, error) {
@@ -133,13 +130,10 @@ func (e DescriptorType) MarshalText() ([]byte, error) {
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.
 func (e *DescriptorType) UnmarshalText(text []byte) error {
-	v := indexDescriptorType(string(text))
-	if v < 0 {
-		return errors.New("unknown enum case")
-	}
-	*e = DescriptorType(v)
-	return nil
+	return _DescriptorTypeUnmarshalCase(e, text)
 }
+
+var _DescriptorTypeUnmarshalCase = cm.CaseUnmarshaler[DescriptorType](_DescriptorTypeStrings[:])
 
 // DescriptorFlags represents the flags "wasi:filesystem/types@0.2.0#descriptor-flags".
 //
@@ -345,7 +339,7 @@ func (self *NewTimestamp) Timestamp() *DateTime {
 	return cm.Case[DateTime](self, 2)
 }
 
-var stringsNewTimestamp = [3]string{
+var _NewTimestampStrings = [3]string{
 	"no-change",
 	"now",
 	"timestamp",
@@ -353,7 +347,7 @@ var stringsNewTimestamp = [3]string{
 
 // String implements [fmt.Stringer], returning the variant case name of v.
 func (v NewTimestamp) String() string {
-	return stringsNewTimestamp[v.Tag()]
+	return _NewTimestampStrings[v.Tag()]
 }
 
 // DirectoryEntry represents the record "wasi:filesystem/types@0.2.0#directory-entry".
@@ -535,7 +529,7 @@ const (
 	ErrorCodeCrossDevice
 )
 
-var stringsErrorCode = [37]string{
+var _ErrorCodeStrings = [37]string{
 	"access",
 	"would-block",
 	"already",
@@ -577,10 +571,8 @@ var stringsErrorCode = [37]string{
 
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e ErrorCode) String() string {
-	return stringsErrorCode[e]
+	return _ErrorCodeStrings[e]
 }
-
-var indexErrorCode = cm.Index(stringsErrorCode[:])
 
 // MarshalText implements [encoding.TextMarshaler].
 func (e ErrorCode) MarshalText() ([]byte, error) {
@@ -590,13 +582,10 @@ func (e ErrorCode) MarshalText() ([]byte, error) {
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.
 func (e *ErrorCode) UnmarshalText(text []byte) error {
-	v := indexErrorCode(string(text))
-	if v < 0 {
-		return errors.New("unknown enum case")
-	}
-	*e = ErrorCode(v)
-	return nil
+	return _ErrorCodeUnmarshalCase(e, text)
 }
+
+var _ErrorCodeUnmarshalCase = cm.CaseUnmarshaler[ErrorCode](_ErrorCodeStrings[:])
 
 // Advice represents the enum "wasi:filesystem/types@0.2.0#advice".
 //
@@ -638,7 +627,7 @@ const (
 	AdviceNoReuse
 )
 
-var stringsAdvice = [6]string{
+var _AdviceStrings = [6]string{
 	"normal",
 	"sequential",
 	"random",
@@ -649,10 +638,8 @@ var stringsAdvice = [6]string{
 
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e Advice) String() string {
-	return stringsAdvice[e]
+	return _AdviceStrings[e]
 }
-
-var indexAdvice = cm.Index(stringsAdvice[:])
 
 // MarshalText implements [encoding.TextMarshaler].
 func (e Advice) MarshalText() ([]byte, error) {
@@ -662,13 +649,10 @@ func (e Advice) MarshalText() ([]byte, error) {
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.
 func (e *Advice) UnmarshalText(text []byte) error {
-	v := indexAdvice(string(text))
-	if v < 0 {
-		return errors.New("unknown enum case")
-	}
-	*e = Advice(v)
-	return nil
+	return _AdviceUnmarshalCase(e, text)
 }
+
+var _AdviceUnmarshalCase = cm.CaseUnmarshaler[Advice](_AdviceStrings[:])
 
 // MetadataHashValue represents the record "wasi:filesystem/types@0.2.0#metadata-hash-value".
 //

@@ -4,7 +4,6 @@
 package tcp
 
 import (
-	"errors"
 	"go.bytecodealliance.org/cm"
 	monotonicclock "tests/generated/wasi/clocks/v0.2.0/monotonic-clock"
 	"tests/generated/wasi/io/v0.2.0/poll"
@@ -72,7 +71,7 @@ const (
 	ShutdownTypeBoth
 )
 
-var stringsShutdownType = [3]string{
+var _ShutdownTypeStrings = [3]string{
 	"receive",
 	"send",
 	"both",
@@ -80,10 +79,8 @@ var stringsShutdownType = [3]string{
 
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e ShutdownType) String() string {
-	return stringsShutdownType[e]
+	return _ShutdownTypeStrings[e]
 }
-
-var indexShutdownType = cm.Index(stringsShutdownType[:])
 
 // MarshalText implements [encoding.TextMarshaler].
 func (e ShutdownType) MarshalText() ([]byte, error) {
@@ -93,13 +90,10 @@ func (e ShutdownType) MarshalText() ([]byte, error) {
 // UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
 // case. Returns an error if the supplied text is not one of the enum cases.
 func (e *ShutdownType) UnmarshalText(text []byte) error {
-	v := indexShutdownType(string(text))
-	if v < 0 {
-		return errors.New("unknown enum case")
-	}
-	*e = ShutdownType(v)
-	return nil
+	return _ShutdownTypeUnmarshalCase(e, text)
 }
+
+var _ShutdownTypeUnmarshalCase = cm.CaseUnmarshaler[ShutdownType](_ShutdownTypeStrings[:])
 
 // TCPSocket represents the imported resource "wasi:sockets/tcp@0.2.0#tcp-socket".
 //

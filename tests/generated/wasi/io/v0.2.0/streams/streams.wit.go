@@ -64,14 +64,14 @@ func (self *StreamError) Closed() bool {
 	return self.Tag() == 1
 }
 
-var stringsStreamError = [2]string{
+var _StreamErrorStrings = [2]string{
 	"last-operation-failed",
 	"closed",
 }
 
 // String implements [fmt.Stringer], returning the variant case name of v.
 func (v StreamError) String() string {
-	return stringsStreamError[v.Tag()]
+	return _StreamErrorStrings[v.Tag()]
 }
 
 // InputStream represents the imported resource "wasi:io/streams@0.2.0#input-stream".
