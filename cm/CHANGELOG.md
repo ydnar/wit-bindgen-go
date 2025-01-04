@@ -7,7 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - Initial support for Component Model [async](https://github.com/WebAssembly/component-model/blob/main/design/mvp/Async.md) types `stream`, `future`, and `error-context`.
-- Initial support for JSON serialization of WIT types, starting with `list` and `record`.
+- Initial support for JSON serialization of WIT `list`, `enum`, and `record` types.
+- Added `cm.CaseUnmarshaler` helper for text and JSON unmarshaling of `enum` and `variant` types.
+
+### Changed
+
+- Breaking: package `cm`: removed `bool` from `Discriminant` type constraint. It was not used by code generation.
 
 ## [v0.1.0] — 2024-12-14
 
