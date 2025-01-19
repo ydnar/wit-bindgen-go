@@ -46,7 +46,7 @@ func wasmimport_TCPSocketKeepAliveCount(self0 uint32, result *cm.Result[uint32, 
 
 //go:wasmimport wasi:sockets/tcp@0.2.0 [method]tcp-socket.keep-alive-enabled
 //go:noescape
-func wasmimport_TCPSocketKeepAliveEnabled(self0 uint32, result *cm.Result[bool, bool, ErrorCode])
+func wasmimport_TCPSocketKeepAliveEnabled(self0 uint32, result *cm.Result[ErrorCode, bool, ErrorCode])
 
 //go:wasmimport wasi:sockets/tcp@0.2.0 [method]tcp-socket.keep-alive-idle-time
 //go:noescape

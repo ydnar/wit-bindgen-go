@@ -23,7 +23,7 @@ type TupleInputStreamOutputStreamShape struct {
 // IPSocketAddressShape is used for storage in variant or result types.
 type IPSocketAddressShape struct {
 	_     cm.HostLayout
-	shape [unsafe.Sizeof(network.IPSocketAddress{})]byte
+	shape [unsafe.Sizeof(IPSocketAddress{})]byte
 }
 
 func lower_IPv4Address(v network.IPv4Address) (f0 uint32, f1 uint32, f2 uint32, f3 uint32) {
