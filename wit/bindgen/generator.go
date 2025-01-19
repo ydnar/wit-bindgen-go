@@ -1018,7 +1018,7 @@ func (g *generator) typeShape(file *gen.File, dir wit.Direction, t wit.Type) str
 }
 
 func (g *generator) typeDefShape(file *gen.File, dir wit.Direction, t *wit.TypeDef) string {
-	switch kind := t.Kind.(type) {
+	switch kind := t.Root().Kind.(type) {
 	case wit.Type:
 		return g.typeShape(file, dir, kind)
 	case *wit.Variant:
