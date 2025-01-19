@@ -574,7 +574,9 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 	// Predeclare reserved methods.
 	switch t.Kind.(type) {
 	case *wit.Enum:
-		decl.scope.DeclareName("String") // For fmt.Stringer
+		decl.scope.DeclareName("String")        // For fmt.Stringer
+		decl.scope.DeclareName("MarshalText")   // For encoding.TextMarshaler
+		decl.scope.DeclareName("UnmarshalText") // For encoding.TextUnmarshaler
 	case *wit.Variant:
 		decl.scope.DeclareName("Tag")    // Method on cm.Variant
 		decl.scope.DeclareName("String") // For fmt.Stringer
