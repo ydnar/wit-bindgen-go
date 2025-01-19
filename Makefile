@@ -53,3 +53,7 @@ test:
 	tinygo test -target=wasip1 $(GOTESTARGS) $(GOTESTMODULES)
 	tinygo test -target=wasip2 $(GOTESTARGS) $(GOTESTMODULES)
 	tinygo test -target=wasip2 $(GOTESTARGS) ./tests/...
+
+.PHONY: tests
+tests:
+	tinygo test -target=wasip2 $(GOTESTARGS) ./tests/...

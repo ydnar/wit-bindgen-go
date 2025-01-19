@@ -1,0 +1,9 @@
+package issues:issue284;
+
+interface i {
+	type bool-s8-result = result<bool, s8>;
+}
+
+world w {
+	import i;
+}
