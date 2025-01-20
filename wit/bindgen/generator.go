@@ -20,6 +20,7 @@ import (
 	"testing/fstest"
 	"time"
 
+	"github.com/tetratelabs/wazero/sys"
 	"go.bytecodealliance.org/cm"
 	"go.bytecodealliance.org/internal/codec"
 	"go.bytecodealliance.org/internal/go/gen"
@@ -2370,6 +2371,7 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 		}
 		content, err := g.componentEmbed(witText)
 		if err != nil {
+			g.opts.logger.Errorf("%v", err)
 			// return nil, err
 		}
 		componentType := &wasm.CustomSection{
@@ -2406,8 +2408,12 @@ func (g *generator) componentEmbed(witData string) ([]byte, error) {
 		},
 	}
 	stdout := &bytes.Buffer{}
-	err := g.wasmTools.Run(ctx, nil, stdout, nil, fsMap, args...)
+	stderr := &bytes.Buffer{}
+	err := g.wasmTools.Run(ctx, nil, stdout, stderr, fsMap, args...)
 	if err != nil {
+		if _, ok := err.(*sys.ExitError); ok {
+			return nil, fmt.Errorf("wasm-tools: %s", stderr.String())
+		}
 		return nil, fmt.Errorf("wasm-tools: %w", err)
 	}
 	return stdout.Bytes(), err
