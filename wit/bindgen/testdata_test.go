@@ -21,6 +21,7 @@ import (
 	"go.bytecodealliance.org/internal/go/gen"
 	"go.bytecodealliance.org/internal/relpath"
 	"go.bytecodealliance.org/wit"
+	"go.bytecodealliance.org/wit/logging"
 )
 
 var writeGoFiles = flag.Bool("write", false, "write generated Go files")
@@ -108,6 +109,7 @@ func validateGeneratedGo(t *testing.T, res *wit.Resolve, origin string) {
 		GeneratedBy("test"),
 		PackageRoot(pkgPath),
 		Versioned(true),
+		Logger(logging.NewLogger(os.Stderr, logging.LevelWarn)),
 	)
 	if err != nil {
 		t.Error(err)
