@@ -1,0 +1,53 @@
+{
+  "worlds": [
+    {
+      "name": "imports",
+      "imports": {
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "exports": {},
+      "package": 1
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "types",
+      "types": {
+        "t": 0
+      },
+      "functions": {},
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "t",
+      "kind": {
+        "type": "u8"
+      },
+      "owner": {
+        "interface": 0
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "wasi:http@0.2.1",
+      "interfaces": {
+        "types": 0
+      },
+      "worlds": {}
+    },
+    {
+      "name": "repro:repro@0.1.0",
+      "interfaces": {},
+      "worlds": {
+        "imports": 0
+      }
+    }
+  ]
+}
