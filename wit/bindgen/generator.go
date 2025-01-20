@@ -20,6 +20,7 @@ import (
 	"testing/fstest"
 	"time"
 
+	"github.com/coreos/go-semver/semver"
 	"github.com/tetratelabs/wazero/sys"
 	"go.bytecodealliance.org/cm"
 	"go.bytecodealliance.org/internal/codec"
@@ -2423,6 +2424,7 @@ func synthesizeWorld(r *wit.Resolve, w *wit.World, name string) (*wit.Resolve, *
 	p := &wit.Package{}
 	p.Name.Namespace = "go"
 	p.Name.Package = "bindgen"
+	p.Name.Version = &semver.Version{Major: 1}
 
 	w = w.Clone()
 	w.Name = name
