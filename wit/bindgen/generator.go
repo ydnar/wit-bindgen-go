@@ -2400,10 +2400,10 @@ func (g *generator) componentEmbed(witData string) ([]byte, error) {
 	defer cancel()
 
 	// TODO: --all-features?
-	filename := "./component.wit"
+	filename := "component.wit"
 	args := []string{"component", "embed", "--only-custom", filename}
 	fsMap := map[string]fs.FS{
-		".": fstest.MapFS{
+		"": fstest.MapFS{
 			filename: &fstest.MapFile{Data: []byte(witData)},
 		},
 	}
