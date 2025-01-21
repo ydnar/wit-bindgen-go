@@ -68,15 +68,15 @@ func (id *Ident) String() string {
 		return id.UnversionedString()
 	}
 	if id.Extension == "" {
-		return id.Namespace + ":" + id.Package + "@" + id.Version.String()
+		return escape(id.Namespace) + ":" + escape(id.Package) + "@" + id.Version.String()
 	}
-	return id.Namespace + ":" + id.Package + "/" + id.Extension + "@" + id.Version.String()
+	return escape(id.Namespace) + ":" + escape(id.Package) + "/" + escape(id.Extension) + "@" + id.Version.String()
 }
 
 // UnversionedString returns a string representation of an [Ident] without version information.
 func (id *Ident) UnversionedString() string {
 	if id.Extension == "" {
-		return id.Namespace + ":" + id.Package
+		return escape(id.Namespace) + ":" + escape(id.Package)
 	}
-	return id.Namespace + ":" + id.Package + "/" + id.Extension
+	return escape(id.Namespace) + ":" + escape(id.Package) + "/" + escape(id.Extension)
 }

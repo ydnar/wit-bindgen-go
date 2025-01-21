@@ -578,7 +578,7 @@ func relativeName(o TypeOwner, p *Package) string {
 		return ""
 	}
 	qualifiedName := op.Name
-	qualifiedName.Package += "/" + name
+	qualifiedName.Package += "/" + escape(name)
 	return qualifiedName.String()
 }
 
