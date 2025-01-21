@@ -20,7 +20,6 @@ import (
 	"testing/fstest"
 	"time"
 
-	"github.com/coreos/go-semver/semver"
 	"github.com/tetratelabs/wazero/sys"
 	"go.bytecodealliance.org/cm"
 	"go.bytecodealliance.org/internal/codec"
@@ -2366,6 +2365,7 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 		// Generate wasm file
 		res, world := synthesizeWorld(g.res, w, worldName)
 		witText := res.WIT(wit.Filter(world, i), "")
+		world.Package.Worlds.Delete(worldName) // Undo mutation
 		if g.opts.generateWIT {
 			witFile := g.witFileFor(owner)
 			witFile.WriteString(witText)
@@ -2394,7 +2394,7 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 	return pkg, nil
 }
 
-var replacer = strings.NewReplacer("/", "-", ":", "-", "@", "-v", ".", "")
+var replacer = strings.NewReplacer("/", "-", ":", "-", "@", "-v", ".", "", "%", "")
 
 // componentEmbed runs generated WIT through wasm-tools to generate a wasm file with a component-type custom section.
 func (g *generator) componentEmbed(witData string) ([]byte, error) {
@@ -2422,20 +2422,13 @@ func (g *generator) componentEmbed(witData string) ([]byte, error) {
 }
 
 func synthesizeWorld(r *wit.Resolve, w *wit.World, name string) (*wit.Resolve, *wit.World) {
-	p := &wit.Package{}
-	p.Name.Namespace = "go"
-	p.Name.Package = "bindgen"
-	p.Name.Version = &semver.Version{Major: 1}
-
 	w = w.Clone()
 	w.Name = name
 	w.Docs = wit.Docs{}
-	w.Package = p
-	p.Worlds.Set(name, w)
+	w.Package.Worlds.Set(name, w)
 
 	r = r.Clone()
 	r.Worlds = append(r.Worlds, w)
-	r.Packages = append(r.Packages, p)
 
 	return r, w
 }
