@@ -43,7 +43,7 @@
       "worlds": {}
     },
     {
-      "name": "repro:repro@0.1.0",
+      "name": "issues:issue281@0.1.0",
       "interfaces": {},
       "worlds": {
         "imports": 0
