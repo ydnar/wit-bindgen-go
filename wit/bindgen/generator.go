@@ -20,6 +20,7 @@ import (
 	"testing/fstest"
 	"time"
 
+	"github.com/tetratelabs/wazero/sys"
 	"go.bytecodealliance.org/cm"
 	"go.bytecodealliance.org/internal/codec"
 	"go.bytecodealliance.org/internal/go/gen"
@@ -2364,13 +2365,15 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 		// Generate wasm file
 		res, world := synthesizeWorld(g.res, w, worldName)
 		witText := res.WIT(wit.Filter(world, i), "")
+		world.Package.Worlds.Delete(worldName) // Undo mutation
 		if g.opts.generateWIT {
 			witFile := g.witFileFor(owner)
 			witFile.WriteString(witText)
 		}
 		content, err := g.componentEmbed(witText)
 		if err != nil {
-			// return nil, err
+			g.opts.logger.Errorf("WIT:\n%s\n\n", witText)
+			return nil, err
 		}
 		componentType := &wasm.CustomSection{
 			Name:     "component-type:" + worldName,
@@ -2390,7 +2393,7 @@ func (g *generator) newPackage(w *wit.World, i *wit.Interface, name string) (*ge
 	return pkg, nil
 }
 
-var replacer = strings.NewReplacer("/", "-", ":", "-", "@", "-v", ".", "")
+var replacer = strings.NewReplacer("/", "-", ":", "-", "@", "-v", ".", "", "%", "")
 
 // componentEmbed runs generated WIT through wasm-tools to generate a wasm file with a component-type custom section.
 func (g *generator) componentEmbed(witData string) ([]byte, error) {
@@ -2398,35 +2401,33 @@ func (g *generator) componentEmbed(witData string) ([]byte, error) {
 	defer cancel()
 
 	// TODO: --all-features?
-	filename := "./component.wit"
+	filename := "component.wit"
 	args := []string{"component", "embed", "--only-custom", filename}
 	fsMap := map[string]fs.FS{
-		".": fstest.MapFS{
+		"": fstest.MapFS{
 			filename: &fstest.MapFile{Data: []byte(witData)},
 		},
 	}
 	stdout := &bytes.Buffer{}
-	err := g.wasmTools.Run(ctx, nil, stdout, nil, fsMap, args...)
+	stderr := &bytes.Buffer{}
+	err := g.wasmTools.Run(ctx, nil, stdout, stderr, fsMap, args...)
 	if err != nil {
+		if _, ok := err.(*sys.ExitError); ok {
+			return nil, fmt.Errorf("wasm-tools: %s", stderr.String())
+		}
 		return nil, fmt.Errorf("wasm-tools: %w", err)
 	}
 	return stdout.Bytes(), err
 }
 
 func synthesizeWorld(r *wit.Resolve, w *wit.World, name string) (*wit.Resolve, *wit.World) {
-	p := &wit.Package{}
-	p.Name.Namespace = "go"
-	p.Name.Package = "bindgen"
-
 	w = w.Clone()
 	w.Name = name
 	w.Docs = wit.Docs{}
-	w.Package = p
-	p.Worlds.Set(name, w)
+	w.Package.Worlds.Set(name, w)
 
 	r = r.Clone()
 	r.Worlds = append(r.Worlds, w)
-	r.Packages = append(r.Packages, p)
 
 	return r, w
 }
