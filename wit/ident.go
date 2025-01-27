@@ -2,6 +2,7 @@ package wit
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/coreos/go-semver/semver"
@@ -34,11 +35,8 @@ type Ident struct {
 // returning any errors encountered. The resulting Ident
 // may not be valid.
 func ParseIdent(s string) (Ident, error) {
-	s = strings.ReplaceAll(s, "%", "")
 	var id Ident
 	name, ver, hasVer := strings.Cut(s, "@")
-	base, ext, hasExt := strings.Cut(name, "/")
-	id.Namespace, id.Package, _ = strings.Cut(base, ":")
 	if hasVer {
 		var err error
 		id.Version, err = semver.NewVersion(ver)
@@ -46,10 +44,21 @@ func ParseIdent(s string) (Ident, error) {
 			return id, err
 		}
 	}
+	base, ext, hasExt := strings.Cut(name, "/")
+	ns, pkg, _ := strings.Cut(base, ":")
+	id.Namespace = trimPercent(ns)
+	id.Package = trimPercent(pkg)
 	if hasExt {
-		id.Extension = ext
+		id.Extension = trimPercent(ext)
 	}
 	return id, id.Validate()
+}
+
+func trimPercent(s string) string {
+	if len(s) > 0 && s[0] == '%' {
+		return s[1:]
+	}
+	return s
 }
 
 // Validate validates id, returning any errors.
@@ -59,6 +68,59 @@ func (id *Ident) Validate() error {
 		return errors.New("missing package namespace")
 	case id.Package == "":
 		return errors.New("missing package name")
+	}
+	if err := validateName(id.Namespace); err != nil {
+		return err
+	}
+	if err := validateName(id.Package); err != nil {
+		return err
+	}
+	return validateName(id.Extension)
+}
+
+func validateName(s string) error {
+	if len(s) == 0 {
+		return nil
+	}
+	var prev rune
+	for _, c := range s {
+		switch {
+		case c >= 'a' && c <= 'z':
+			switch {
+			case prev >= 'A' && prev <= 'Z':
+				return errors.New("invalid character " + strconv.Quote(string(c)))
+			}
+		case c >= 'A' && c <= 'Z':
+			switch {
+			case prev == 0: // start of string
+			case prev >= 'A' && prev <= 'Z':
+			case prev >= '0' && prev <= '9':
+			case prev == '-':
+			default:
+				return errors.New("invalid character " + strconv.Quote(string(c)))
+			}
+		case c >= '0' && c <= '9':
+			switch {
+			case prev >= 'a' && prev <= 'z':
+			case prev >= 'A' && prev <= 'Z':
+			case prev >= '0' && prev <= '9':
+			default:
+				return errors.New("invalid character " + strconv.Quote(string(c)))
+			}
+		case c == '-':
+			switch {
+			case prev == 0: // start of string
+				return errors.New("invalid leading -")
+			case prev == '-':
+				return errors.New("invalid double --")
+			}
+		default:
+			return errors.New("invalid character " + strconv.Quote(string(c)))
+		}
+		prev = c
+	}
+	if prev == '-' {
+		return errors.New("invalid trailing -")
 	}
 	return nil
 }

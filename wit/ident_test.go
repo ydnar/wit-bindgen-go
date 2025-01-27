@@ -34,6 +34,7 @@ func TestIdent(t *testing.T) {
 		{"wasi:/", Ident{}, true},
 		{"wasi:clocks@", Ident{}, true},
 		{"wasi:clocks/wall-clock@", Ident{}, true},
+		{"foo%:bar%baz", Ident{Namespace: "foo%", Package: "bar%baz"}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.s, func(t *testing.T) {
