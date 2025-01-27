@@ -18,6 +18,12 @@ func TestIdent(t *testing.T) {
 		{"wasi:io/streams", Ident{Namespace: "wasi", Package: "io", Extension: "streams"}, false},
 		{"wasi:io/streams@0.2.0", Ident{Namespace: "wasi", Package: "io", Extension: "streams", Version: semver.New("0.2.0")}, false},
 
+		// Escaping
+		{"%use:%own", Ident{Namespace: "use", Package: "own"}, false},
+		{"%use:%own@0.2.0", Ident{Namespace: "use", Package: "own", Version: semver.New("0.2.0")}, false},
+		{"%use:%own/%type", Ident{Namespace: "use", Package: "own", Extension: "type"}, false},
+		{"%use:%own/%type@0.2.0", Ident{Namespace: "use", Package: "own", Extension: "type", Version: semver.New("0.2.0")}, false},
+
 		// Errors
 		{"", Ident{}, true},
 		{":", Ident{}, true},

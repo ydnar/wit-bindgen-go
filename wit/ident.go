@@ -34,6 +34,7 @@ type Ident struct {
 // returning any errors encountered. The resulting Ident
 // may not be valid.
 func ParseIdent(s string) (Ident, error) {
+	s = strings.ReplaceAll(s, "%", "")
 	var id Ident
 	name, ver, hasVer := strings.Cut(s, "@")
 	base, ext, hasExt := strings.Cut(name, "/")
