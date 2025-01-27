@@ -6,7 +6,7 @@ import (
 	"go.bytecodealliance.org/wit"
 )
 
-// variantShape returns the type with the greatest size.
+// variantShape returns the type with the greatest size that is not a bool.
 // If there are multiple types with the same size, it returns
 // the first type that contains a pointer.
 func variantShape(types []wit.Type) wit.Type {
@@ -19,6 +19,12 @@ func variantShape(types []wit.Type) wit.Type {
 			return -1
 		case a.Size() < b.Size():
 			return 1
+		case !isBool(a) && isBool(b):
+			// bool cannot be used as variant shape
+			// See https://github.com/bytecodealliance/go-modules/issues/284
+			return -1
+		case isBool(a) && !isBool(b):
+			return 1
 		case wit.HasPointer(a) && !wit.HasPointer(b):
 			return -1
 		case !wit.HasPointer(a) && wit.HasPointer(b):
@@ -28,6 +34,16 @@ func variantShape(types []wit.Type) wit.Type {
 		}
 	})
 	return types[0]
+}
+
+func isBool(t wit.TypeDefKind) bool {
+	switch t := t.(type) {
+	case wit.Bool:
+		return true
+	case *wit.TypeDef:
+		return isBool(t.Root().Kind)
+	}
+	return false
 }
 
 // variantAlign returns the type with the largest alignment.

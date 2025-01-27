@@ -285,7 +285,7 @@ func (self TCPSocket) KeepAliveCount() (result cm.Result[uint32, uint32, ErrorCo
 //	keep-alive-enabled: func() -> result<bool, error-code>
 //
 //go:nosplit
-func (self TCPSocket) KeepAliveEnabled() (result cm.Result[bool, bool, ErrorCode]) {
+func (self TCPSocket) KeepAliveEnabled() (result cm.Result[ErrorCode, bool, ErrorCode]) {
 	self0 := cm.Reinterpret[uint32](self)
 	wasmimport_TCPSocketKeepAliveEnabled((uint32)(self0), &result)
 	return

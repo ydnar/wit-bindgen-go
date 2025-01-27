@@ -1,6 +1,7 @@
 package cm
 
 import (
+	"fmt"
 	"runtime"
 	"testing"
 	"unsafe"
@@ -236,5 +237,100 @@ func TestIssue95BoolInt64(t *testing.T) {
 	// fmt.Printf("got: %v want: %v\n", got, want)
 	if got != want {
 		t.Errorf("*res.OK(): %v, expected %v", got, want)
+	}
+}
+
+func TestIssue284(t *testing.T) {
+	// Using int8 instead of bool for shape works on Go and TinyGo.
+	// See https://github.com/bytecodealliance/go-modules/issues/284
+	type BoolS8Result Result[int8, bool, int8]
+
+	tests := []struct {
+		isErr bool
+		ok    bool
+		err   int8
+	}{
+		{false, false, 0},
+		{false, true, 0},
+		{true, false, 0},
+		{true, false, 1},
+		{true, false, 5},
+		{true, false, 126},
+		{true, false, 127},
+	}
+	for _, tt := range tests {
+		if !tt.isErr {
+			t.Run(fmt.Sprintf("OK[BoolS8Result](%t)", tt.ok), func(t *testing.T) {
+				r := OK[BoolS8Result](tt.ok)
+				ok, _, isErr := r.Result()
+				if isErr != tt.isErr {
+					t.Errorf("isErr == %t, expected %t", isErr, tt.isErr)
+				}
+				if ok != tt.ok {
+					t.Errorf("ok == %t, expected %t", ok, tt.ok)
+				}
+			})
+		} else {
+			t.Run(fmt.Sprintf("Err[BoolS8Result](%d)", tt.err), func(t *testing.T) {
+				r := Err[BoolS8Result](tt.err)
+				_, err, isErr := r.Result()
+				if isErr != tt.isErr {
+					t.Errorf("isErr == %t, expected %t", isErr, tt.isErr)
+				}
+				if err != tt.err {
+					t.Errorf("err == %d, expected %d", err, tt.err)
+				}
+			})
+		}
+	}
+}
+
+func TestIssue284NotTinyGo(t *testing.T) {
+	if runtime.Compiler == "tinygo" {
+		return
+	}
+
+	// Using bool as result shape changes how [OK] returns the result by value.
+	// This works on Go, but breaks on TinyGo / LLVM.
+	// See https://github.com/bytecodealliance/go-modules/issues/284
+	type BoolS8Result Result[bool, bool, int8]
+
+	tests := []struct {
+		isErr bool
+		ok    bool
+		err   int8
+	}{
+		{false, false, 0},
+		{false, true, 0},
+		{true, false, 0},
+		{true, false, 1},
+		{true, false, 5},
+		{true, false, 126},
+		{true, false, 127},
+	}
+	for _, tt := range tests {
+		if !tt.isErr {
+			t.Run(fmt.Sprintf("OK[BoolS8Result](%t)", tt.ok), func(t *testing.T) {
+				r := OK[BoolS8Result](tt.ok)
+				ok, _, isErr := r.Result()
+				if isErr != tt.isErr {
+					t.Errorf("isErr == %t, expected %t", isErr, tt.isErr)
+				}
+				if ok != tt.ok {
+					t.Errorf("ok == %t, expected %t", ok, tt.ok)
+				}
+			})
+		} else {
+			t.Run(fmt.Sprintf("Err[BoolS8Result](%d)", tt.err), func(t *testing.T) {
+				r := Err[BoolS8Result](tt.err)
+				_, err, isErr := r.Result()
+				if isErr != tt.isErr {
+					t.Errorf("isErr == %t, expected %t", isErr, tt.isErr)
+				}
+				if err != tt.err {
+					t.Errorf("err == %d, expected %d", err, tt.err)
+				}
+			})
+		}
 	}
 }

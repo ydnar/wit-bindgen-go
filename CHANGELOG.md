@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Breaking: generated `*.wasm.go` files will now have correct WIT kebab-case base name. Interfaces or worlds with `-` in their name will require removal of the previous `*.wasm.go` files.
 - Dropped support for TinyGo v0.32.0.
 
+### Fixed
+
+- [#284](https://github.com/bytecodealliance/go-modules/issues/284): do not use `bool` for `variant` or `result` GC shapes. TinyGo returns `result` and `variant` values with `bool` as 0 or 1, which breaks the memory representation of tagged unions (variants).
+
 ## [v0.5.0] — 2024-12-14
 
 ### Changed
