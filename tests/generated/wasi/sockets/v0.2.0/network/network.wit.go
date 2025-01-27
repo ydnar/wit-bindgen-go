@@ -153,7 +153,7 @@ const (
 	ErrorCodePermanentResolverFailure
 )
 
-var stringsErrorCode = [21]string{
+var _ErrorCodeStrings = [21]string{
 	"unknown",
 	"access-denied",
 	"not-supported",
@@ -179,8 +179,21 @@ var stringsErrorCode = [21]string{
 
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e ErrorCode) String() string {
-	return stringsErrorCode[e]
+	return _ErrorCodeStrings[e]
 }
+
+// MarshalText implements [encoding.TextMarshaler].
+func (e ErrorCode) MarshalText() ([]byte, error) {
+	return []byte(e.String()), nil
+}
+
+// UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
+// case. Returns an error if the supplied text is not one of the enum cases.
+func (e *ErrorCode) UnmarshalText(text []byte) error {
+	return _ErrorCodeUnmarshalCase(e, text)
+}
+
+var _ErrorCodeUnmarshalCase = cm.CaseUnmarshaler[ErrorCode](_ErrorCodeStrings[:])
 
 // IPAddressFamily represents the enum "wasi:sockets/network@0.2.0#ip-address-family".
 //
@@ -198,15 +211,28 @@ const (
 	IPAddressFamilyIPv6
 )
 
-var stringsIPAddressFamily = [2]string{
+var _IPAddressFamilyStrings = [2]string{
 	"ipv4",
 	"ipv6",
 }
 
 // String implements [fmt.Stringer], returning the enum case name of e.
 func (e IPAddressFamily) String() string {
-	return stringsIPAddressFamily[e]
+	return _IPAddressFamilyStrings[e]
 }
+
+// MarshalText implements [encoding.TextMarshaler].
+func (e IPAddressFamily) MarshalText() ([]byte, error) {
+	return []byte(e.String()), nil
+}
+
+// UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum
+// case. Returns an error if the supplied text is not one of the enum cases.
+func (e *IPAddressFamily) UnmarshalText(text []byte) error {
+	return _IPAddressFamilyUnmarshalCase(e, text)
+}
+
+var _IPAddressFamilyUnmarshalCase = cm.CaseUnmarshaler[IPAddressFamily](_IPAddressFamilyStrings[:])
 
 // IPv4Address represents the tuple "wasi:sockets/network@0.2.0#ipv4-address".
 //
@@ -246,14 +272,14 @@ func (self *IPAddress) IPv6() *IPv6Address {
 	return cm.Case[IPv6Address](self, 1)
 }
 
-var stringsIPAddress = [2]string{
+var _IPAddressStrings = [2]string{
 	"ipv4",
 	"ipv6",
 }
 
 // String implements [fmt.Stringer], returning the variant case name of v.
 func (v IPAddress) String() string {
-	return stringsIPAddress[v.Tag()]
+	return _IPAddressStrings[v.Tag()]
 }
 
 // IPv4SocketAddress represents the record "wasi:sockets/network@0.2.0#ipv4-socket-address".
@@ -322,12 +348,12 @@ func (self *IPSocketAddress) IPv6() *IPv6SocketAddress {
 	return cm.Case[IPv6SocketAddress](self, 1)
 }
 
-var stringsIPSocketAddress = [2]string{
+var _IPSocketAddressStrings = [2]string{
 	"ipv4",
 	"ipv6",
 }
 
 // String implements [fmt.Stringer], returning the variant case name of v.
 func (v IPSocketAddress) String() string {
-	return stringsIPSocketAddress[v.Tag()]
+	return _IPSocketAddressStrings[v.Tag()]
 }

@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - Initial support for Component Model [async](https://github.com/WebAssembly/component-model/blob/main/design/mvp/Async.md) types `stream`, `future`, and `error-context`.
+- Initial support for JSON serialization of WIT `list`, `enum`, and `record` types.
 - [`wasm-tools`](https://crates.io/crates/wasm-tools) is now vendored as a WebAssembly module, executed using [Wazero](https://wazero.io/). This allows package `wit` and `wit-bindgen-go` to run on any supported platform without needing to separately install `wasm-tools`.
 
 ### Changed

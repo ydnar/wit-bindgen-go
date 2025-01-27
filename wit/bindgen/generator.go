@@ -575,7 +575,9 @@ func (g *generator) declareTypeDef(file *gen.File, dir wit.Direction, t *wit.Typ
 	// Predeclare reserved methods.
 	switch t.Kind.(type) {
 	case *wit.Enum:
-		decl.scope.DeclareName("String") // For fmt.Stringer
+		decl.scope.DeclareName("String")        // For fmt.Stringer
+		decl.scope.DeclareName("MarshalText")   // For encoding.TextMarshaler
+		decl.scope.DeclareName("UnmarshalText") // For encoding.TextUnmarshaler
 	case *wit.Variant:
 		decl.scope.DeclareName("Tag")    // Method on cm.Variant
 		decl.scope.DeclareName("String") // For fmt.Stringer
@@ -839,7 +841,7 @@ func (g *generator) enumRep(file *gen.File, dir wit.Direction, e *wit.Enum, goNa
 	}
 	b.WriteString(")\n\n")
 
-	stringsName := file.DeclareName("strings" + GoName(goName, true))
+	stringsName := file.DeclareName("_" + GoName(goName, true) + "Strings")
 	stringio.Write(&b, "var ", stringsName, " = [", fmt.Sprintf("%d", len(e.Cases)), "]string {\n")
 	for _, c := range e.Cases {
 		stringio.Write(&b, `"`, c.Name, `"`, ",\n")
@@ -850,6 +852,20 @@ func (g *generator) enumRep(file *gen.File, dir wit.Direction, e *wit.Enum, goNa
 	stringio.Write(&b, "func (e ", goName, ") String() string {\n")
 	stringio.Write(&b, "return ", stringsName, "[e]\n")
 	b.WriteString("}\n\n")
+
+	b.WriteString(formatDocComments("MarshalText implements [encoding.TextMarshaler].", true))
+	stringio.Write(&b, "func (e ", goName, ") MarshalText() ([]byte, error) {\n")
+	stringio.Write(&b, "return []byte(e.String()), nil\n")
+	b.WriteString("}\n\n")
+
+	unmarshalName := file.DeclareName("_" + GoName(goName, true) + "UnmarshalCase")
+
+	b.WriteString(formatDocComments("UnmarshalText implements [encoding.TextUnmarshaler], unmarshaling into an enum case. Returns an error if the supplied text is not one of the enum cases.", true))
+	stringio.Write(&b, "func (e *", goName, ") UnmarshalText(text []byte) error {\n")
+	stringio.Write(&b, "return ", unmarshalName, "(e, text)\n")
+	b.WriteString("}\n\n")
+
+	stringio.Write(&b, "var ", unmarshalName, " = ", file.Import(g.opts.cmPackage), ".CaseUnmarshaler[", goName, "](", stringsName, "[:])\n")
 
 	return b.String()
 }
@@ -921,7 +937,7 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 		}
 	}
 
-	stringsName := file.DeclareName("strings" + GoName(goName, true))
+	stringsName := file.DeclareName("_" + GoName(goName, true) + "Strings")
 	stringio.Write(&b, "var ", stringsName, " = [", fmt.Sprintf("%d", len(v.Cases)), "]string {\n")
 	for _, c := range v.Cases {
 		stringio.Write(&b, `"`, c.Name, `"`, ",\n")

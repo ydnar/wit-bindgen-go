@@ -3,10 +3,9 @@ package cm
 import "unsafe"
 
 // Discriminant is the set of types that can represent the tag or discriminator of a variant.
-// Use bool for 2-case variant types, result<T>, or option<T> types, uint8 where there are 256 or
-// fewer cases, uint16 for up to 65,536 cases, or uint32 for anything greater.
+// Use uint8 where there are 256 or fewer cases, uint16 for up to 65,536 cases, or uint32 for anything greater.
 type Discriminant interface {
-	bool | uint8 | uint16 | uint32
+	uint8 | uint16 | uint32
 }
 
 // Variant represents a loosely-typed Component Model variant.
