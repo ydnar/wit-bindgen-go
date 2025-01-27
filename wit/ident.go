@@ -108,10 +108,10 @@ func validateName(s string) error {
 				return errors.New("invalid character " + strconv.Quote(string(c)))
 			}
 		case c == '-':
-			switch {
-			case prev == 0: // start of string
+			switch prev {
+			case 0: // start of string
 				return errors.New("invalid leading -")
-			case prev == '-':
+			case '-':
 				return errors.New("invalid double --")
 			}
 		default:
