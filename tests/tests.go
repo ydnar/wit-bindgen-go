@@ -7,4 +7,3 @@ package tests
 //go:generate rm -rf ./generated/*
 //go:generate mkdir -p ./generated
 //go:generate go run go.bytecodealliance.org/cmd/wit-bindgen-go generate --versioned -o ./generated ../testdata/wasi/cli.wit.json
-//go:generate go run go.bytecodealliance.org/cmd/wit-bindgen-go generate --versioned -o ./generated ../testdata/issues/issue284.wit
