@@ -17,7 +17,7 @@ func (*List) Size() uintptr { return 8 } // [2]int32
 // Align returns the [ABI byte alignment] a [List].
 //
 // [ABI byte alignment]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#alignment
-func (*List) Align() uintptr { return 8 } // [2]int32
+func (*List) Align() uintptr { return 4 }
 
 // Flat returns the [flattened] ABI representation of [List].
 //
