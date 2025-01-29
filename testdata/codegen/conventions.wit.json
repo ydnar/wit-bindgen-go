@@ -85,7 +85,7 @@
           "params": [],
           "results": [],
           "docs": {
-            "contents": "Comment out identifiers that collide when mapped to snake_case, for now; see\nhttps://github.com/WebAssembly/component-model/issues/118\nAPPLE: func()\nAPPLE-pear-GRAPE: func()\napple-PEAR-grape: func()"
+            "contents": " Comment out identifiers that collide when mapped to snake_case, for now; see\n https://github.com/WebAssembly/component-model/issues/118\nAPPLE: func()\nAPPLE-pear-GRAPE: func()\napple-PEAR-grape: func()"
           }
         },
         "explicit": {
