@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - [#281](https://github.com/bytecodealliance/go-modules/issues/281): errors from internal `wasm-tools` calls are no longer silently ignored. This required fixing a number of related issues, including synthetic world packages for Component Model metadata generation, WIT generation, and WIT keyword escaping in WIT package or interface names.
 - [#284](https://github.com/bytecodealliance/go-modules/issues/284): do not use `bool` for `variant` or `result` GC shapes. TinyGo returns `result` and `variant` values with `bool` as 0 or 1, which breaks the memory representation of tagged unions (variants).
+- [#288](https://github.com/bytecodealliance/go-modules/issues/288): correctly report the `wasm32` ABI alignment of `list<T>` as 4, rather than 8.
 
 ## [v0.5.0] — 2024-12-14
 

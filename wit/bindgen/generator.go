@@ -880,11 +880,12 @@ func (g *generator) variantRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 	}
 
 	disc := wit.Discriminant(len(v.Cases))
-	shape := variantShape(v.Types())
-	align := variantAlign(v.Types())
+	types := v.Types()
+	shape := variantShape(types)
+	align := variantAlign(types)
 
 	var typeShape string
-	if len(v.Types()) == 1 {
+	if len(types) == 1 {
 		typeShape = g.typeRep(file, dir, shape)
 	} else {
 		typeShape = g.typeShape(file, dir, shape)
