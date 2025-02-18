@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Breaking: generated `*.wasm.go` files will now have correct WIT kebab-case base name. Interfaces or worlds with `-` in their name will require removal of the previous `*.wasm.go` files.
 - Dropped support for TinyGo v0.32.0.
+- Added support for Go 1.24 and dropped support for Go 1.22.
 
 ### Fixed
 
