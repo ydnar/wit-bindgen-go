@@ -14,7 +14,7 @@ on:
 
 env:
   go-modules: ./... ./cm/...
-  wasm-tools-version: "1.224.0"
+  wasm-tools-version: "1.226.0"
   wasmtime-version: "26.0.0"
 
 jobs:
