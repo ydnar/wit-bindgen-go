@@ -659,8 +659,6 @@ func (g *generator) typeDefRep(file *gen.File, dir wit.Direction, t *wit.TypeDef
 		return g.ownRep(file, dir, kind)
 	case *wit.Borrow:
 		return g.borrowRep(file, dir, kind)
-	case *wit.ErrorContext:
-		return g.errorContextRep(file, dir, kind)
 	case *wit.Stream:
 		return g.streamRep(file, dir, kind)
 	case *wit.Future:
@@ -691,13 +689,13 @@ func (g *generator) typeRep(file *gen.File, dir wit.Direction, t wit.Type) strin
 		// TODO: add wit.Type.BuiltIn() method?
 		return g.typeDefRep(file, dir, t, "")
 	case wit.Primitive:
-		return g.primitiveRep(t)
+		return g.primitiveRep(file, t)
 	default:
 		panic(fmt.Sprintf("BUG: unknown wit.Type %T", t)) // should never reach here
 	}
 }
 
-func (g *generator) primitiveRep(p wit.Primitive) string {
+func (g *generator) primitiveRep(file *gen.File, p wit.Primitive) string {
 	switch p := p.(type) {
 	case wit.Bool:
 		return "bool"
@@ -725,6 +723,8 @@ func (g *generator) primitiveRep(p wit.Primitive) string {
 		return "rune"
 	case wit.String:
 		return "string"
+	case wit.ErrorContext:
+		return file.Import(g.opts.cmPackage) + ".ErrorContext"
 	default:
 		panic(fmt.Sprintf("BUG: unknown wit.Primitive %T", p)) // should never reach here
 	}
@@ -1005,10 +1005,6 @@ func (g *generator) borrowRep(file *gen.File, dir wit.Direction, b *wit.Borrow) 
 	}
 }
 
-func (g *generator) errorContextRep(file *gen.File, dir wit.Direction, e *wit.ErrorContext) string {
-	return file.Import(g.opts.cmPackage) + ".ErrorContext"
-}
-
 func (g *generator) streamRep(file *gen.File, dir wit.Direction, s *wit.Stream) string {
 	var b strings.Builder
 	stringio.Write(&b, file.Import(g.opts.cmPackage), ".Stream[", g.typeRep(file, dir, s.Type), "]")
@@ -1050,7 +1046,7 @@ func (g *generator) typeDefShape(file *gen.File, dir wit.Direction, t *wit.TypeD
 			return g.typeRep(file, dir, t)
 		}
 	case *wit.Enum, *wit.Flags, *wit.List,
-		*wit.Resource, *wit.Own, *wit.Borrow, *wit.ErrorContext, *wit.Stream, *wit.Future:
+		*wit.Resource, *wit.Own, *wit.Borrow, *wit.Stream, *wit.Future:
 		// Certain types do not need custom type shapes:
 		// own, borrow, error-context, stream, future, enum, flags, and list
 		return g.typeRep(file, dir, t)
@@ -1120,8 +1116,7 @@ func (g *generator) lowerTypeDef(file *gen.File, dir wit.Direction, t *wit.TypeD
 		return g.lowerOption(file, dir, t, input)
 	case *wit.List:
 		return g.cmCall(file, "LowerList", input)
-	case *wit.Resource, *wit.Own, *wit.Borrow,
-		*wit.ErrorContext, *wit.Stream, *wit.Future:
+	case *wit.Resource, *wit.Own, *wit.Borrow, *wit.Stream, *wit.Future:
 		return g.cmCall(file, "Reinterpret["+g.typeRep(file, dir, flat[0])+"]", input)
 	default:
 		panic(fmt.Sprintf("BUG: unknown wit.TypeDef %T", kind)) // should never reach here
@@ -1275,6 +1270,8 @@ func (g *generator) lowerPrimitive(file *gen.File, dir wit.Direction, p wit.Prim
 	switch p := p.(type) {
 	case wit.String:
 		return g.cmCall(file, "LowerString", input)
+	case wit.ErrorContext:
+		return g.cmCall(file, "Reinterpret["+g.typeRep(file, dir, flat[0])+"]", input)
 	default:
 		return g.cast(file, dir, p, flat[0], input)
 	}
@@ -1334,8 +1331,7 @@ func (g *generator) liftTypeDef(file *gen.File, dir wit.Direction, t *wit.TypeDe
 		return g.liftOption(file, dir, t, input)
 	case *wit.List:
 		return g.cmCall(file, "LiftList["+g.typeRep(file, dir, t)+"]", input)
-	case *wit.Resource, *wit.Own, *wit.Borrow,
-		*wit.ErrorContext, *wit.Stream, *wit.Future:
+	case *wit.Resource, *wit.Own, *wit.Borrow, *wit.Stream, *wit.Future:
 		return g.cmCall(file, "Reinterpret["+g.typeRep(file, dir, t)+"]", input)
 	default:
 		panic(fmt.Sprintf("BUG: unknown wit.TypeDef %T", kind)) // should never reach here
@@ -1485,6 +1481,8 @@ func (g *generator) liftPrimitive(file *gen.File, dir wit.Direction, t wit.Type,
 	switch p.(type) {
 	case wit.String:
 		return g.cmCall(file, "LiftString["+g.typeRep(file, dir, t)+"]", input)
+	case wit.ErrorContext:
+		return g.cmCall(file, "Reinterpret["+g.typeRep(file, dir, t)+"]", input)
 	default:
 		return g.cast(file, dir, flat[0], t, input)
 	}

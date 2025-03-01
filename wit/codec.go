@@ -326,7 +326,7 @@ func (c *typeDefKindCodec) DecodeString(s string) error {
 		*c.v = &Resource{}
 	case "errorcontext", // https://github.com/bytecodealliance/wasm-tools/pull/1964
 		"error-context":
-		*c.v = &ErrorContext{}
+		*c.v = ErrorContext{}
 	}
 	return nil
 }
@@ -577,6 +577,12 @@ func (f *Function) DecodeField(dec codec.Decoder, name string) error {
 		return dec.Decode(&f.Kind)
 	case "params":
 		return codec.DecodeSlice(dec, &f.Params)
+	case "result":
+		// Multiple function results were removed in this PR:
+		// https://github.com/bytecodealliance/wasm-tools/pull/2050/files
+		// For now, this package preserves the underlying ability to support > 1 result.
+		f.Results = []Param{{}}
+		return dec.Decode(&f.Results[0].Type)
 	case "results":
 		return codec.DecodeSlice(dec, &f.Results)
 	case "stability":

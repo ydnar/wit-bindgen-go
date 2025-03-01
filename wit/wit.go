@@ -693,12 +693,12 @@ func (b *Borrow) WIT(ctx Node, name string) string {
 }
 
 // WITKind returns the WIT kind.
-func (*ErrorContext) WITKind() string { return "error-context" }
+func (ErrorContext) WITKind() string { return "error-context" }
 
 // WIT returns the [WIT] text format for [ErrorContext] r.
 //
 // [WIT]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
-func (*ErrorContext) WIT(_ Node, name string) string {
+func (ErrorContext) WIT(_ Node, name string) string {
 	var b strings.Builder
 	if name != "" {
 		b.WriteString("type ")
@@ -962,9 +962,12 @@ func (s *Stream) WIT(_ Node, name string) string {
 		b.WriteString(escape(name))
 		b.WriteString(" = ")
 	}
-	b.WriteString("stream<")
-	b.WriteString(s.Type.WIT(s, ""))
-	b.WriteRune('>')
+	b.WriteString("stream")
+	if s.Type != nil {
+		b.WriteRune('<')
+		b.WriteString(s.Type.WIT(s, ""))
+		b.WriteRune('>')
+	}
 	return b.String()
 }
 
@@ -1001,6 +1004,8 @@ func (_primitive[T]) WITKind() string {
 		return "char"
 	case string:
 		return "string"
+	case errorContext:
+		return "error-context"
 	default:
 		panic(fmt.Sprintf("BUG: unknown primitive type %T", v)) // should never reach here
 	}
