@@ -3,7 +3,7 @@ name = 'wasm-tools-go'
 edition = '2021'
 
 [dependencies]
-wasm-tools = { version = '1.224.0', default-features = false, features = [
+wasm-tools = { version = '1.226.0', default-features = false, features = [
 	'component',
 ] }
 
