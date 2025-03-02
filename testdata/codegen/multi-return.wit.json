@@ -30,12 +30,6 @@
           "params": [],
           "results": []
         },
-        "mrb": {
-          "name": "mrb",
-          "kind": "freestanding",
-          "params": [],
-          "results": []
-        },
         "mrc": {
           "name": "mrc",
           "kind": "freestanding",

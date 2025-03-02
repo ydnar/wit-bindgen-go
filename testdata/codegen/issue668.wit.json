@@ -1,0 +1,122 @@
+{
+  "worlds": [
+    {
+      "name": "test-world",
+      "imports": {
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "exports": {},
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "test-import",
+      "types": {
+        "resource-a": 0,
+        "record-a": 3,
+        "resource-b": 4
+      },
+      "functions": {
+        "[constructor]resource-a": {
+          "name": "[constructor]resource-a",
+          "kind": {
+            "constructor": 0
+          },
+          "params": [
+            {
+              "name": "id",
+              "type": "u32"
+            }
+          ],
+          "results": [
+            {
+              "type": 1
+            }
+          ]
+        },
+        "[static]resource-b.make": {
+          "name": "[static]resource-b.make",
+          "kind": {
+            "static": 4
+          },
+          "params": [
+            {
+              "name": "record-a",
+              "type": 3
+            }
+          ],
+          "results": []
+        }
+      },
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "resource-a",
+      "kind": "resource",
+      "owner": {
+        "interface": 0
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "own": 0
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "list": 1
+      },
+      "owner": null
+    },
+    {
+      "name": "record-a",
+      "kind": {
+        "record": {
+          "fields": [
+            {
+              "name": "resource-a",
+              "type": 1
+            },
+            {
+              "name": "resources",
+              "type": 2
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 0
+      }
+    },
+    {
+      "name": "resource-b",
+      "kind": "resource",
+      "owner": {
+        "interface": 0
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "test:test",
+      "interfaces": {
+        "test-import": 0
+      },
+      "worlds": {
+        "test-world": 0
+      }
+    }
+  ]
+}

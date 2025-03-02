@@ -1,4 +1,4 @@
-package %bool:%import;
+package unused:%import;
 
 interface types {
     record r {

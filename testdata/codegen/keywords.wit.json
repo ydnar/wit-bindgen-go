@@ -37,12 +37,7 @@
           ],
           "results": [
             {
-              "name": "type",
-              "type": "u32"
-            },
-            {
-              "name": "flags",
-              "type": "s32"
+              "type": 1
             }
           ]
         },
@@ -429,6 +424,18 @@
       "owner": {
         "interface": 0
       }
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            "u32",
+            "s32"
+          ]
+        }
+      },
+      "owner": null
     }
   ],
   "packages": [

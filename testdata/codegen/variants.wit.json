@@ -308,28 +308,6 @@
             }
           ]
         },
-        "return-named-option": {
-          "name": "return-named-option",
-          "kind": "freestanding",
-          "params": [],
-          "results": [
-            {
-              "name": "a",
-              "type": 39
-            }
-          ]
-        },
-        "return-named-result": {
-          "name": "return-named-result",
-          "kind": "freestanding",
-          "params": [],
-          "results": [
-            {
-              "name": "a",
-              "type": 40
-            }
-          ]
-        },
         "consumes-no-data": {
           "name": "consumes-no-data",
           "kind": "freestanding",
@@ -418,6 +396,10 @@
             {
               "name": "g",
               "type": "u32"
+            },
+            {
+              "name": "h",
+              "type": "f32"
             }
           ]
         }
@@ -864,23 +846,6 @@
         "result": {
           "ok": "u32",
           "err": "s32"
-        }
-      },
-      "owner": null
-    },
-    {
-      "name": null,
-      "kind": {
-        "option": "u8"
-      },
-      "owner": null
-    },
-    {
-      "name": null,
-      "kind": {
-        "result": {
-          "ok": "u8",
-          "err": 11
         }
       },
       "owner": null

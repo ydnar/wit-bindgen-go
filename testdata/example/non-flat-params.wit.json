@@ -417,11 +417,6 @@
           ],
           "results": [
             {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
               "type": "u8"
             }
           ]
@@ -497,152 +492,7 @@
           ],
           "results": [
             {
-              "name": "r0",
               "type": "u32"
-            },
-            {
-              "name": "r1",
-              "type": "u64"
-            }
-          ]
-        },
-        "u16-x17-u8": {
-          "name": "u16-x17-u8",
-          "kind": "freestanding",
-          "params": [
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            }
-          ],
-          "results": [
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            },
-            {
-              "name": "q",
-              "type": "u8"
             }
           ]
         },
@@ -719,7 +569,10 @@
               "type": "u8"
             }
           ],
-          "results": []
+          "results": [],
+          "docs": {
+            "contents": "u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);"
+          }
         },
         "u17-u8-u8": {
           "name": "u17-u8-u8",
@@ -796,11 +649,6 @@
           ],
           "results": [
             {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
               "type": "u8"
             }
           ]
@@ -1230,11 +1078,6 @@
           ],
           "results": [
             {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
               "type": "u8"
             }
           ]
@@ -1316,158 +1159,7 @@
           ],
           "results": [
             {
-              "name": "r0",
               "type": "u32"
-            },
-            {
-              "name": "r1",
-              "type": "u64"
-            }
-          ]
-        },
-        "[method]wind.u16-x17-u8": {
-          "name": "[method]wind.u16-x17-u8",
-          "kind": {
-            "method": 4
-          },
-          "params": [
-            {
-              "name": "self",
-              "type": 6
-            },
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            }
-          ],
-          "results": [
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            },
-            {
-              "name": "q",
-              "type": "u8"
             }
           ]
         },
@@ -1550,7 +1242,10 @@
               "type": "u8"
             }
           ],
-          "results": []
+          "results": [],
+          "docs": {
+            "contents": "u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);"
+          }
         },
         "[method]wind.u17-u8-u8": {
           "name": "[method]wind.u17-u8-u8",
@@ -1633,11 +1328,6 @@
           ],
           "results": [
             {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
               "type": "u8"
             }
           ]
@@ -1717,11 +1407,6 @@
           ],
           "results": [
             {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
               "type": "u8"
             }
           ]

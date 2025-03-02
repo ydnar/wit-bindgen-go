@@ -20,11 +20,7 @@
               "type": 0
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         }
       },
       "package": 0
@@ -33,14 +29,14 @@
   "types": [
     {
       "name": "t1",
-      "kind": "errorcontext",
+      "kind": "error-context",
       "owner": {
         "interface": 0
       }
     },
     {
       "name": null,
-      "kind": "errorcontext",
+      "kind": "error-context",
       "owner": null
     },
     {

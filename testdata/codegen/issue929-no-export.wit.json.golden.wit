@@ -1,0 +1,15 @@
+package foo:bar1;
+
+interface f {
+	resource fd;
+}
+
+interface utils {
+	use f.{fd};
+	my-func: func() -> fd;
+}
+
+world test {
+	import f;
+	export utils;
+}
