@@ -27,24 +27,13 @@
         "mra": {
           "name": "mra",
           "kind": "freestanding",
-          "params": [],
-          "results": []
-        },
-        "mrb": {
-          "name": "mrb",
-          "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "mrc": {
           "name": "mrc",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         }
       },
       "package": 0

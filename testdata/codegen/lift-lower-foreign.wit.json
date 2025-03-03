@@ -55,11 +55,7 @@
                 "type": 20
               }
             ],
-            "results": [
-              {
-                "type": 20
-              }
-            ]
+            "result": 20
           }
         },
         "foo-f2": {
@@ -72,11 +68,7 @@
                 "type": 21
               }
             ],
-            "results": [
-              {
-                "type": 21
-              }
-            ]
+            "result": 21
           }
         },
         "foo-f3": {
@@ -89,11 +81,7 @@
                 "type": 22
               }
             ],
-            "results": [
-              {
-                "type": 22
-              }
-            ]
+            "result": 22
           }
         },
         "foo-f4": {
@@ -106,11 +94,7 @@
                 "type": 23
               }
             ],
-            "results": [
-              {
-                "type": 23
-              }
-            ]
+            "result": 23
           }
         },
         "foo-f5": {
@@ -123,11 +107,7 @@
                 "type": 24
               }
             ],
-            "results": [
-              {
-                "type": 24
-              }
-            ]
+            "result": 24
           }
         },
         "foo-f6": {
@@ -140,11 +120,7 @@
                 "type": 25
               }
             ],
-            "results": [
-              {
-                "type": 25
-              }
-            ]
+            "result": 25
           }
         },
         "foo-f7": {
@@ -157,11 +133,7 @@
                 "type": 26
               }
             ],
-            "results": [
-              {
-                "type": 26
-              }
-            ]
+            "result": 26
           }
         },
         "foo-f8": {
@@ -174,11 +146,7 @@
                 "type": 27
               }
             ],
-            "results": [
-              {
-                "type": 27
-              }
-            ]
+            "result": 27
           }
         },
         "foo-f10": {
@@ -191,11 +159,7 @@
                 "type": 28
               }
             ],
-            "results": [
-              {
-                "type": 28
-              }
-            ]
+            "result": 28
           }
         },
         "foo-f11": {
@@ -208,11 +172,7 @@
                 "type": 29
               }
             ],
-            "results": [
-              {
-                "type": 29
-              }
-            ]
+            "result": 29
           }
         },
         "interface-1": {
@@ -266,11 +226,7 @@
               "type": 10
             }
           ],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         },
         "f2": {
           "name": "f2",
@@ -281,11 +237,7 @@
               "type": 11
             }
           ],
-          "results": [
-            {
-              "type": 11
-            }
-          ]
+          "result": 11
         },
         "f3": {
           "name": "f3",
@@ -296,11 +248,7 @@
               "type": 12
             }
           ],
-          "results": [
-            {
-              "type": 12
-            }
-          ]
+          "result": 12
         },
         "f4": {
           "name": "f4",
@@ -311,11 +259,7 @@
               "type": 13
             }
           ],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         },
         "f5": {
           "name": "f5",
@@ -326,11 +270,7 @@
               "type": 14
             }
           ],
-          "results": [
-            {
-              "type": 14
-            }
-          ]
+          "result": 14
         },
         "f6": {
           "name": "f6",
@@ -341,11 +281,7 @@
               "type": 15
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ]
+          "result": 15
         },
         "f7": {
           "name": "f7",
@@ -356,11 +292,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 16
-            }
-          ]
+          "result": 16
         },
         "f8": {
           "name": "f8",
@@ -371,11 +303,7 @@
               "type": 17
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ]
+          "result": 17
         },
         "f10": {
           "name": "f10",
@@ -386,11 +314,7 @@
               "type": 18
             }
           ],
-          "results": [
-            {
-              "type": 18
-            }
-          ]
+          "result": 18
         },
         "f11": {
           "name": "f11",
@@ -401,11 +325,7 @@
               "type": 19
             }
           ],
-          "results": [
-            {
-              "type": 19
-            }
-          ]
+          "result": 19
         }
       },
       "package": 0

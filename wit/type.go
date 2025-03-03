@@ -71,6 +71,8 @@ func ParseType(s string) (Type, error) {
 		return Char{}, nil
 	case "string":
 		return String{}, nil
+	case "error-context":
+		return &ErrorContext{}, nil
 	}
 	return nil, fmt.Errorf("unknown primitive type %q", s)
 }
@@ -79,11 +81,14 @@ func ParseType(s string) (Type, error) {
 //
 // [primitive types]: https://component-model.bytecodealliance.org/design/wit.html#primitive-types
 type primitive interface {
-	bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | char | string
+	bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | char | string | errorContext
 }
 
 // char is defined because [rune] is an alias of [int32]
 type char rune
+
+// errorContext is defined because WIT error-context is a primitive type in the Component Model.
+type errorContext uint32
 
 // Primitive is the interface implemented by WIT [primitive types].
 // It also conforms to the [Node], [ABI], [Type], and [TypeDefKind] interfaces.
@@ -144,7 +149,7 @@ func (_primitive[T]) hasPointer() bool {
 func (_primitive[T]) Flat() []Type {
 	var v T
 	switch any(v).(type) {
-	case bool, int8, uint8, int16, uint16, int32, uint32, char:
+	case bool, int8, uint8, int16, uint16, int32, uint32, char, errorContext:
 		return []Type{U32{}}
 	case int64, uint64:
 		return []Type{U64{}}
@@ -263,3 +268,9 @@ type Char struct{ _primitive[char] }
 // [primitive type]: https://component-model.bytecodealliance.org/design/wit.html#primitive-types
 // [string]: https://pkg.go.dev/builtin#string
 type String struct{ _primitive[string] }
+
+// ErrorContext represents a WIT [error-context] type.
+// It implements the [Node], [ABI], and [TypeDefKind] interfaces.
+//
+// [resource type]: https://github.com/WebAssembly/component-model/blob/main/design/mvp/Explainer.md#error-context-type
+type ErrorContext struct{ _primitive[errorContext] }

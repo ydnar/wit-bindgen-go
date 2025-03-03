@@ -45,18 +45,13 @@
               "name": "x",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         },
         "e1-result": {
           "name": "e1-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "v1-arg": {
           "name": "v1-arg",
@@ -66,18 +61,13 @@
               "name": "x",
               "type": 2
             }
-          ],
-          "results": []
+          ]
         },
         "v1-result": {
           "name": "v1-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "bool-arg": {
           "name": "bool-arg",
@@ -87,18 +77,13 @@
               "name": "x",
               "type": "bool"
             }
-          ],
-          "results": []
+          ]
         },
         "bool-result": {
           "name": "bool-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "bool"
-            }
-          ]
+          "result": "bool"
         },
         "option-arg": {
           "name": "option-arg",
@@ -128,18 +113,13 @@
               "name": "g",
               "type": 20
             }
-          ],
-          "results": []
+          ]
         },
         "option-result": {
           "name": "option-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 21
-            }
-          ]
+          "result": 21
         },
         "casts": {
           "name": "casts",
@@ -170,11 +150,7 @@
               "type": 10
             }
           ],
-          "results": [
-            {
-              "type": 22
-            }
-          ]
+          "result": 22
         },
         "result-arg": {
           "name": "result-arg",
@@ -204,88 +180,55 @@
               "name": "f",
               "type": 29
             }
-          ],
-          "results": []
+          ]
         },
         "result-result": {
           "name": "result-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 30
-            }
-          ]
+          "result": 30
         },
         "return-result-sugar": {
           "name": "return-result-sugar",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 31
-            }
-          ]
+          "result": 31
         },
         "return-result-sugar2": {
           "name": "return-result-sugar2",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 32
-            }
-          ]
+          "result": 32
         },
         "return-result-sugar3": {
           "name": "return-result-sugar3",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 33
-            }
-          ]
+          "result": 33
         },
         "return-result-sugar4": {
           "name": "return-result-sugar4",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 35
-            }
-          ]
+          "result": 35
         },
         "return-option-sugar": {
           "name": "return-option-sugar",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 36
-            }
-          ]
+          "result": 36
         },
         "return-option-sugar2": {
           "name": "return-option-sugar2",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 37
-            }
-          ]
+          "result": 37
         },
         "result-simple": {
           "name": "result-simple",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 38
-            }
-          ]
+          "result": 38
         },
         "is-clone-arg": {
           "name": "is-clone-arg",
@@ -295,40 +238,13 @@
               "name": "a",
               "type": 12
             }
-          ],
-          "results": []
+          ]
         },
         "is-clone-return": {
           "name": "is-clone-return",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 12
-            }
-          ]
-        },
-        "return-named-option": {
-          "name": "return-named-option",
-          "kind": "freestanding",
-          "params": [],
-          "results": [
-            {
-              "name": "a",
-              "type": 39
-            }
-          ]
-        },
-        "return-named-result": {
-          "name": "return-named-result",
-          "kind": "freestanding",
-          "params": [],
-          "results": [
-            {
-              "name": "a",
-              "type": 40
-            }
-          ]
+          "result": 12
         },
         "consumes-no-data": {
           "name": "consumes-no-data",
@@ -338,18 +254,13 @@
               "name": "x",
               "type": 13
             }
-          ],
-          "results": []
+          ]
         },
         "produces-no-data": {
           "name": "produces-no-data",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         }
       },
       "package": 0
@@ -418,6 +329,10 @@
             {
               "name": "g",
               "type": "u32"
+            },
+            {
+              "name": "h",
+              "type": "f32"
             }
           ]
         }
@@ -864,23 +779,6 @@
         "result": {
           "ok": "u32",
           "err": "s32"
-        }
-      },
-      "owner": null
-    },
-    {
-      "name": null,
-      "kind": {
-        "option": "u8"
-      },
-      "owner": null
-    },
-    {
-      "name": null,
-      "kind": {
-        "result": {
-          "ok": "u8",
-          "err": 11
         }
       },
       "owner": null

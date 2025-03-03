@@ -38,11 +38,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "handle-empty": {
           "name": "handle-empty",
@@ -53,11 +49,7 @@
               "type": 4
             }
           ],
-          "results": [
-            {
-              "type": 4
-            }
-          ]
+          "result": 4
         }
       },
       "package": 0

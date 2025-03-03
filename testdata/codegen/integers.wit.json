@@ -32,8 +32,7 @@
               "name": "x",
               "type": "u8"
             }
-          ],
-          "results": []
+          ]
         },
         "a2": {
           "name": "a2",
@@ -43,8 +42,7 @@
               "name": "x",
               "type": "s8"
             }
-          ],
-          "results": []
+          ]
         },
         "a3": {
           "name": "a3",
@@ -54,8 +52,7 @@
               "name": "x",
               "type": "u16"
             }
-          ],
-          "results": []
+          ]
         },
         "a4": {
           "name": "a4",
@@ -65,8 +62,7 @@
               "name": "x",
               "type": "s16"
             }
-          ],
-          "results": []
+          ]
         },
         "a5": {
           "name": "a5",
@@ -76,8 +72,7 @@
               "name": "x",
               "type": "u32"
             }
-          ],
-          "results": []
+          ]
         },
         "a6": {
           "name": "a6",
@@ -87,8 +82,7 @@
               "name": "x",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "a7": {
           "name": "a7",
@@ -98,8 +92,7 @@
               "name": "x",
               "type": "u64"
             }
-          ],
-          "results": []
+          ]
         },
         "a8": {
           "name": "a8",
@@ -109,8 +102,7 @@
               "name": "x",
               "type": "s64"
             }
-          ],
-          "results": []
+          ]
         },
         "a9": {
           "name": "a9",
@@ -148,98 +140,61 @@
               "name": "p8",
               "type": "s64"
             }
-          ],
-          "results": []
+          ]
         },
         "r1": {
           "name": "r1",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         },
         "r2": {
           "name": "r2",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "s8"
-            }
-          ]
+          "result": "s8"
         },
         "r3": {
           "name": "r3",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u16"
-            }
-          ]
+          "result": "u16"
         },
         "r4": {
           "name": "r4",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "s16"
-            }
-          ]
+          "result": "s16"
         },
         "r5": {
           "name": "r5",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "r6": {
           "name": "r6",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "s32"
-            }
-          ]
+          "result": "s32"
         },
         "r7": {
           "name": "r7",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u64"
-            }
-          ]
+          "result": "u64"
         },
         "r8": {
           "name": "r8",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "s64"
-            }
-          ]
+          "result": "s64"
         },
         "pair-ret": {
           "name": "pair-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         }
       },
       "package": 0

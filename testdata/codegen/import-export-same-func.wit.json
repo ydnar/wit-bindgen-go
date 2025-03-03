@@ -1,0 +1,37 @@
+{
+  "worlds": [
+    {
+      "name": "my-world",
+      "imports": {
+        "purple": {
+          "function": {
+            "name": "purple",
+            "kind": "freestanding",
+            "params": []
+          }
+        }
+      },
+      "exports": {
+        "purple": {
+          "function": {
+            "name": "purple",
+            "kind": "freestanding",
+            "params": []
+          }
+        }
+      },
+      "package": 0
+    }
+  ],
+  "interfaces": [],
+  "types": [],
+  "packages": [
+    {
+      "name": "green:blue",
+      "interfaces": {},
+      "worlds": {
+        "my-world": 0
+      }
+    }
+  ]
+}

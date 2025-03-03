@@ -63,10 +63,6 @@
         "variant": {
           "cases": [
             {
-              "name": "string",
-              "type": null
-            },
-            {
               "name": "enum",
               "type": 0
             },

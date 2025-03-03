@@ -1,0 +1,7 @@
+package wasi:dep2@0.2.3;
+
+interface stable {}
+
+package wasmtime:test {
+	interface types {}
+}

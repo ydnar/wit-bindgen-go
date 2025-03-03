@@ -47,8 +47,7 @@
               "name": "data",
               "type": 2
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0
@@ -107,7 +106,7 @@
   ],
   "packages": [
     {
-      "name": "bool:import",
+      "name": "unused:import",
       "interfaces": {
         "types": 0
       },

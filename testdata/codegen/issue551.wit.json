@@ -33,8 +33,7 @@
               "name": "data",
               "type": 3
             }
-          ],
-          "results": []
+          ]
         },
         "query-eval": {
           "name": "query-eval",
@@ -45,11 +44,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 6
-            }
-          ]
+          "result": 6
         }
       },
       "package": 0

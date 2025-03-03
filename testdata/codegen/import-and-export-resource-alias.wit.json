@@ -38,11 +38,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "[method]x.get": {
           "name": "[method]x.get",
@@ -55,11 +51,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": "string"
-            }
-          ]
+          "result": "string"
         },
         "transmogriphy": {
           "name": "transmogriphy",
@@ -70,11 +62,7 @@
               "type": 4
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         }
       },
       "package": 0

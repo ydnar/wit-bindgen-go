@@ -37,11 +37,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "[method]x.get": {
           "name": "[method]x.get",
@@ -54,11 +50,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": "string"
-            }
-          ]
+          "result": "string"
         }
       },
       "package": 0

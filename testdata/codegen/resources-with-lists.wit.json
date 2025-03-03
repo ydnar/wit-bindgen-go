@@ -37,11 +37,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "[method]x.get": {
           "name": "[method]x.get",
@@ -54,11 +50,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "[method]x.set": {
           "name": "[method]x.set",
@@ -74,8 +66,7 @@
               "name": "l",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "[static]x.etc": {
           "name": "[static]x.etc",
@@ -88,11 +79,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         }
       },
       "package": 0

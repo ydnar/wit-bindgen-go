@@ -29,8 +29,7 @@
         "kebab-case": {
           "name": "kebab-case",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "foo": {
           "name": "foo",
@@ -40,50 +39,42 @@
               "name": "x",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         },
         "function-with-dashes": {
           "name": "function-with-dashes",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "function-with-no-weird-characters": {
           "name": "function-with-no-weird-characters",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "apple": {
           "name": "apple",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "apple-pear": {
           "name": "apple-pear",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "apple-pear-grape": {
           "name": "apple-pear-grape",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "a0": {
           "name": "a0",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "is-XML": {
           "name": "is-XML",
           "kind": "freestanding",
           "params": [],
-          "results": [],
           "docs": {
             "contents": " Comment out identifiers that collide when mapped to snake_case, for now; see\n https://github.com/WebAssembly/component-model/issues/118\nAPPLE: func()\nAPPLE-pear-GRAPE: func()\napple-PEAR-grape: func()"
           }
@@ -91,20 +82,17 @@
         "explicit": {
           "name": "explicit",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "explicit-kebab": {
           "name": "explicit-kebab",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "bool": {
           "name": "bool",
           "kind": "freestanding",
           "params": [],
-          "results": [],
           "docs": {
             "contents": "Identifiers with the same name as keywords are quoted."
           }

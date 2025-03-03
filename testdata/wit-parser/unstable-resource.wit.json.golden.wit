@@ -1,0 +1,9 @@
+package a:b@0.1.0;
+
+interface foo {}
+
+package wasi:io@0.1.0 {
+	interface error {
+		resource error;
+	}
+}

@@ -2,14 +2,13 @@
   "worlds": [
     {
       "name": "test",
-      "imports": {
+      "imports": {},
+      "exports": {
         "interface-0": {
           "interface": {
             "id": 0
           }
-        }
-      },
-      "exports": {
+        },
         "interface-1": {
           "interface": {
             "id": 1
@@ -38,11 +37,7 @@
           "name": "my-func",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         }
       },
       "package": 0
@@ -77,7 +72,7 @@
   ],
   "packages": [
     {
-      "name": "foo:bar1",
+      "name": "foo:bar2",
       "interfaces": {
         "f": 0,
         "utils": 1

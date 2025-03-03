@@ -51,7 +51,6 @@
             "name": "x",
             "kind": "freestanding",
             "params": [],
-            "results": [],
             "stability": {
               "stable": {
                 "since": "1.0.0"
@@ -86,11 +85,7 @@
               "constructor": 19
             },
             "params": [],
-            "results": [
-              {
-                "type": 21
-              }
-            ],
+            "result": 21,
             "stability": {
               "stable": {
                 "since": "1.0.0"
@@ -105,7 +100,6 @@
             "name": "x",
             "kind": "freestanding",
             "params": [],
-            "results": [],
             "stability": {
               "stable": {
                 "since": "1.0.0"
@@ -199,7 +193,6 @@
           "name": "foo",
           "kind": "freestanding",
           "params": [],
-          "results": [],
           "stability": {
             "stable": {
               "since": "1.0.0"
@@ -212,11 +205,7 @@
             "constructor": 7
           },
           "params": [],
-          "results": [
-            {
-              "type": 20
-            }
-          ],
+          "result": 20,
           "stability": {
             "stable": {
               "since": "1.0.0"
@@ -229,7 +218,6 @@
             "static": 7
           },
           "params": [],
-          "results": [],
           "stability": {
             "stable": {
               "since": "1.0.0"
@@ -247,7 +235,6 @@
               "type": 8
             }
           ],
-          "results": [],
           "stability": {
             "stable": {
               "since": "1.0.0"

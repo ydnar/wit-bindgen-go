@@ -16,12 +16,16 @@ interface corner-case {
 		f4-t4: func(t: t4) -> t4;
 		f4-u32: func(t: t4) -> u32;
 		f4-void: func(t: t4);
-		u16-u32-u64: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (r0: u32, r1: u64);
+		u16-u32-u64: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> u32;
 		u16-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> u8;
-		u16-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (r0: u8, r1: u8);
+		u16-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> u8;
 		u16-void: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8);
-		u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);
-		u17-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8) -> (r0: u8, r1: u8);
+		u17-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8) -> u8;
+
+		/// u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8,
+		/// j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8,
+		/// e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p:
+		/// u8, q: u8);
 		u17-void: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);
 	}
 	f: func();
@@ -39,12 +43,16 @@ interface corner-case {
 	f32-t32: func(t: t32) -> t32;
 	u16-void: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8);
 	u16-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> u8;
-	u16-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (r0: u8, r1: u8);
-	u16-u32-u64: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (r0: u32, r1: u64);
-	u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);
+	u16-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> u8;
+	u16-u32-u64: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> u32;
+
+	/// u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8,
+	/// j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8,
+	/// e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p:
+	/// u8, q: u8);
 	u17-void: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);
-	u17-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8) -> (r0: u8, r1: u8);
-	reserved-names: func(%bool: u8, int8: u8, uint8: u8, int16: u8, uint16: u8, int32: u8, uint32: u8, %f32: u8, %f64: u8, %string: u8, %record: u8, struct: u8, %world: u8, %interface: u8, %option: u8, %package: u8, %result: u8) -> (r0: u8, r1: u8);
+	u17-u8-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8) -> u8;
+	reserved-names: func(%bool: u8, int8: u8, uint8: u8, int16: u8, uint16: u8, int32: u8, uint32: u8, %f32: u8, %f64: u8, %string: u8, %record: u8, struct: u8, %world: u8, %interface: u8, %option: u8, %package: u8, %result: u8) -> u8;
 }
 
 world imports {

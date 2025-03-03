@@ -1,0 +1,151 @@
+{
+  "worlds": [
+    {
+      "name": "resources",
+      "imports": {
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "exports": {
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "with-streams",
+      "types": {
+        "x": 0
+      },
+      "functions": {
+        "[constructor]x": {
+          "name": "[constructor]x",
+          "kind": {
+            "constructor": 0
+          },
+          "params": [
+            {
+              "name": "l",
+              "type": 1
+            }
+          ],
+          "result": 3
+        },
+        "[method]x.get": {
+          "name": "[method]x.get",
+          "kind": {
+            "method": 0
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 2
+            }
+          ],
+          "result": 1
+        },
+        "[method]x.set": {
+          "name": "[method]x.set",
+          "kind": {
+            "method": 0
+          },
+          "params": [
+            {
+              "name": "self",
+              "type": 2
+            },
+            {
+              "name": "l",
+              "type": 1
+            }
+          ]
+        },
+        "[static]x.etc": {
+          "name": "[static]x.etc",
+          "kind": {
+            "static": 0
+          },
+          "params": [
+            {
+              "name": "l",
+              "type": 1
+            }
+          ],
+          "result": 1
+        },
+        "foo": {
+          "name": "foo",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 4
+            }
+          ],
+          "result": 4
+        }
+      },
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "x",
+      "kind": "resource",
+      "owner": {
+        "interface": 0
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "u8"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "borrow": 0
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "handle": {
+          "own": 0
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 3
+      },
+      "owner": null
+    }
+  ],
+  "packages": [
+    {
+      "name": "my:resources",
+      "interfaces": {
+        "with-streams": 0
+      },
+      "worlds": {
+        "resources": 0
+      }
+    }
+  ]
+}

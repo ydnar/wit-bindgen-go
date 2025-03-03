@@ -13,6 +13,7 @@ interface variants {
 		e(empty),
 		f,
 		g(u32),
+		h(f32),
 	}
 	variant casts1 { a(s32), b(f32) }
 	variant casts2 { a(f64), b(f32) }
@@ -46,8 +47,6 @@ interface variants {
 	result-simple: func() -> result<u32, s32>;
 	is-clone-arg: func(a: is-clone);
 	is-clone-return: func() -> is-clone;
-	return-named-option: func() -> (a: option<u8>);
-	return-named-result: func() -> (a: result<u8, my-errno>);
 	consumes-no-data: func(x: no-data);
 	produces-no-data: func() -> no-data;
 }

@@ -33,8 +33,7 @@
         "f": {
           "name": "f",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "f0-void": {
           "name": "f0-void",
@@ -44,8 +43,7 @@
               "name": "t",
               "type": 5
             }
-          ],
-          "results": []
+          ]
         },
         "f0-u32": {
           "name": "f0-u32",
@@ -56,11 +54,7 @@
               "type": 5
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "f0-t0": {
           "name": "f0-t0",
@@ -71,11 +65,7 @@
               "type": 5
             }
           ],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "f4-void": {
           "name": "f4-void",
@@ -85,8 +75,7 @@
               "name": "t",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "f4-u32": {
           "name": "f4-u32",
@@ -97,11 +86,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "f4-t4": {
           "name": "f4-t4",
@@ -112,11 +97,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "f16-void": {
           "name": "f16-void",
@@ -126,8 +107,7 @@
               "name": "t",
               "type": 2
             }
-          ],
-          "results": []
+          ]
         },
         "f16-u32": {
           "name": "f16-u32",
@@ -138,11 +118,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "f16-t16": {
           "name": "f16-t16",
@@ -153,11 +129,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "f32-void": {
           "name": "f32-void",
@@ -167,8 +139,7 @@
               "name": "t",
               "type": 3
             }
-          ],
-          "results": []
+          ]
         },
         "f32-u32": {
           "name": "f32-u32",
@@ -179,11 +150,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "f32-t32": {
           "name": "f32-t32",
@@ -194,11 +161,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "u16-void": {
           "name": "u16-void",
@@ -268,8 +231,7 @@
               "name": "p",
               "type": "u8"
             }
-          ],
-          "results": []
+          ]
         },
         "u16-u8": {
           "name": "u16-u8",
@@ -340,11 +302,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         },
         "u16-u8-u8": {
           "name": "u16-u8-u8",
@@ -415,16 +373,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         },
         "u16-u32-u64": {
           "name": "u16-u32-u64",
@@ -495,156 +444,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "name": "r0",
-              "type": "u32"
-            },
-            {
-              "name": "r1",
-              "type": "u64"
-            }
-          ]
-        },
-        "u16-x17-u8": {
-          "name": "u16-x17-u8",
-          "kind": "freestanding",
-          "params": [
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            }
-          ],
-          "results": [
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            },
-            {
-              "name": "q",
-              "type": "u8"
-            }
-          ]
+          "result": "u32"
         },
         "u17-void": {
           "name": "u17-void",
@@ -719,7 +519,9 @@
               "type": "u8"
             }
           ],
-          "results": []
+          "docs": {
+            "contents": "u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);"
+          }
         },
         "u17-u8-u8": {
           "name": "u17-u8-u8",
@@ -794,16 +596,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         },
         "[method]wind.f": {
           "name": "[method]wind.f",
@@ -815,8 +608,7 @@
               "name": "self",
               "type": 6
             }
-          ],
-          "results": []
+          ]
         },
         "[method]wind.f4-void": {
           "name": "[method]wind.f4-void",
@@ -832,8 +624,7 @@
               "name": "t",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "[method]wind.f4-u32": {
           "name": "[method]wind.f4-u32",
@@ -850,11 +641,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "[method]wind.f4-t4": {
           "name": "[method]wind.f4-t4",
@@ -871,11 +658,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "[method]wind.f16-void": {
           "name": "[method]wind.f16-void",
@@ -891,8 +674,7 @@
               "name": "t",
               "type": 2
             }
-          ],
-          "results": []
+          ]
         },
         "[method]wind.f16-u32": {
           "name": "[method]wind.f16-u32",
@@ -909,11 +691,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "[method]wind.f16-t16": {
           "name": "[method]wind.f16-t16",
@@ -930,11 +708,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "[method]wind.f32-void": {
           "name": "[method]wind.f32-void",
@@ -950,8 +724,7 @@
               "name": "t",
               "type": 3
             }
-          ],
-          "results": []
+          ]
         },
         "[method]wind.f32-u32": {
           "name": "[method]wind.f32-u32",
@@ -968,11 +741,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "[method]wind.f32-t32": {
           "name": "[method]wind.f32-t32",
@@ -989,11 +758,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "[method]wind.u16-void": {
           "name": "[method]wind.u16-void",
@@ -1069,8 +834,7 @@
               "name": "p",
               "type": "u8"
             }
-          ],
-          "results": []
+          ]
         },
         "[method]wind.u16-u8": {
           "name": "[method]wind.u16-u8",
@@ -1147,11 +911,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         },
         "[method]wind.u16-u8-u8": {
           "name": "[method]wind.u16-u8-u8",
@@ -1228,16 +988,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         },
         "[method]wind.u16-u32-u64": {
           "name": "[method]wind.u16-u32-u64",
@@ -1314,162 +1065,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "name": "r0",
-              "type": "u32"
-            },
-            {
-              "name": "r1",
-              "type": "u64"
-            }
-          ]
-        },
-        "[method]wind.u16-x17-u8": {
-          "name": "[method]wind.u16-x17-u8",
-          "kind": {
-            "method": 4
-          },
-          "params": [
-            {
-              "name": "self",
-              "type": 6
-            },
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            }
-          ],
-          "results": [
-            {
-              "name": "a",
-              "type": "u8"
-            },
-            {
-              "name": "b",
-              "type": "u8"
-            },
-            {
-              "name": "c",
-              "type": "u8"
-            },
-            {
-              "name": "d",
-              "type": "u8"
-            },
-            {
-              "name": "e",
-              "type": "u8"
-            },
-            {
-              "name": "f",
-              "type": "u8"
-            },
-            {
-              "name": "g",
-              "type": "u8"
-            },
-            {
-              "name": "h",
-              "type": "u8"
-            },
-            {
-              "name": "i",
-              "type": "u8"
-            },
-            {
-              "name": "j",
-              "type": "u8"
-            },
-            {
-              "name": "k",
-              "type": "u8"
-            },
-            {
-              "name": "l",
-              "type": "u8"
-            },
-            {
-              "name": "m",
-              "type": "u8"
-            },
-            {
-              "name": "n",
-              "type": "u8"
-            },
-            {
-              "name": "o",
-              "type": "u8"
-            },
-            {
-              "name": "p",
-              "type": "u8"
-            },
-            {
-              "name": "q",
-              "type": "u8"
-            }
-          ]
+          "result": "u32"
         },
         "[method]wind.u17-void": {
           "name": "[method]wind.u17-void",
@@ -1550,7 +1146,9 @@
               "type": "u8"
             }
           ],
-          "results": []
+          "docs": {
+            "contents": "u16-x17-u8: func(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8) -> (a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8, j: u8, k: u8, l: u8, m: u8, n: u8, o: u8, p: u8, q: u8);"
+          }
         },
         "[method]wind.u17-u8-u8": {
           "name": "[method]wind.u17-u8-u8",
@@ -1631,16 +1229,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         },
         "reserved-names": {
           "name": "reserved-names",
@@ -1715,16 +1304,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "name": "r0",
-              "type": "u8"
-            },
-            {
-              "name": "r1",
-              "type": "u8"
-            }
-          ]
+          "result": "u8"
         }
       },
       "package": 0

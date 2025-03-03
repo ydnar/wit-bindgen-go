@@ -8,8 +8,7 @@
           "function": {
             "name": "y",
             "kind": "freestanding",
-            "params": [],
-            "results": []
+            "params": []
           }
         }
       },

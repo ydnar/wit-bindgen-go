@@ -48,18 +48,13 @@
               "name": "x",
               "type": 18
             }
-          ],
-          "results": []
+          ]
         },
         "o5-result": {
           "name": "o5-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 18
-            }
-          ]
+          "result": 18
         },
         "o6-arg": {
           "name": "o6-arg",
@@ -69,18 +64,13 @@
               "name": "x",
               "type": 21
             }
-          ],
-          "results": []
+          ]
         },
         "o6-result": {
           "name": "o6-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 21
-            }
-          ]
+          "result": 21
         },
         "r1-arg": {
           "name": "r1-arg",
@@ -90,18 +80,13 @@
               "name": "x",
               "type": 10
             }
-          ],
-          "results": []
+          ]
         },
         "r1-result": {
           "name": "r1-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         },
         "r2-arg": {
           "name": "r2-arg",
@@ -111,18 +96,13 @@
               "name": "x",
               "type": 11
             }
-          ],
-          "results": []
+          ]
         },
         "r2-result": {
           "name": "r2-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 11
-            }
-          ]
+          "result": 11
         },
         "r3-arg": {
           "name": "r3-arg",
@@ -132,18 +112,13 @@
               "name": "x",
               "type": 12
             }
-          ],
-          "results": []
+          ]
         },
         "r3-result": {
           "name": "r3-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 12
-            }
-          ]
+          "result": 12
         },
         "r4-arg": {
           "name": "r4-arg",
@@ -153,18 +128,13 @@
               "name": "x",
               "type": 13
             }
-          ],
-          "results": []
+          ]
         },
         "r4-result": {
           "name": "r4-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         },
         "r5-arg": {
           "name": "r5-arg",
@@ -174,18 +144,13 @@
               "name": "x",
               "type": 14
             }
-          ],
-          "results": []
+          ]
         },
         "r5-result": {
           "name": "r5-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 14
-            }
-          ]
+          "result": 14
         },
         "r6-arg": {
           "name": "r6-arg",
@@ -195,18 +160,13 @@
               "name": "x",
               "type": 15
             }
-          ],
-          "results": []
+          ]
         },
         "r6-result": {
           "name": "r6-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 15
-            }
-          ]
+          "result": 15
         },
         "r7-arg": {
           "name": "r7-arg",
@@ -216,18 +176,13 @@
               "name": "x",
               "type": 16
             }
-          ],
-          "results": []
+          ]
         },
         "r7-result": {
           "name": "r7-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 16
-            }
-          ]
+          "result": 16
         },
         "multi": {
           "name": "multi",
@@ -242,11 +197,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 22
-            }
-          ]
+          "result": 22
         },
         "multi-option": {
           "name": "multi-option",
@@ -261,11 +212,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 24
-            }
-          ]
+          "result": 24
         }
       },
       "package": 0

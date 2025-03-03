@@ -29,11 +29,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         }
       },
       "package": 0

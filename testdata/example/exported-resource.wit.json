@@ -30,8 +30,7 @@
               "name": "self",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "[method]example-resource.bar": {
           "name": "[method]example-resource.bar",
@@ -47,8 +46,7 @@
               "name": "arg",
               "type": "u32"
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

@@ -30,41 +30,25 @@
           "name": "my-func",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "my-optional": {
           "name": "my-optional",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "my-tuple": {
           "name": "my-tuple",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 4
-            }
-          ]
+          "result": 4
         },
         "my-list": {
           "name": "my-list",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
+          "result": 5
         }
       },
       "package": 0
@@ -80,41 +64,25 @@
           "name": "my-func",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 8
-            }
-          ]
+          "result": 8
         },
         "my-optional": {
           "name": "my-optional",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 9
-            }
-          ]
+          "result": 9
         },
         "my-tuple": {
           "name": "my-tuple",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         },
         "my-list": {
           "name": "my-list",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 11
-            }
-          ]
+          "result": 11
         }
       },
       "package": 0

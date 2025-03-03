@@ -32,18 +32,13 @@
               "name": "x",
               "type": "string"
             }
-          ],
-          "results": []
+          ]
         },
         "b": {
           "name": "b",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "string"
-            }
-          ]
+          "result": "string"
         },
         "c": {
           "name": "c",
@@ -58,11 +53,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": "string"
-            }
-          ]
+          "result": "string"
         }
       },
       "package": 0

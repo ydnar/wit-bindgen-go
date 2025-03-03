@@ -167,11 +167,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": "string"
-            }
-          ],
+          "result": "string",
           "docs": {
             "contents": "Returns a string that is suitable to assist humans in debugging\nthis error.\n\nWARNING: The returned string should not be consumed mechanically!\nIt may change across platforms, hosts, or other implementation\ndetails. Parsing this string is a major platform-compatibility\nhazard."
           }
@@ -196,7 +192,6 @@
               "type": 3
             }
           ],
-          "results": [],
           "docs": {
             "contents": "`block` returns immediately if the pollable is ready, and otherwise\nblocks until ready.\n\nThis function is equivalent to calling `poll.poll` on a list\ncontaining only this pollable."
           }
@@ -212,11 +207,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": "bool"
-            }
-          ],
+          "result": "bool",
           "docs": {
             "contents": "Return the readiness of a pollable. This function never blocks.\n\nReturns `true` when the pollable is ready, and `false` otherwise."
           }
@@ -230,11 +221,7 @@
               "type": 4
             }
           ],
-          "results": [
-            {
-              "type": 5
-            }
-          ],
+          "result": 5,
           "docs": {
             "contents": "Poll for completion on a set of pollables.\n\nThis function takes a list of pollables, which identify I/O sources of\ninterest, and waits until one or more of the events is ready for I/O.\n\nThe result `list<u32>` contains one or more indices of handles in the\nargument list that is ready for I/O.\n\nIf the list contains more elements than can be indexed with a `u32`\nvalue, this function traps.\n\nA timeout can be implemented by adding a pollable from the\nwasi-clocks API to the list.\n\nThis function does not return a `result`; polling in itself does not\ndo any I/O so it doesn't fail. If any of the I/O sources identified by\nthe pollables has an error, it is indicated by marking the source as\nbeing reaedy for I/O."
           }
@@ -270,11 +257,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 14
-            }
-          ],
+          "result": 14,
           "docs": {
             "contents": "Read bytes from a stream, after blocking until at least one byte can\nbe read. Except for blocking, behavior is identical to `read`."
           }
@@ -294,11 +277,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Skip bytes from a stream, after blocking until at least one byte\ncan be skipped. Except for blocking behavior, identical to `skip`."
           }
@@ -318,11 +297,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 14
-            }
-          ],
+          "result": 14,
           "docs": {
             "contents": "Perform a non-blocking read from the stream.\n\nWhen the source of a `read` is binary data, the bytes from the source\nare returned verbatim. When the source of a `read` is known to the\nimplementation to be text, bytes containing the UTF-8 encoding of the\ntext are returned.\n\nThis function returns a list of bytes containing the read data,\nwhen successful. The returned list will contain up to `len` bytes;\nit may return fewer than requested, but not more. The list is\nempty when no bytes are available for reading at this time. The\npollable given by `subscribe` will be ready when more bytes are\navailable.\n\nThis function fails with a `stream-error` when the operation\nencounters an error, giving `last-operation-failed`, or when the\nstream is closed, giving `closed`.\n\nWhen the caller gives a `len` of 0, it represents a request to\nread 0 bytes. If the stream is still open, this call should\nsucceed and return an empty list, or otherwise fail with `closed`.\n\nThe `len` parameter is a `u64`, which could represent a list of u8 which\nis not possible to allocate in wasm32, or not desirable to allocate as\nas a return value by the callee. The callee may return a list of bytes\nless than `len` in size while more bytes are available for reading."
           }
@@ -342,11 +317,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Skip bytes from a stream. Returns number of bytes skipped.\n\nBehaves identical to `read`, except instead of returning a list\nof bytes, returns the number of bytes consumed from the stream."
           }
@@ -362,11 +333,7 @@
               "type": 12
             }
           ],
-          "results": [
-            {
-              "type": 18
-            }
-          ],
+          "result": 18,
           "docs": {
             "contents": "Create a `pollable` which will resolve once either the specified stream\nhas bytes available to read or the other end of the stream has been\nclosed.\nThe created `pollable` is a child resource of the `input-stream`.\nImplementations may trap if the `input-stream` is dropped before\nall derived `pollable`s created with this function are dropped."
           }
@@ -382,11 +349,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Request to flush buffered output, and block until flush completes\nand stream is ready for writing again."
           }
@@ -410,11 +373,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Read from one stream and write to another, with blocking.\n\nThis is similar to `splice`, except that it blocks until the\n`output-stream` is ready for writing, and the `input-stream`\nis ready for reading, before performing the `splice`."
           }
@@ -434,11 +393,7 @@
               "type": 13
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Perform a write of up to 4096 bytes, and then flush the stream. Block\nuntil all of these operations are complete, or an error occurs.\n\nThis is a convenience wrapper around the use of `check-write`,\n`subscribe`, `write`, and `flush`, and is implemented with the\nfollowing pseudo-code:\n\n```text\nlet pollable = this.subscribe();\nwhile !contents.is_empty() {\n// Wait for the stream to become writable\npollable.block();\nlet Ok(n) = this.check-write(); // eliding error handling\nlet len = min(n, contents.len());\nlet (chunk, rest) = contents.split_at(len);\nthis.write(chunk  );            // eliding error handling\ncontents = rest;\n}\nthis.flush();\n// Wait for completion of `flush`\npollable.block();\n// Check for any errors that arose during `flush`\nlet _ = this.check-write();         // eliding error handling\n```"
           }
@@ -458,11 +413,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Perform a write of up to 4096 zeroes, and then flush the stream.\nBlock until all of these operations are complete, or an error\noccurs.\n\nThis is a convenience wrapper around the use of `check-write`,\n`subscribe`, `write-zeroes`, and `flush`, and is implemented with\nthe following pseudo-code:\n\n```text\nlet pollable = this.subscribe();\nwhile num_zeroes != 0 {\n// Wait for the stream to become writable\npollable.block();\nlet Ok(n) = this.check-write(); // eliding error handling\nlet len = min(n, num_zeroes);\nthis.write-zeroes(len);         // eliding error handling\nnum_zeroes -= len;\n}\nthis.flush();\n// Wait for completion of `flush`\npollable.block();\n// Check for any errors that arose during `flush`\nlet _ = this.check-write();         // eliding error handling\n```"
           }
@@ -478,11 +429,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Check readiness for writing. This function never blocks.\n\nReturns the number of bytes permitted for the next call to `write`,\nor an error. Calling `write` with more bytes than this function has\npermitted will trap.\n\nWhen this function returns 0 bytes, the `subscribe` pollable will\nbecome ready when this function will report at least 1 byte, or an\nerror."
           }
@@ -498,11 +445,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Request to flush buffered output. This function never blocks.\n\nThis tells the output-stream that the caller intends any buffered\noutput to be flushed. the output which is expected to be flushed\nis all that has been passed to `write` prior to this call.\n\nUpon calling this function, the `output-stream` will not accept any\nwrites (`check-write` will return `ok(0)`) until the flush has\ncompleted. The `subscribe` pollable will become ready when the\nflush has completed and the stream can accept more writes."
           }
@@ -526,11 +469,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Read from one stream and write to another.\n\nThe behavior of splice is equivelant to:\n1. calling `check-write` on the `output-stream`\n2. calling `read` on the `input-stream` with the smaller of the\n`check-write` permitted length and the `len` provided to `splice`\n3. calling `write` on the `output-stream` with that read data.\n\nAny error reported by the call to `check-write`, `read`, or\n`write` ends the splice and reports that error.\n\nThis function returns the number of bytes transferred; it may be less\nthan `len`."
           }
@@ -546,11 +485,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 18
-            }
-          ],
+          "result": 18,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the output-stream\nis ready for more writing, or an error has occured. When this\npollable is ready, `check-write` will return `ok(n)` with n>0, or an\nerror.\n\nIf the stream is closed, this pollable is always ready immediately.\n\nThe created `pollable` is a child resource of the `output-stream`.\nImplementations may trap if the `output-stream` is dropped before\nall derived `pollable`s created with this function are dropped."
           }
@@ -570,11 +505,7 @@
               "type": 13
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Perform a write. This function never blocks.\n\nWhen the destination of a `write` is binary data, the bytes from\n`contents` are written verbatim. When the destination of a `write` is\nknown to the implementation to be text, the bytes of `contents` are\ntranscoded from UTF-8 into the encoding of the destination and then\nwritten.\n\nPrecondition: check-write gave permit of Ok(n) and contents has a\nlength of less than or equal to n. Otherwise, this function will trap.\n\nreturns Err(closed) without writing if the stream has closed since\nthe last call to check-write provided a permit."
           }
@@ -594,11 +525,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Write zeroes to a stream.\n\nThis should be used precisely like `write` with the exact same\npreconditions (must use check-write first), but instead of\npassing a list of bytes, you simply pass the number of zero-bytes\nthat should be written."
           }
@@ -621,11 +548,7 @@
           "name": "now",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 20
-            }
-          ],
+          "result": 20,
           "docs": {
             "contents": "Read the current value of the clock.\n\nThe clock is monotonic, therefore calling this function repeatedly will\nproduce a sequence of non-decreasing values."
           }
@@ -634,11 +557,7 @@
           "name": "resolution",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 21
-            }
-          ],
+          "result": 21,
           "docs": {
             "contents": "Query the resolution of the clock. Returns the duration of time\ncorresponding to a clock tick."
           }
@@ -652,11 +571,7 @@
               "type": 20
             }
           ],
-          "results": [
-            {
-              "type": 23
-            }
-          ],
+          "result": 23,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the specified instant\noccured."
           }
@@ -670,11 +585,7 @@
               "type": 21
             }
           ],
-          "results": [
-            {
-              "type": 23
-            }
-          ],
+          "result": 23,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the given duration has\nelapsed, starting at the time at which this function was called.\noccured."
           }
@@ -695,11 +606,7 @@
           "name": "now",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 22
-            }
-          ],
+          "result": 22,
           "docs": {
             "contents": "Read the current value of the clock.\n\nThis clock is not monotonic, therefore calling this function repeatedly\nwill not necessarily produce a sequence of non-decreasing values.\n\nThe returned timestamps represent the number of seconds since\n1970-01-01T00:00:00Z, also known as [POSIX's Seconds Since the Epoch],\nalso known as [Unix Time].\n\nThe nanoseconds field of the output is always less than 1000000000.\n\n[POSIX's Seconds Since the Epoch]: https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xbd_chap04.html#tag_21_04_16\n[Unix Time]: https://en.wikipedia.org/wiki/Unix_time"
           }
@@ -708,11 +615,7 @@
           "name": "resolution",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 22
-            }
-          ],
+          "result": 22,
           "docs": {
             "contents": "Query the resolution of the clock.\n\nThe nanoseconds field of the output is always less than 1000000000."
           }
@@ -769,11 +672,7 @@
               "type": 39
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Provide file advisory information on a descriptor.\n\nThis is similar to `posix_fadvise` in POSIX."
           }
@@ -789,11 +688,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 46
-            }
-          ],
+          "result": 46,
           "docs": {
             "contents": "Return a stream for appending to a file, if available.\n\nMay fail with an error-code describing why the file cannot be appended.\n\nNote: This allows using `write-stream`, which is similar to `write` with\n`O_APPEND` in in POSIX."
           }
@@ -813,11 +708,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Create a directory.\n\nNote: This is similar to `mkdirat` in POSIX."
           }
@@ -833,11 +724,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 47
-            }
-          ],
+          "result": 47,
           "docs": {
             "contents": "Get flags associated with a descriptor.\n\nNote: This returns similar flags to `fcntl(fd, F_GETFL)` in POSIX.\n\nNote: This returns the value that was the `fs_flags` value returned\nfrom `fdstat_get` in earlier versions of WASI."
           }
@@ -853,11 +740,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 48
-            }
-          ],
+          "result": 48,
           "docs": {
             "contents": "Get the dynamic type of a descriptor.\n\nNote: This returns the same value as the `type` field of the `fd-stat`\nreturned by `stat`, `stat-at` and similar.\n\nNote: This returns similar flags to the `st_mode & S_IFMT` value provided\nby `fstat` in POSIX.\n\nNote: This returns the value that was the `fs_filetype` value returned\nfrom `fdstat_get` in earlier versions of WASI."
           }
@@ -877,11 +760,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": "bool"
-            }
-          ],
+          "result": "bool",
           "docs": {
             "contents": "Test whether two descriptors refer to the same filesystem object.\n\nIn POSIX, this corresponds to testing whether the two descriptors have the\nsame device (`st_dev`) and inode (`st_ino` or `d_ino`) numbers.\nwasi-filesystem does not expose device and inode numbers, so this function\nmay be used instead."
           }
@@ -913,11 +792,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Create a hard link.\n\nNote: This is similar to `linkat` in POSIX."
           }
@@ -933,11 +808,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 49
-            }
-          ],
+          "result": 49,
           "docs": {
             "contents": "Return a hash of the metadata associated with a filesystem object referred\nto by a descriptor.\n\nThis returns a hash of the last-modification timestamp and file size, and\nmay also include the inode number, device number, birth timestamp, and\nother metadata fields that may change when the file is modified or\nreplaced. It may also include a secret value chosen by the\nimplementation and not otherwise exposed.\n\nImplementations are encourated to provide the following properties:\n\n- If the file is not modified or replaced, the computed hash value should\nusually not change.\n- If the object is modified or replaced, the computed hash value should\nusually change.\n- The inputs to the hash should not be easily computable from the\ncomputed hash.\n\nHowever, none of these is required."
           }
@@ -961,11 +832,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 49
-            }
-          ],
+          "result": 49,
           "docs": {
             "contents": "Return a hash of the metadata associated with a filesystem object referred\nto by a directory descriptor and a relative path.\n\nThis performs the same hash computation as `metadata-hash`."
           }
@@ -997,11 +864,7 @@
               "type": 30
             }
           ],
-          "results": [
-            {
-              "type": 51
-            }
-          ],
+          "result": 51,
           "docs": {
             "contents": "Open a file or directory.\n\nThe returned descriptor is not guaranteed to be the lowest-numbered\ndescriptor not currently open/ it is randomized to prevent applications\nfrom depending on making assumptions about indexes, since this is\nerror-prone in multi-threaded contexts. The returned descriptor is\nguaranteed to be less than 2**31.\n\nIf `flags` contains `descriptor-flags::mutate-directory`, and the base\ndescriptor doesn't have `descriptor-flags::mutate-directory` set,\n`open-at` fails with `error-code::read-only`.\n\nIf `flags` contains `write` or `mutate-directory`, or `open-flags`\ncontains `truncate` or `create`, and the base descriptor doesn't have\n`descriptor-flags::mutate-directory` set, `open-at` fails with\n`error-code::read-only`.\n\nNote: This is similar to `openat` in POSIX."
           }
@@ -1025,11 +888,7 @@
               "type": 28
             }
           ],
-          "results": [
-            {
-              "type": 54
-            }
-          ],
+          "result": 54,
           "docs": {
             "contents": "Read from a descriptor, without using and updating the descriptor's offset.\n\nThis function returns a list of bytes containing the data that was\nread, along with a bool which, when true, indicates that the end of the\nfile was reached. The returned list will contain up to `length` bytes; it\nmay return fewer than requested, if the end of the file is reached or\nif the I/O operation is interrupted.\n\nIn the future, this may change to return a `stream<u8, error-code>`.\n\nNote: This is similar to `pread` in POSIX."
           }
@@ -1045,11 +904,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 56
-            }
-          ],
+          "result": 56,
           "docs": {
             "contents": "Read directory entries from a directory.\n\nOn filesystems where directories contain entries referring to themselves\nand their parents, often named `.` and `..` respectively, these entries\nare omitted.\n\nThis always returns a new stream which starts at the beginning of the\ndirectory. Multiple streams may be active on the same directory, and they\ndo not interfere with each other."
           }
@@ -1069,11 +924,7 @@
               "type": 28
             }
           ],
-          "results": [
-            {
-              "type": 58
-            }
-          ],
+          "result": 58,
           "docs": {
             "contents": "Return a stream for reading from a file, if available.\n\nMay fail with an error-code describing why the file cannot be read.\n\nMultiple read, write, and append streams may be active on the same open\nfile and they do not interfere with each other.\n\nNote: This allows using `read-stream`, which is similar to `read` in POSIX."
           }
@@ -1093,11 +944,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 59
-            }
-          ],
+          "result": 59,
           "docs": {
             "contents": "Read the contents of a symbolic link.\n\nIf the contents contain an absolute or rooted path in the underlying\nfilesystem, this function fails with `error-code::not-permitted`.\n\nNote: This is similar to `readlinkat` in POSIX."
           }
@@ -1117,11 +964,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Remove a directory.\n\nReturn `error-code::not-empty` if the directory is not empty.\n\nNote: This is similar to `unlinkat(fd, path, AT_REMOVEDIR)` in POSIX."
           }
@@ -1149,11 +992,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Rename a filesystem object.\n\nNote: This is similar to `renameat` in POSIX."
           }
@@ -1173,11 +1012,7 @@
               "type": 28
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Adjust the size of an open file. If this increases the file's size, the\nextra bytes are filled with zeros.\n\nNote: This was called `fd_filestat_set_size` in earlier versions of WASI."
           }
@@ -1201,11 +1036,7 @@
               "type": 36
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Adjust the timestamps of an open file or directory.\n\nNote: This is similar to `futimens` in POSIX.\n\nNote: This was called `fd_filestat_set_times` in earlier versions of WASI."
           }
@@ -1237,11 +1068,7 @@
               "type": 36
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Adjust the timestamps of a file or directory.\n\nNote: This is similar to `utimensat` in POSIX.\n\nNote: This was called `path_filestat_set_times` in earlier versions of\nWASI."
           }
@@ -1257,11 +1084,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 60
-            }
-          ],
+          "result": 60,
           "docs": {
             "contents": "Return the attributes of an open file or directory.\n\nNote: This is similar to `fstat` in POSIX, except that it does not return\ndevice and inode information. For testing whether two descriptors refer to\nthe same underlying filesystem object, use `is-same-object`. To obtain\nadditional data that can be used do determine whether a file has been\nmodified, use `metadata-hash`.\n\nNote: This was called `fd_filestat_get` in earlier versions of WASI."
           }
@@ -1285,11 +1108,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 60
-            }
-          ],
+          "result": 60,
           "docs": {
             "contents": "Return the attributes of a file or directory.\n\nNote: This is similar to `fstatat` in POSIX, except that it does not\nreturn device and inode information. See the `stat` description for a\ndiscussion of alternatives.\n\nNote: This was called `path_filestat_get` in earlier versions of WASI."
           }
@@ -1313,11 +1132,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Create a symbolic link (also known as a \"symlink\").\n\nIf `old-path` starts with `/`, the function fails with\n`error-code::not-permitted`.\n\nNote: This is similar to `symlinkat` in POSIX."
           }
@@ -1333,11 +1148,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Synchronize the data and metadata of a file to disk.\n\nThis function succeeds with no effect if the file descriptor is not\nopened for writing.\n\nNote: This is similar to `fsync` in POSIX."
           }
@@ -1353,11 +1164,7 @@
               "type": 43
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Synchronize the data of a file to disk.\n\nThis function succeeds with no effect if the file descriptor is not\nopened for writing.\n\nNote: This is similar to `fdatasync` in POSIX."
           }
@@ -1377,11 +1184,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 44
-            }
-          ],
+          "result": 44,
           "docs": {
             "contents": "Unlink a filesystem object that is not a directory.\n\nReturn `error-code::is-directory` if the path refers to a directory.\nNote: This is similar to `unlinkat(fd, path, 0)` in POSIX."
           }
@@ -1405,11 +1208,7 @@
               "type": 28
             }
           ],
-          "results": [
-            {
-              "type": 61
-            }
-          ],
+          "result": 61,
           "docs": {
             "contents": "Write to a descriptor, without using and updating the descriptor's offset.\n\nIt is valid to write past the end of a file; the file is extended to the\nextent of the write, with bytes between the previous end and the start of\nthe write set to zero.\n\nIn the future, this may change to take a `stream<u8, error-code>`.\n\nNote: This is similar to `pwrite` in POSIX."
           }
@@ -1429,11 +1228,7 @@
               "type": 28
             }
           ],
-          "results": [
-            {
-              "type": 46
-            }
-          ],
+          "result": 46,
           "docs": {
             "contents": "Return a stream for writing to a file, if available.\n\nMay fail with an error-code describing why the file cannot be written.\n\nNote: This allows using `write-stream`, which is similar to `write` in\nPOSIX."
           }
@@ -1449,11 +1244,7 @@
               "type": 62
             }
           ],
-          "results": [
-            {
-              "type": 64
-            }
-          ],
+          "result": 64,
           "docs": {
             "contents": "Read a single directory entry from a `directory-entry-stream`."
           }
@@ -1467,11 +1258,7 @@
               "type": 65
             }
           ],
-          "results": [
-            {
-              "type": 66
-            }
-          ],
+          "result": 66,
           "docs": {
             "contents": "Attempts to extract a filesystem-related `error-code` from the stream\n`error` provided.\n\nStream operations which return `stream-error::last-operation-failed`\nhave a payload with more information about the operation that failed.\nThis payload can be passed through to this function to see if there's\nfilesystem-related information about the error to return.\n\nNote that this function is fallible because not all stream-related\nerrors are filesystem-related errors."
           }
@@ -1492,11 +1279,7 @@
           "name": "get-directories",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 70
-            }
-          ],
+          "result": 70,
           "docs": {
             "contents": "Return the set of preopened directories, and their path."
           }
@@ -1530,11 +1313,7 @@
           "name": "instance-network",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 157
-            }
-          ],
+          "result": 157,
           "docs": {
             "contents": "Get a handle to the default network."
           }
@@ -1566,11 +1345,7 @@
               "type": 86
             }
           ],
-          "results": [
-            {
-              "type": 88
-            }
-          ],
+          "result": 88,
           "docs": {
             "contents": "Returns the next address from the resolver.\n\nThis function should be called multiple times. On each call, it will\nreturn the next address in connection order preference. If all\naddresses have been exhausted, this function returns `none`.\n\nThis function never returns IPv4-mapped IPv6 addresses.\n\n# Typical errors\n- `name-unresolvable`:          Name does not exist or has no suitable associated\nIP addresses. (EAI_NONAME, EAI_NODATA, EAI_ADDRFAMILY)\n- `temporary-resolver-failure`: A temporary failure in name resolution occurred.\n(EAI_AGAIN)\n- `permanent-resolver-failure`: A permanent failure in name resolution occurred.\n(EAI_FAIL)\n- `would-block`:                A result is not available yet. (EWOULDBLOCK, EAGAIN)"
           }
@@ -1586,11 +1361,7 @@
               "type": 86
             }
           ],
-          "results": [
-            {
-              "type": 158
-            }
-          ],
+          "result": 158,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the stream is ready for I/O.\n\nNote: this function is here for WASI Preview2 only.\nIt's planned to be removed when `future` is natively supported in Preview3."
           }
@@ -1608,11 +1379,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 91
-            }
-          ],
+          "result": 91,
           "docs": {
             "contents": "Resolve an internet host name to a list of IP addresses.\n\nUnicode domain names are automatically converted to ASCII using IDNA encoding.\nIf the input is an IP address string, the address is parsed and returned\nas-is without making any external requests.\n\nSee the wasi-socket proposal README.md for a comparison with getaddrinfo.\n\nThis function never blocks. It either immediately fails or immediately\nreturns successfully with a `resolve-address-stream` that can be used\nto (asynchronously) fetch the results.\n\n# Typical errors\n- `invalid-argument`: `name` is a syntactically invalid domain name or IP address.\n\n# References:\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/getaddrinfo.html>\n- <https://man7.org/linux/man-pages/man3/getaddrinfo.3.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfo>\n- <https://man.freebsd.org/cgi/man.cgi?query=getaddrinfo&sektion=3>"
           }
@@ -1646,11 +1413,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 107
-            }
-          ],
+          "result": 107,
           "docs": {
             "contents": "Accept a new client socket.\n\nThe returned socket is bound and in the `connected` state. The following properties\nare inherited from the listener socket:\n- `address-family`\n- `keep-alive-enabled`\n- `keep-alive-idle-time`\n- `keep-alive-interval`\n- `keep-alive-count`\n- `hop-limit`\n- `receive-buffer-size`\n- `send-buffer-size`\n\nOn success, this function returns the newly accepted client socket along with\na pair of streams that can be used to read & write to the connection.\n\n# Typical errors\n- `invalid-state`:      Socket is not in the `listening` state. (EINVAL)\n- `would-block`:        No pending connections at the moment. (EWOULDBLOCK, EAGAIN)\n- `connection-aborted`: An incoming connection was pending, but was terminated\nby the client before this listener could accept it. (ECONNABORTED)\n- `new-socket-limit`:   The new socket resource could not be created because of\na system limit. (EMFILE, ENFILE)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/accept.html>\n- <https://man7.org/linux/man-pages/man2/accept.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-accept>\n- <https://man.freebsd.org/cgi/man.cgi?query=accept&sektion=2>"
           }
@@ -1666,11 +1429,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 99
-            }
-          ],
+          "result": 99,
           "docs": {
             "contents": "Whether this is a IPv4 or IPv6 socket.\n\nEquivalent to the SO_DOMAIN socket option."
           }
@@ -1686,11 +1445,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.finish-connect": {
           "name": "[method]tcp-socket.finish-connect",
@@ -1703,11 +1458,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 110
-            }
-          ]
+          "result": 110
         },
         "[method]tcp-socket.finish-listen": {
           "name": "[method]tcp-socket.finish-listen",
@@ -1720,11 +1471,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.hop-limit": {
           "name": "[method]tcp-socket.hop-limit",
@@ -1737,11 +1484,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 111
-            }
-          ],
+          "result": 111,
           "docs": {
             "contents": "Equivalent to the IP_TTL & IPV6_UNICAST_HOPS socket options.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\n\n# Typical errors\n- `invalid-argument`:     (set) The TTL value must be 1 or higher."
           }
@@ -1757,11 +1500,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": "bool"
-            }
-          ],
+          "result": "bool",
           "docs": {
             "contents": "Whether the socket is in the `listening` state.\n\nEquivalent to the SO_ACCEPTCONN socket option."
           }
@@ -1777,11 +1516,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 112
-            }
-          ],
+          "result": 112,
           "docs": {
             "contents": "The maximum amount of keepalive packets TCP should send before aborting the connection.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\nAny other value will never cause an error, but it might be silently clamped and/or\nrounded.\nI.e. after setting a value, reading the same setting back may return a different\nvalue.\n\nEquivalent to the TCP_KEEPCNT socket option.\n\n# Typical errors\n- `invalid-argument`:     (set) The provided value was 0."
           }
@@ -1797,11 +1532,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 113
-            }
-          ],
+          "result": 113,
           "docs": {
             "contents": "Enables or disables keepalive.\n\nThe keepalive behavior can be adjusted using:\n- `keep-alive-idle-time`\n- `keep-alive-interval`\n- `keep-alive-count`\nThese properties can be configured while `keep-alive-enabled` is false, but only\ncome into effect when `keep-alive-enabled` is true.\n\nEquivalent to the SO_KEEPALIVE socket option."
           }
@@ -1817,11 +1548,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 114
-            }
-          ],
+          "result": 114,
           "docs": {
             "contents": "Amount of time the connection has to be idle before TCP starts sending keepalive\npackets.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\nAny other value will never cause an error, but it might be silently clamped and/or\nrounded.\nI.e. after setting a value, reading the same setting back may return a different\nvalue.\n\nEquivalent to the TCP_KEEPIDLE socket option. (TCP_KEEPALIVE on MacOS)\n\n# Typical errors\n- `invalid-argument`:     (set) The provided value was 0."
           }
@@ -1837,11 +1564,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 114
-            }
-          ],
+          "result": 114,
           "docs": {
             "contents": "The time between keepalive packets.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\nAny other value will never cause an error, but it might be silently clamped and/or\nrounded.\nI.e. after setting a value, reading the same setting back may return a different\nvalue.\n\nEquivalent to the TCP_KEEPINTVL socket option.\n\n# Typical errors\n- `invalid-argument`:     (set) The provided value was 0."
           }
@@ -1857,11 +1580,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 115
-            }
-          ],
+          "result": 115,
           "docs": {
             "contents": "Get the bound local address.\n\nPOSIX mentions:\n> If the socket has not been bound to a local name, the value\n> stored in the object pointed to by `address` is unspecified.\n\nWASI is stricter and requires `local-address` to return `invalid-state` when the\nsocket hasn't been bound yet.\n\n# Typical errors\n- `invalid-state`: The socket is not bound to any local address.\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/getsockname.html>\n- <https://man7.org/linux/man-pages/man2/getsockname.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-getsockname>\n- <https://man.freebsd.org/cgi/man.cgi?getsockname>"
           }
@@ -1877,11 +1596,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 116
-            }
-          ],
+          "result": 116,
           "docs": {
             "contents": "The kernel buffer space reserved for sends/receives on this socket.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\nAny other value will never cause an error, but it might be silently clamped and/or\nrounded.\nI.e. after setting a value, reading the same setting back may return a different\nvalue.\n\nEquivalent to the SO_RCVBUF and SO_SNDBUF socket options.\n\n# Typical errors\n- `invalid-argument`:     (set) The provided value was 0."
           }
@@ -1897,11 +1612,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 115
-            }
-          ],
+          "result": 115,
           "docs": {
             "contents": "Get the remote address.\n\n# Typical errors\n- `invalid-state`: The socket is not connected to a remote address. (ENOTCONN)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/getpeername.html>\n- <https://man7.org/linux/man-pages/man2/getpeername.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-getpeername>\n- <https://man.freebsd.org/cgi/man.cgi?query=getpeername&sektion=2&n=1>"
           }
@@ -1917,11 +1628,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 116
-            }
-          ]
+          "result": 116
         },
         "[method]tcp-socket.set-hop-limit": {
           "name": "[method]tcp-socket.set-hop-limit",
@@ -1938,11 +1645,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.set-keep-alive-count": {
           "name": "[method]tcp-socket.set-keep-alive-count",
@@ -1959,11 +1662,7 @@
               "type": "u32"
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.set-keep-alive-enabled": {
           "name": "[method]tcp-socket.set-keep-alive-enabled",
@@ -1980,11 +1679,7 @@
               "type": "bool"
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.set-keep-alive-idle-time": {
           "name": "[method]tcp-socket.set-keep-alive-idle-time",
@@ -2001,11 +1696,7 @@
               "type": 95
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.set-keep-alive-interval": {
           "name": "[method]tcp-socket.set-keep-alive-interval",
@@ -2022,11 +1713,7 @@
               "type": 95
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.set-listen-backlog-size": {
           "name": "[method]tcp-socket.set-listen-backlog-size",
@@ -2043,11 +1730,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ],
+          "result": 108,
           "docs": {
             "contents": "Hints the desired listen queue size. Implementations are free to ignore this.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\nAny other value will never cause an error, but it might be silently clamped and/or\nrounded.\n\n# Typical errors\n- `not-supported`:        (set) The platform does not support changing the backlog\nsize after the initial listen.\n- `invalid-argument`:     (set) The provided value was 0.\n- `invalid-state`:        (set) The socket is in the `connect-in-progress` or\n`connected` state."
           }
@@ -2067,11 +1750,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.set-send-buffer-size": {
           "name": "[method]tcp-socket.set-send-buffer-size",
@@ -2088,11 +1767,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ]
+          "result": 108
         },
         "[method]tcp-socket.shutdown": {
           "name": "[method]tcp-socket.shutdown",
@@ -2109,11 +1784,7 @@
               "type": 100
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ],
+          "result": 108,
           "docs": {
             "contents": "Initiate a graceful shutdown.\n\n- `receive`: The socket is not expecting to receive any data from\nthe peer. The `input-stream` associated with this socket will be\nclosed. Any data still in the receive queue at time of calling\nthis method will be discarded.\n- `send`: The socket has no more data to send to the peer. The `output-stream`\nassociated with this socket will be closed and a FIN packet will be sent.\n- `both`: Same effect as `receive` & `send` combined.\n\nThis function is idempotent. Shutting a down a direction more than once\nhas no effect and returns `ok`.\n\nThe shutdown function does not close (drop) the socket.\n\n# Typical errors\n- `invalid-state`: The socket is not in the `connected` state. (ENOTCONN)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/shutdown.html>\n- <https://man7.org/linux/man-pages/man2/shutdown.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-shutdown>\n- <https://man.freebsd.org/cgi/man.cgi?query=shutdown&sektion=2>"
           }
@@ -2137,11 +1808,7 @@
               "type": 98
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ],
+          "result": 108,
           "docs": {
             "contents": "Bind the socket to a specific network on the provided IP address and port.\n\nIf the IP address is zero (`0.0.0.0` in IPv4, `::` in IPv6), it is left to the\nimplementation to decide which\nnetwork interface(s) to bind to.\nIf the TCP/UDP port is zero, the socket will be bound to a random free port.\n\nBind can be attempted multiple times on the same socket, even with\ndifferent arguments on each iteration. But never concurrently and\nonly as long as the previous bind failed. Once a bind succeeds, the\nbinding can't be changed anymore.\n\n# Typical errors\n- `invalid-argument`:          The `local-address` has the wrong address family.\n(EAFNOSUPPORT, EFAULT on Windows)\n- `invalid-argument`:          `local-address` is not a unicast address. (EINVAL)\n- `invalid-argument`:          `local-address` is an IPv4-mapped IPv6 address.\n(EINVAL)\n- `invalid-state`:             The socket is already bound. (EINVAL)\n- `address-in-use`:            No ephemeral ports available. (EADDRINUSE, ENOBUFS\non Windows)\n- `address-in-use`:            Address is already in use. (EADDRINUSE)\n- `address-not-bindable`:      `local-address` is not an address that the `network`\ncan bind to. (EADDRNOTAVAIL)\n- `not-in-progress`:           A `bind` operation is not in progress.\n- `would-block`:               Can't finish the operation, it is still in progress.\n(EWOULDBLOCK, EAGAIN)\n\n# Implementors note\nWhen binding to a non-zero port, this bind operation shouldn't be affected by\nthe TIME_WAIT\nstate of a recently closed socket on the same local address. In practice this\nmeans that the SO_REUSEADDR\nsocket option should be set implicitly on all platforms, except on Windows where\nthis is the default behavior\nand SO_REUSEADDR performs something different entirely.\n\nUnlike in POSIX, in WASI the bind operation is async. This enables\ninteractive WASI hosts to inject permission prompts. Runtimes that\ndon't want to make use of this ability can simply call the native\n`bind` as part of either `start-bind` or `finish-bind`.\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/bind.html>\n- <https://man7.org/linux/man-pages/man2/bind.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-bind>\n- <https://man.freebsd.org/cgi/man.cgi?query=bind&sektion=2&format=html>"
           }
@@ -2165,11 +1832,7 @@
               "type": 98
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ],
+          "result": 108,
           "docs": {
             "contents": "Connect to a remote endpoint.\n\nOn success:\n- the socket is transitioned into the `connection` state.\n- a pair of streams is returned that can be used to read & write to the connection\n\nAfter a failed connection attempt, the socket will be in the `closed`\nstate and the only valid action left is to `drop` the socket. A single\nsocket can not be used to connect more than once.\n\n# Typical errors\n- `invalid-argument`:          The `remote-address` has the wrong address family.\n(EAFNOSUPPORT)\n- `invalid-argument`:          `remote-address` is not a unicast address. (EINVAL,\nENETUNREACH on Linux, EAFNOSUPPORT on MacOS)\n- `invalid-argument`:          `remote-address` is an IPv4-mapped IPv6 address.\n(EINVAL, EADDRNOTAVAIL on Illumos)\n- `invalid-argument`:          The IP address in `remote-address` is set to INADDR_ANY\n(`0.0.0.0` / `::`). (EADDRNOTAVAIL on Windows)\n- `invalid-argument`:          The port in `remote-address` is set to 0. (EADDRNOTAVAIL\non Windows)\n- `invalid-argument`:          The socket is already attached to a different network.\nThe `network` passed to `connect` must be identical to the one passed to `bind`.\n- `invalid-state`:             The socket is already in the `connected` state.\n(EISCONN)\n- `invalid-state`:             The socket is already in the `listening` state.\n(EOPNOTSUPP, EINVAL on Windows)\n- `timeout`:                   Connection timed out. (ETIMEDOUT)\n- `connection-refused`:        The connection was forcefully rejected. (ECONNREFUSED)\n- `connection-reset`:          The connection was reset. (ECONNRESET)\n- `connection-aborted`:        The connection was aborted. (ECONNABORTED)\n- `remote-unreachable`:        The remote address is not reachable. (EHOSTUNREACH,\nEHOSTDOWN, ENETUNREACH, ENETDOWN, ENONET)\n- `address-in-use`:            Tried to perform an implicit bind, but there were\nno ephemeral ports available. (EADDRINUSE, EADDRNOTAVAIL on Linux, EAGAIN on BSD)\n- `not-in-progress`:           A connect operation is not in progress.\n- `would-block`:               Can't finish the operation, it is still in progress.\n(EWOULDBLOCK, EAGAIN)\n\n# Implementors note\nThe POSIX equivalent of `start-connect` is the regular `connect` syscall.\nBecause all WASI sockets are non-blocking this is expected to return\nEINPROGRESS, which should be translated to `ok()` in WASI.\n\nThe POSIX equivalent of `finish-connect` is a `poll` for event `POLLOUT`\nwith a timeout of 0 on the socket descriptor. Followed by a check for\nthe `SO_ERROR` socket option, in case the poll signaled readiness.\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/connect.html>\n- <https://man7.org/linux/man-pages/man2/connect.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect>\n- <https://man.freebsd.org/cgi/man.cgi?connect>"
           }
@@ -2185,11 +1848,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 108
-            }
-          ],
+          "result": 108,
           "docs": {
             "contents": "Start listening for new connections.\n\nTransitions the socket into the `listening` state.\n\nUnlike POSIX, the socket must already be explicitly bound.\n\n# Typical errors\n- `invalid-state`:             The socket is not bound to any local address. (EDESTADDRREQ)\n- `invalid-state`:             The socket is already in the `connected` state.\n(EISCONN, EINVAL on BSD)\n- `invalid-state`:             The socket is already in the `listening` state.\n- `address-in-use`:            Tried to perform an implicit bind, but there were\nno ephemeral ports available. (EADDRINUSE)\n- `not-in-progress`:           A listen operation is not in progress.\n- `would-block`:               Can't finish the operation, it is still in progress.\n(EWOULDBLOCK, EAGAIN)\n\n# Implementors note\nUnlike in POSIX, in WASI the listen operation is async. This enables\ninteractive WASI hosts to inject permission prompts. Runtimes that\ndon't want to make use of this ability can simply call the native\n`listen` as part of either `start-listen` or `finish-listen`.\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/listen.html>\n- <https://man7.org/linux/man-pages/man2/listen.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-listen>\n- <https://man.freebsd.org/cgi/man.cgi?query=listen&sektion=2>"
           }
@@ -2205,11 +1864,7 @@
               "type": 102
             }
           ],
-          "results": [
-            {
-              "type": 159
-            }
-          ],
+          "result": 159,
           "docs": {
             "contents": "Create a `pollable` which can be used to poll for, or block on,\ncompletion of any of the asynchronous operations of this socket.\n\nWhen `finish-bind`, `finish-listen`, `finish-connect` or `accept`\nreturn `error(would-block)`, this pollable can be used to wait for\ntheir success or failure, after which the method can be retried.\n\nThe pollable is not limited to the async operation that happens to be\nin progress at the time of calling `subscribe` (if any). Theoretically,\n`subscribe` only has to be called once per socket and can then be\n(re)used for the remainder of the socket's lifetime.\n\nSee <https://github.com/WebAssembly/wasi-sockets/TcpSocketOperationalSemantics.md#Pollable-readiness>\nfor a more information.\n\nNote: this function is here for WASI Preview2 only.\nIt's planned to be removed when `future` is natively supported in Preview3."
           }
@@ -2235,11 +1890,7 @@
               "type": 120
             }
           ],
-          "results": [
-            {
-              "type": 123
-            }
-          ],
+          "result": 123,
           "docs": {
             "contents": "Create a new TCP socket.\n\nSimilar to `socket(AF_INET or AF_INET6, SOCK_STREAM, IPPROTO_TCP)` in POSIX.\nOn IPv6 sockets, IPV6_V6ONLY is enabled by default and can't be configured otherwise.\n\nThis function does not require a network capability handle. This is considered\nto be safe because\nat time of creation, the socket is not bound to any `network` yet. Up to the moment\n`bind`/`connect`\nis called, the socket is effectively an in-memory configuration object, unable\nto communicate with the outside world.\n\nAll sockets are non-blocking. Use the wasi-poll interface to block on asynchronous\noperations.\n\n# Typical errors\n- `not-supported`:     The specified `address-family` is not supported. (EAFNOSUPPORT)\n- `new-socket-limit`:  The new socket resource could not be created because of\na system limit. (EMFILE, ENFILE)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/socket.html>\n- <https://man7.org/linux/man-pages/man2/socket.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsasocketw>\n- <https://man.freebsd.org/cgi/man.cgi?query=socket&sektion=2>"
           }
@@ -2273,11 +1924,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 128
-            }
-          ],
+          "result": 128,
           "docs": {
             "contents": "Whether this is a IPv4 or IPv6 socket.\n\nEquivalent to the SO_DOMAIN socket option."
           }
@@ -2293,11 +1940,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 137
-            }
-          ]
+          "result": 137
         },
         "[method]udp-socket.local-address": {
           "name": "[method]udp-socket.local-address",
@@ -2310,11 +1953,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 138
-            }
-          ],
+          "result": 138,
           "docs": {
             "contents": "Get the current bound address.\n\nPOSIX mentions:\n> If the socket has not been bound to a local name, the value\n> stored in the object pointed to by `address` is unspecified.\n\nWASI is stricter and requires `local-address` to return `invalid-state` when the\nsocket hasn't been bound yet.\n\n# Typical errors\n- `invalid-state`: The socket is not bound to any local address.\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/getsockname.html>\n- <https://man7.org/linux/man-pages/man2/getsockname.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-getsockname>\n- <https://man.freebsd.org/cgi/man.cgi?getsockname>"
           }
@@ -2330,11 +1969,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 139
-            }
-          ],
+          "result": 139,
           "docs": {
             "contents": "The kernel buffer space reserved for sends/receives on this socket.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\nAny other value will never cause an error, but it might be silently clamped and/or\nrounded.\nI.e. after setting a value, reading the same setting back may return a different\nvalue.\n\nEquivalent to the SO_RCVBUF and SO_SNDBUF socket options.\n\n# Typical errors\n- `invalid-argument`:     (set) The provided value was 0."
           }
@@ -2350,11 +1985,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 138
-            }
-          ],
+          "result": 138,
           "docs": {
             "contents": "Get the address the socket is currently streaming to.\n\n# Typical errors\n- `invalid-state`: The socket is not streaming to a specific remote address. (ENOTCONN)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/getpeername.html>\n- <https://man7.org/linux/man-pages/man2/getpeername.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-getpeername>\n- <https://man.freebsd.org/cgi/man.cgi?query=getpeername&sektion=2&n=1>"
           }
@@ -2370,11 +2001,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 139
-            }
-          ]
+          "result": 139
         },
         "[method]udp-socket.set-receive-buffer-size": {
           "name": "[method]udp-socket.set-receive-buffer-size",
@@ -2391,11 +2018,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 137
-            }
-          ]
+          "result": 137
         },
         "[method]udp-socket.set-send-buffer-size": {
           "name": "[method]udp-socket.set-send-buffer-size",
@@ -2412,11 +2035,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 137
-            }
-          ]
+          "result": 137
         },
         "[method]udp-socket.set-unicast-hop-limit": {
           "name": "[method]udp-socket.set-unicast-hop-limit",
@@ -2433,11 +2052,7 @@
               "type": "u8"
             }
           ],
-          "results": [
-            {
-              "type": 137
-            }
-          ]
+          "result": 137
         },
         "[method]udp-socket.start-bind": {
           "name": "[method]udp-socket.start-bind",
@@ -2458,11 +2073,7 @@
               "type": 127
             }
           ],
-          "results": [
-            {
-              "type": 137
-            }
-          ],
+          "result": 137,
           "docs": {
             "contents": "Bind the socket to a specific network on the provided IP address and port.\n\nIf the IP address is zero (`0.0.0.0` in IPv4, `::` in IPv6), it is left to the\nimplementation to decide which\nnetwork interface(s) to bind to.\nIf the port is zero, the socket will be bound to a random free port.\n\n# Typical errors\n- `invalid-argument`:          The `local-address` has the wrong address family.\n(EAFNOSUPPORT, EFAULT on Windows)\n- `invalid-state`:             The socket is already bound. (EINVAL)\n- `address-in-use`:            No ephemeral ports available. (EADDRINUSE, ENOBUFS\non Windows)\n- `address-in-use`:            Address is already in use. (EADDRINUSE)\n- `address-not-bindable`:      `local-address` is not an address that the `network`\ncan bind to. (EADDRNOTAVAIL)\n- `not-in-progress`:           A `bind` operation is not in progress.\n- `would-block`:               Can't finish the operation, it is still in progress.\n(EWOULDBLOCK, EAGAIN)\n\n# Implementors note\nUnlike in POSIX, in WASI the bind operation is async. This enables\ninteractive WASI hosts to inject permission prompts. Runtimes that\ndon't want to make use of this ability can simply call the native\n`bind` as part of either `start-bind` or `finish-bind`.\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/bind.html>\n- <https://man7.org/linux/man-pages/man2/bind.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-bind>\n- <https://man.freebsd.org/cgi/man.cgi?query=bind&sektion=2&format=html>"
           }
@@ -2482,11 +2093,7 @@
               "type": 131
             }
           ],
-          "results": [
-            {
-              "type": 144
-            }
-          ],
+          "result": 144,
           "docs": {
             "contents": "Set up inbound & outbound communication channels, optionally to a specific peer.\n\nThis function only changes the local socket configuration and does not generate\nany network traffic.\nOn success, the `remote-address` of the socket is updated. The `local-address`\nmay be updated as well,\nbased on the best network path to `remote-address`.\n\nWhen a `remote-address` is provided, the returned streams are limited to communicating\nwith that specific peer:\n- `send` can only be used to send to this destination.\n- `receive` will only return datagrams sent from the provided `remote-address`.\n\nThis method may be called multiple times on the same socket to change its association,\nbut\nonly the most recently returned pair of streams will be operational. Implementations\nmay trap if\nthe streams returned by a previous invocation haven't been dropped yet before\ncalling `stream` again.\n\nThe POSIX equivalent in pseudo-code is:\n```text\nif (was previously connected) {\nconnect(s, AF_UNSPEC)\n}\nif (remote_address is Some) {\nconnect(s, remote_address)\n}\n```\n\nUnlike in POSIX, the socket must already be explicitly bound.\n\n# Typical errors\n- `invalid-argument`:          The `remote-address` has the wrong address family.\n(EAFNOSUPPORT)\n- `invalid-argument`:          The IP address in `remote-address` is set to INADDR_ANY\n(`0.0.0.0` / `::`). (EDESTADDRREQ, EADDRNOTAVAIL)\n- `invalid-argument`:          The port in `remote-address` is set to 0. (EDESTADDRREQ,\nEADDRNOTAVAIL)\n- `invalid-state`:             The socket is not bound.\n- `address-in-use`:            Tried to perform an implicit bind, but there were\nno ephemeral ports available. (EADDRINUSE, EADDRNOTAVAIL on Linux, EAGAIN on BSD)\n- `remote-unreachable`:        The remote address is not reachable. (ECONNRESET,\nENETRESET, EHOSTUNREACH, EHOSTDOWN, ENETUNREACH, ENETDOWN, ENONET)\n- `connection-refused`:        The connection was refused. (ECONNREFUSED)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/connect.html>\n- <https://man7.org/linux/man-pages/man2/connect.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect>\n- <https://man.freebsd.org/cgi/man.cgi?connect>"
           }
@@ -2502,11 +2109,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 160
-            }
-          ],
+          "result": 160,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the socket is ready for I/O.\n\nNote: this function is here for WASI Preview2 only.\nIt's planned to be removed when `future` is natively supported in Preview3."
           }
@@ -2522,11 +2125,7 @@
               "type": 136
             }
           ],
-          "results": [
-            {
-              "type": 145
-            }
-          ],
+          "result": 145,
           "docs": {
             "contents": "Equivalent to the IP_TTL & IPV6_UNICAST_HOPS socket options.\n\nIf the provided value is 0, an `invalid-argument` error is returned.\n\n# Typical errors\n- `invalid-argument`:     (set) The TTL value must be 1 or higher."
           }
@@ -2546,11 +2145,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 148
-            }
-          ],
+          "result": 148,
           "docs": {
             "contents": "Receive messages on the socket.\n\nThis function attempts to receive up to `max-results` datagrams on the socket\nwithout blocking.\nThe returned list may contain fewer elements than requested, but never more.\n\nThis function returns successfully with an empty list when either:\n- `max-results` is 0, or:\n- `max-results` is greater than 0, but no results are immediately available.\nThis function never returns `error(would-block)`.\n\n# Typical errors\n- `remote-unreachable`: The remote address is not reachable. (ECONNRESET, ENETRESET\non Windows, EHOSTUNREACH, EHOSTDOWN, ENETUNREACH, ENETDOWN, ENONET)\n- `connection-refused`: The connection was refused. (ECONNREFUSED)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/recvfrom.html>\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/recvmsg.html>\n- <https://man7.org/linux/man-pages/man2/recv.2.html>\n- <https://man7.org/linux/man-pages/man2/recvmmsg.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recvfrom>\n- <https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms741687(v=vs.85)>\n- <https://man.freebsd.org/cgi/man.cgi?query=recv&sektion=2>"
           }
@@ -2566,11 +2161,7 @@
               "type": 146
             }
           ],
-          "results": [
-            {
-              "type": 160
-            }
-          ],
+          "result": 160,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the stream is ready to receive again.\n\nNote: this function is here for WASI Preview2 only.\nIt's planned to be removed when `future` is natively supported in Preview3."
           }
@@ -2586,11 +2177,7 @@
               "type": 149
             }
           ],
-          "results": [
-            {
-              "type": 139
-            }
-          ],
+          "result": 139,
           "docs": {
             "contents": "Check readiness for sending. This function never blocks.\n\nReturns the number of datagrams permitted for the next call to `send`,\nor an error. Calling `send` with more datagrams than this function has\npermitted will trap.\n\nWhen this function returns ok(0), the `subscribe` pollable will\nbecome ready when this function will report at least ok(1), or an\nerror.\n\nNever returns `would-block`."
           }
@@ -2610,11 +2197,7 @@
               "type": 150
             }
           ],
-          "results": [
-            {
-              "type": 139
-            }
-          ],
+          "result": 139,
           "docs": {
             "contents": "Send messages on the socket.\n\nThis function attempts to send all provided `datagrams` on the socket without\nblocking and\nreturns how many messages were actually sent (or queued for sending). This function\nnever\nreturns `error(would-block)`. If none of the datagrams were able to be sent, `ok(0)`\nis returned.\n\nThis function semantically behaves the same as iterating the `datagrams` list\nand sequentially\nsending each individual datagram until either the end of the list has been reached\nor the first error occurred.\nIf at least one datagram has been sent successfully, this function never returns\nan error.\n\nIf the input list is empty, the function returns `ok(0)`.\n\nEach call to `send` must be permitted by a preceding `check-send`. Implementations\nmust trap if\neither `check-send` was not called or `datagrams` contains more items than `check-send`\npermitted.\n\n# Typical errors\n- `invalid-argument`:        The `remote-address` has the wrong address family.\n(EAFNOSUPPORT)\n- `invalid-argument`:        The IP address in `remote-address` is set to INADDR_ANY\n(`0.0.0.0` / `::`). (EDESTADDRREQ, EADDRNOTAVAIL)\n- `invalid-argument`:        The port in `remote-address` is set to 0. (EDESTADDRREQ,\nEADDRNOTAVAIL)\n- `invalid-argument`:        The socket is in \"connected\" mode and `remote-address`\nis `some` value that does not match the address passed to `stream`. (EISCONN)\n- `invalid-argument`:        The socket is not \"connected\" and no value for `remote-address`\nwas provided. (EDESTADDRREQ)\n- `remote-unreachable`:      The remote address is not reachable. (ECONNRESET,\nENETRESET on Windows, EHOSTUNREACH, EHOSTDOWN, ENETUNREACH, ENETDOWN, ENONET)\n- `connection-refused`:      The connection was refused. (ECONNREFUSED)\n- `datagram-too-large`:      The datagram is too large. (EMSGSIZE)\n\n# References\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/sendto.html>\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/sendmsg.html>\n- <https://man7.org/linux/man-pages/man2/send.2.html>\n- <https://man7.org/linux/man-pages/man2/sendmmsg.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-sendto>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsasendmsg>\n- <https://man.freebsd.org/cgi/man.cgi?query=send&sektion=2>"
           }
@@ -2630,11 +2213,7 @@
               "type": 149
             }
           ],
-          "results": [
-            {
-              "type": 160
-            }
-          ],
+          "result": 160,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the stream is ready to send again.\n\nNote: this function is here for WASI Preview2 only.\nIt's planned to be removed when `future` is natively supported in Preview3."
           }
@@ -2660,11 +2239,7 @@
               "type": 153
             }
           ],
-          "results": [
-            {
-              "type": 156
-            }
-          ],
+          "result": 156,
           "docs": {
             "contents": "Create a new UDP socket.\n\nSimilar to `socket(AF_INET or AF_INET6, SOCK_DGRAM, IPPROTO_UDP)` in POSIX.\nOn IPv6 sockets, IPV6_V6ONLY is enabled by default and can't be configured otherwise.\n\nThis function does not require a network capability handle. This is considered\nto be safe because\nat time of creation, the socket is not bound to any `network` yet. Up to the moment\n`bind` is called,\nthe socket is effectively an in-memory configuration object, unable to communicate\nwith the outside world.\n\nAll sockets are non-blocking. Use the wasi-poll interface to block on asynchronous\noperations.\n\n# Typical errors\n- `not-supported`:     The specified `address-family` is not supported. (EAFNOSUPPORT)\n- `new-socket-limit`:  The new socket resource could not be created because of\na system limit. (EMFILE, ENFILE)\n\n# References:\n- <https://pubs.opengroup.org/onlinepubs/9699919799/functions/socket.html>\n- <https://man7.org/linux/man-pages/man2/socket.2.html>\n- <https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsasocketw>\n- <https://man.freebsd.org/cgi/man.cgi?query=socket&sektion=2>"
           }
@@ -2680,11 +2255,7 @@
           "name": "insecure-seed",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 161
-            }
-          ],
+          "result": 161,
           "docs": {
             "contents": "Return a 128-bit value that may contain a pseudo-random value.\n\nThe returned value is not required to be computed from a CSPRNG, and may\neven be entirely deterministic. Host implementations are encouraged to\nprovide pseudo-random values to any program exposed to\nattacker-controlled content, to enable DoS protection built into many\nlanguages' hash-map implementations.\n\nThis function is intended to only be called once, by a source language\nto initialize Denial Of Service (DoS) protection in its hash-map\nimplementation.\n\n# Expected future evolution\n\nThis will likely be changed to a value import, to prevent it from being\ncalled multiple times and potentially used for purposes other than DoS\nprotection."
           }
@@ -2708,11 +2279,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 162
-            }
-          ],
+          "result": 162,
           "docs": {
             "contents": "Return `len` insecure pseudo-random bytes.\n\nThis function is not cryptographically secure. Do not use it for\nanything related to security.\n\nThere are no requirements on the values of the returned bytes, however\nimplementations are encouraged to return evenly distributed values with\na long period."
           }
@@ -2721,11 +2288,7 @@
           "name": "get-insecure-random-u64",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u64"
-            }
-          ],
+          "result": "u64",
           "docs": {
             "contents": "Return an insecure pseudo-random `u64` value.\n\nThis function returns the same type of pseudo-random data as\n`get-insecure-random-bytes`, represented as a `u64`."
           }
@@ -2749,11 +2312,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 162
-            }
-          ],
+          "result": 162,
           "docs": {
             "contents": "Return `len` cryptographically-secure random or pseudo-random bytes.\n\nThis function must produce data at least as cryptographically secure and\nfast as an adequately seeded cryptographically-secure pseudo-random\nnumber generator (CSPRNG). It must not block, from the perspective of\nthe calling program, under any circumstances, including on the first\nrequest and on requests for numbers of bytes. The returned data must\nalways be unpredictable.\n\nThis function must always return fresh data. Deterministic environments\nmust omit this function, rather than implementing it with deterministic\ndata."
           }
@@ -2762,11 +2321,7 @@
           "name": "get-random-u64",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u64"
-            }
-          ],
+          "result": "u64",
           "docs": {
             "contents": "Return a cryptographically-secure random or pseudo-random `u64` value.\n\nThis function returns the same type of data as `get-random-bytes`,\nrepresented as a `u64`."
           }
@@ -2785,11 +2340,7 @@
           "name": "get-environment",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 164
-            }
-          ],
+          "result": 164,
           "docs": {
             "contents": "Get the POSIX-style environment variables.\n\nEach environment variable is provided as a pair of string variable names\nand string value.\n\nMorally, these are a value import, but until value imports are available\nin the component model, this import function should return the same\nvalues each time it is called."
           }
@@ -2798,11 +2349,7 @@
           "name": "get-arguments",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 165
-            }
-          ],
+          "result": 165,
           "docs": {
             "contents": "Get the POSIX-style arguments to the program."
           }
@@ -2811,11 +2358,7 @@
           "name": "initial-cwd",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 166
-            }
-          ],
+          "result": 166,
           "docs": {
             "contents": "Return a path that programs should use as their initial current working\ndirectory, interpreting `.` as shorthand for this."
           }
@@ -2836,7 +2379,6 @@
               "type": 167
             }
           ],
-          "results": [],
           "docs": {
             "contents": "Exit the current instance and any linked instances."
           }
@@ -2852,11 +2394,7 @@
           "name": "run",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 167
-            }
-          ],
+          "result": 167,
           "docs": {
             "contents": "Run the program."
           }
@@ -2874,11 +2412,7 @@
           "name": "get-stdin",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 182
-            }
-          ]
+          "result": 182
         }
       },
       "package": 5
@@ -2893,11 +2427,7 @@
           "name": "get-stdout",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 183
-            }
-          ]
+          "result": 183
         }
       },
       "package": 5
@@ -2912,11 +2442,7 @@
           "name": "get-stderr",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 184
-            }
-          ]
+          "result": 184
         }
       },
       "package": 5
@@ -2953,11 +2479,7 @@
           "name": "get-terminal-stdin",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 175
-            }
-          ],
+          "result": 175,
           "docs": {
             "contents": "If stdin is connected to a terminal, return a `terminal-input` handle\nallowing further interaction with it."
           }
@@ -2978,11 +2500,7 @@
           "name": "get-terminal-stdout",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 178
-            }
-          ],
+          "result": 178,
           "docs": {
             "contents": "If stdout is connected to a terminal, return a `terminal-output` handle\nallowing further interaction with it."
           }
@@ -3003,11 +2521,7 @@
           "name": "get-terminal-stderr",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 181
-            }
-          ],
+          "result": 181,
           "docs": {
             "contents": "If stderr is connected to a terminal, return a `terminal-output` handle\nallowing further interaction with it."
           }

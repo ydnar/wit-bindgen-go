@@ -36,8 +36,7 @@
               "name": "self",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "[method]foo.bar": {
           "name": "[method]foo.bar",
@@ -53,8 +52,7 @@
               "name": "arg",
               "type": "u32"
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

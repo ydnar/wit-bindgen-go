@@ -18,11 +18,7 @@
                 "type": 0
               }
             ],
-            "results": [
-              {
-                "type": 3
-              }
-            ]
+            "result": 3
           }
         }
       },

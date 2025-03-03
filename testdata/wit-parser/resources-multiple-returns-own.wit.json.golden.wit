@@ -2,7 +2,7 @@ package foo:resources1;
 
 interface resources1 {
 	resource r1 {
-		f1: func() -> (a: s32, handle: r1);
+		f1: func() -> tuple<s32, r1>;
 	}
 	t1: func(a: r1);
 }

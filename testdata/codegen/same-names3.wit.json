@@ -27,8 +27,7 @@
         "name3": {
           "name": "name3",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         }
       },
       "package": 0

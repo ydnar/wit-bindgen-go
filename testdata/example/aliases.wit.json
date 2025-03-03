@@ -40,11 +40,7 @@
               "type": 4
             }
           ],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "fa": {
           "name": "fa",
@@ -54,8 +50,7 @@
               "name": "v",
               "type": 5
             }
-          ],
-          "results": []
+          ]
         },
         "fb": {
           "name": "fb",
@@ -65,8 +60,7 @@
               "name": "v",
               "type": 6
             }
-          ],
-          "results": []
+          ]
         },
         "fc": {
           "name": "fc",
@@ -76,8 +70,7 @@
               "name": "v",
               "type": 7
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

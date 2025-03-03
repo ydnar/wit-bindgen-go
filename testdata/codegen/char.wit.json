@@ -33,7 +33,6 @@
               "type": "char"
             }
           ],
-          "results": [],
           "docs": {
             "contents": "A function that accepts a character"
           }
@@ -42,11 +41,7 @@
           "name": "return-char",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "char"
-            }
-          ],
+          "result": "char",
           "docs": {
             "contents": "A function that returns a character"
           }

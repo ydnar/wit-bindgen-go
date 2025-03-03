@@ -1,0 +1,759 @@
+{
+  "worlds": [
+    {
+      "name": "the-streams",
+      "imports": {
+        "interface-1": {
+          "interface": {
+            "id": 1
+          }
+        }
+      },
+      "exports": {
+        "interface-1": {
+          "interface": {
+            "id": 1
+          }
+        },
+        "interface-0": {
+          "interface": {
+            "id": 0
+          }
+        }
+      },
+      "package": 0
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "transmit",
+      "types": {
+        "control": 0
+      },
+      "functions": {
+        "exchange": {
+          "name": "exchange",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "control",
+              "type": 1
+            },
+            {
+              "name": "caller-stream",
+              "type": 2
+            },
+            {
+              "name": "caller-future1",
+              "type": 3
+            },
+            {
+              "name": "caller-future2",
+              "type": 3
+            }
+          ],
+          "result": 4
+        }
+      },
+      "package": 0
+    },
+    {
+      "name": "streams",
+      "types": {
+        "other-record": 6,
+        "some-record": 8,
+        "other-variant": 9,
+        "some-variant": 11,
+        "load-store-all-sizes": 13
+      },
+      "functions": {
+        "stream-param": {
+          "name": "stream-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 14
+            }
+          ]
+        },
+        "stream-u8-param": {
+          "name": "stream-u8-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 5
+            }
+          ]
+        },
+        "stream-u16-param": {
+          "name": "stream-u16-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 15
+            }
+          ]
+        },
+        "stream-u32-param": {
+          "name": "stream-u32-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 16
+            }
+          ]
+        },
+        "stream-u64-param": {
+          "name": "stream-u64-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 17
+            }
+          ]
+        },
+        "stream-s8-param": {
+          "name": "stream-s8-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 18
+            }
+          ]
+        },
+        "stream-s16-param": {
+          "name": "stream-s16-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 19
+            }
+          ]
+        },
+        "stream-s32-param": {
+          "name": "stream-s32-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 20
+            }
+          ]
+        },
+        "stream-s64-param": {
+          "name": "stream-s64-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 21
+            }
+          ]
+        },
+        "stream-f32-param": {
+          "name": "stream-f32-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 22
+            }
+          ]
+        },
+        "stream-f64-param": {
+          "name": "stream-f64-param",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 23
+            }
+          ]
+        },
+        "stream-ret": {
+          "name": "stream-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 14
+        },
+        "stream-u8-ret": {
+          "name": "stream-u8-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 5
+        },
+        "stream-u16-ret": {
+          "name": "stream-u16-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 15
+        },
+        "stream-u32-ret": {
+          "name": "stream-u32-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 16
+        },
+        "stream-u64-ret": {
+          "name": "stream-u64-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 17
+        },
+        "stream-s8-ret": {
+          "name": "stream-s8-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 18
+        },
+        "stream-s16-ret": {
+          "name": "stream-s16-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 19
+        },
+        "stream-s32-ret": {
+          "name": "stream-s32-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 20
+        },
+        "stream-s64-ret": {
+          "name": "stream-s64-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 21
+        },
+        "stream-f32-ret": {
+          "name": "stream-f32-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 22
+        },
+        "stream-f64-ret": {
+          "name": "stream-f64-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 23
+        },
+        "tuple-stream": {
+          "name": "tuple-stream",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 25
+            }
+          ],
+          "result": 27
+        },
+        "string-stream-arg": {
+          "name": "string-stream-arg",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "a",
+              "type": 2
+            }
+          ]
+        },
+        "string-stream-ret": {
+          "name": "string-stream-ret",
+          "kind": "freestanding",
+          "params": [],
+          "result": 2
+        },
+        "tuple-string-stream": {
+          "name": "tuple-string-stream",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 29
+            }
+          ],
+          "result": 31
+        },
+        "string-stream": {
+          "name": "string-stream",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 2
+            }
+          ],
+          "result": 2
+        },
+        "record-stream": {
+          "name": "record-stream",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 32
+            }
+          ],
+          "result": 7
+        },
+        "record-stream-reverse": {
+          "name": "record-stream-reverse",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 7
+            }
+          ],
+          "result": 32
+        },
+        "variant-stream": {
+          "name": "variant-stream",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "x",
+              "type": 33
+            }
+          ],
+          "result": 10
+        },
+        "load-store-everything": {
+          "name": "load-store-everything",
+          "kind": "freestanding",
+          "params": [
+            {
+              "name": "a",
+              "type": 13
+            }
+          ],
+          "result": 13
+        }
+      },
+      "package": 0
+    }
+  ],
+  "types": [
+    {
+      "name": "control",
+      "kind": {
+        "variant": {
+          "cases": [
+            {
+              "name": "read-stream",
+              "type": "string"
+            },
+            {
+              "name": "read-future",
+              "type": "string"
+            },
+            {
+              "name": "write-stream",
+              "type": "string"
+            },
+            {
+              "name": "write-future",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 0
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 0
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "string"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "future": "string"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            2,
+            3,
+            3
+          ]
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "u8"
+      },
+      "owner": null
+    },
+    {
+      "name": "other-record",
+      "kind": {
+        "record": {
+          "fields": [
+            {
+              "name": "a1",
+              "type": "u32"
+            },
+            {
+              "name": "a2",
+              "type": "u64"
+            },
+            {
+              "name": "a3",
+              "type": "s32"
+            },
+            {
+              "name": "a4",
+              "type": "s64"
+            },
+            {
+              "name": "b",
+              "type": "string"
+            },
+            {
+              "name": "c",
+              "type": 5
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 6
+      },
+      "owner": null
+    },
+    {
+      "name": "some-record",
+      "kind": {
+        "record": {
+          "fields": [
+            {
+              "name": "x",
+              "type": "string"
+            },
+            {
+              "name": "y",
+              "type": 6
+            },
+            {
+              "name": "z",
+              "type": 7
+            },
+            {
+              "name": "c1",
+              "type": "u32"
+            },
+            {
+              "name": "c2",
+              "type": "u64"
+            },
+            {
+              "name": "c3",
+              "type": "s32"
+            },
+            {
+              "name": "c4",
+              "type": "s64"
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": "other-variant",
+      "kind": {
+        "variant": {
+          "cases": [
+            {
+              "name": "a",
+              "type": null
+            },
+            {
+              "name": "b",
+              "type": "u32"
+            },
+            {
+              "name": "c",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 9
+      },
+      "owner": null
+    },
+    {
+      "name": "some-variant",
+      "kind": {
+        "variant": {
+          "cases": [
+            {
+              "name": "a",
+              "type": "string"
+            },
+            {
+              "name": "b",
+              "type": null
+            },
+            {
+              "name": "c",
+              "type": "u32"
+            },
+            {
+              "name": "d",
+              "type": 10
+            }
+          ]
+        }
+      },
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            "string",
+            "u8",
+            "s8",
+            "u16",
+            "s16",
+            "u32",
+            "s32",
+            "u64",
+            "s64",
+            "f32",
+            "f64",
+            "char"
+          ]
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": "load-store-all-sizes",
+      "kind": {
+        "stream": 12
+      },
+      "owner": {
+        "interface": 1
+      }
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": null
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "u16"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "u32"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "u64"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "s8"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "s16"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "s32"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "s64"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "f32"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": "f64"
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            "u8",
+            "s8"
+          ]
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 24
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            "s64",
+            "u32"
+          ]
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 26
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            "u8",
+            "string"
+          ]
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 28
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            "string",
+            "u8"
+          ]
+        }
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 30
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 8
+      },
+      "owner": null
+    },
+    {
+      "name": null,
+      "kind": {
+        "stream": 11
+      },
+      "owner": null
+    }
+  ],
+  "packages": [
+    {
+      "name": "foo:foo",
+      "interfaces": {
+        "transmit": 0,
+        "streams": 1
+      },
+      "worlds": {
+        "the-streams": 0
+      }
+    }
+  ]
+}

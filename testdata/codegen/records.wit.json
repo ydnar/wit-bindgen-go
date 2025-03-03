@@ -40,18 +40,13 @@
               "name": "x",
               "type": 7
             }
-          ],
-          "results": []
+          ]
         },
         "tuple-result": {
           "name": "tuple-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 7
-            }
-          ]
+          "result": 7
         },
         "empty-arg": {
           "name": "empty-arg",
@@ -61,18 +56,13 @@
               "name": "x",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         },
         "empty-result": {
           "name": "empty-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "scalar-arg": {
           "name": "scalar-arg",
@@ -82,18 +72,13 @@
               "name": "x",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "scalar-result": {
           "name": "scalar-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "flags-arg": {
           "name": "flags-arg",
@@ -103,18 +88,13 @@
               "name": "x",
               "type": 2
             }
-          ],
-          "results": []
+          ]
         },
         "flags-result": {
           "name": "flags-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "aggregate-arg": {
           "name": "aggregate-arg",
@@ -124,18 +104,13 @@
               "name": "x",
               "type": 3
             }
-          ],
-          "results": []
+          ]
         },
         "aggregate-result": {
           "name": "aggregate-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "typedef-inout": {
           "name": "typedef-inout",
@@ -146,11 +121,7 @@
               "type": 6
             }
           ],
-          "results": [
-            {
-              "type": "s32"
-            }
-          ]
+          "result": "s32"
         }
       },
       "package": 0

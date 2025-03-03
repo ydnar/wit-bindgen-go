@@ -10,4 +10,3 @@ world foo {
   import error-contexts;
   export error-contexts;
 }
-

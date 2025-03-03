@@ -35,16 +35,7 @@
               "type": "u32"
             }
           ],
-          "results": [
-            {
-              "name": "type",
-              "type": "u32"
-            },
-            {
-              "name": "flags",
-              "type": "s32"
-            }
-          ]
+          "result": 1
         },
         "variant": {
           "name": "variant",
@@ -54,8 +45,7 @@
               "name": "enum",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "interface": {
           "name": "interface",
@@ -65,8 +55,7 @@
               "name": "interface",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "throw": {
           "name": "throw",
@@ -76,8 +65,7 @@
               "name": "throw",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "new": {
           "name": "new",
@@ -87,8 +75,7 @@
               "name": "new",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "package": {
           "name": "package",
@@ -98,8 +85,7 @@
               "name": "package",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "final": {
           "name": "final",
@@ -109,8 +95,7 @@
               "name": "final",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "auto": {
           "name": "auto",
@@ -120,8 +105,7 @@
               "name": "auto",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "else": {
           "name": "else",
@@ -131,8 +115,7 @@
               "name": "for",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "long": {
           "name": "long",
@@ -142,8 +125,7 @@
               "name": "long",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "switch": {
           "name": "switch",
@@ -153,8 +135,7 @@
               "name": "switch",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "break": {
           "name": "break",
@@ -164,8 +145,7 @@
               "name": "break",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "register": {
           "name": "register",
@@ -175,8 +155,7 @@
               "name": "register",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "typedef": {
           "name": "typedef",
@@ -186,8 +165,7 @@
               "name": "typedef",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "case": {
           "name": "case",
@@ -197,8 +175,7 @@
               "name": "case",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "extern": {
           "name": "extern",
@@ -208,8 +185,7 @@
               "name": "extern",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "char": {
           "name": "char",
@@ -219,8 +195,7 @@
               "name": "char",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "float": {
           "name": "float",
@@ -230,8 +205,7 @@
               "name": "float",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "short": {
           "name": "short",
@@ -241,8 +215,7 @@
               "name": "short",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "unsigned": {
           "name": "unsigned",
@@ -252,8 +225,7 @@
               "name": "unsigned",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "const": {
           "name": "const",
@@ -263,8 +235,7 @@
               "name": "const",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "signed": {
           "name": "signed",
@@ -274,8 +245,7 @@
               "name": "signed",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "void": {
           "name": "void",
@@ -285,8 +255,7 @@
               "name": "void",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "continue": {
           "name": "continue",
@@ -296,8 +265,7 @@
               "name": "continue",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "goto": {
           "name": "goto",
@@ -307,8 +275,7 @@
               "name": "goto",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "sizeof": {
           "name": "sizeof",
@@ -318,8 +285,7 @@
               "name": "sizeof",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "volatile": {
           "name": "volatile",
@@ -329,8 +295,7 @@
               "name": "volatile",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "default": {
           "name": "default",
@@ -340,8 +305,7 @@
               "name": "default",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "if": {
           "name": "if",
@@ -351,8 +315,7 @@
               "name": "if",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "static": {
           "name": "static",
@@ -362,8 +325,7 @@
               "name": "static",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "while": {
           "name": "while",
@@ -373,8 +335,7 @@
               "name": "while",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "do": {
           "name": "do",
@@ -384,8 +345,7 @@
               "name": "do",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "int": {
           "name": "int",
@@ -395,8 +355,7 @@
               "name": "int",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         },
         "struct": {
           "name": "struct",
@@ -406,8 +365,7 @@
               "name": "struct",
               "type": "s32"
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0
@@ -429,6 +387,18 @@
       "owner": {
         "interface": 0
       }
+    },
+    {
+      "name": null,
+      "kind": {
+        "tuple": {
+          "types": [
+            "u32",
+            "s32"
+          ]
+        }
+      },
+      "owner": null
     }
   ],
   "packages": [
