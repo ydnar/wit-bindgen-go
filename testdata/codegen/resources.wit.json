@@ -38,11 +38,7 @@
                 "type": 2
               }
             ],
-            "results": [
-              {
-                "type": 14
-              }
-            ]
+            "result": 14
           }
         },
         "maybe-with-z": {
@@ -54,8 +50,7 @@
                 "name": "a",
                 "type": 5
               }
-            ],
-            "results": []
+            ]
           }
         },
         "variant-with-z": {
@@ -67,8 +62,7 @@
                 "name": "a",
                 "type": 3
               }
-            ],
-            "results": []
+            ]
           }
         },
         "maybe-variant-with-z": {
@@ -80,8 +74,7 @@
                 "name": "a",
                 "type": 6
               }
-            ],
-            "results": []
+            ]
           }
         },
         "big-record": {
@@ -93,8 +86,7 @@
                 "name": "r",
                 "type": 4
               }
-            ],
-            "results": []
+            ]
           }
         },
         "exports": {
@@ -124,11 +116,7 @@
               "type": "f64"
             }
           ],
-          "results": [
-            {
-              "type": 11
-            }
-          ]
+          "result": 11
         }
       },
       "package": 0
@@ -150,11 +138,7 @@
               "type": "f64"
             }
           ],
-          "results": [
-            {
-              "type": 12
-            }
-          ]
+          "result": 12
         },
         "[method]x.get-a": {
           "name": "[method]x.get-a",
@@ -167,11 +151,7 @@
               "type": 8
             }
           ],
-          "results": [
-            {
-              "type": "f64"
-            }
-          ]
+          "result": "f64"
         },
         "[method]x.set-a": {
           "name": "[method]x.set-a",
@@ -187,8 +167,7 @@
               "name": "a",
               "type": "f64"
             }
-          ],
-          "results": []
+          ]
         },
         "[static]x.add": {
           "name": "[static]x.add",
@@ -205,11 +184,7 @@
               "type": "f64"
             }
           ],
-          "results": [
-            {
-              "type": 12
-            }
-          ]
+          "result": 12
         }
       },
       "package": 0
@@ -231,11 +206,7 @@
               "type": "f64"
             }
           ],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         },
         "[method]y.get-a": {
           "name": "[method]y.get-a",
@@ -248,11 +219,7 @@
               "type": 10
             }
           ],
-          "results": [
-            {
-              "type": "f64"
-            }
-          ]
+          "result": "f64"
         },
         "[method]y.set-a": {
           "name": "[method]y.set-a",
@@ -268,8 +235,7 @@
               "name": "a",
               "type": "f64"
             }
-          ],
-          "results": []
+          ]
         },
         "[static]y.add": {
           "name": "[static]y.add",
@@ -286,11 +252,7 @@
               "type": "f64"
             }
           ],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         }
       },
       "package": 0

@@ -90,11 +90,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": "string"
-            }
-          ],
+          "result": "string",
           "docs": {
             "contents": "Returns a string that is suitable to assist humans in debugging\nthis error.\n\nWARNING: The returned string should not be consumed mechanically!\nIt may change across platforms, hosts, or other implementation\ndetails. Parsing this string is a major platform-compatibility\nhazard."
           }
@@ -119,7 +115,6 @@
               "type": 3
             }
           ],
-          "results": [],
           "docs": {
             "contents": "`block` returns immediately if the pollable is ready, and otherwise\nblocks until ready.\n\nThis function is equivalent to calling `poll.poll` on a list\ncontaining only this pollable."
           }
@@ -135,11 +130,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": "bool"
-            }
-          ],
+          "result": "bool",
           "docs": {
             "contents": "Return the readiness of a pollable. This function never blocks.\n\nReturns `true` when the pollable is ready, and `false` otherwise."
           }
@@ -153,11 +144,7 @@
               "type": 4
             }
           ],
-          "results": [
-            {
-              "type": 5
-            }
-          ],
+          "result": 5,
           "docs": {
             "contents": "Poll for completion on a set of pollables.\n\nThis function takes a list of pollables, which identify I/O sources of\ninterest, and waits until one or more of the events is ready for I/O.\n\nThe result `list<u32>` contains one or more indices of handles in the\nargument list that is ready for I/O.\n\nIf the list contains more elements than can be indexed with a `u32`\nvalue, this function traps.\n\nA timeout can be implemented by adding a pollable from the\nwasi-clocks API to the list.\n\nThis function does not return a `result`; polling in itself does not\ndo any I/O so it doesn't fail. If any of the I/O sources identified by\nthe pollables has an error, it is indicated by marking the source as\nbeing reaedy for I/O."
           }
@@ -193,11 +180,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 14
-            }
-          ],
+          "result": 14,
           "docs": {
             "contents": "Read bytes from a stream, after blocking until at least one byte can\nbe read. Except for blocking, behavior is identical to `read`."
           }
@@ -217,11 +200,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Skip bytes from a stream, after blocking until at least one byte\ncan be skipped. Except for blocking behavior, identical to `skip`."
           }
@@ -241,11 +220,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 14
-            }
-          ],
+          "result": 14,
           "docs": {
             "contents": "Perform a non-blocking read from the stream.\n\nWhen the source of a `read` is binary data, the bytes from the source\nare returned verbatim. When the source of a `read` is known to the\nimplementation to be text, bytes containing the UTF-8 encoding of the\ntext are returned.\n\nThis function returns a list of bytes containing the read data,\nwhen successful. The returned list will contain up to `len` bytes;\nit may return fewer than requested, but not more. The list is\nempty when no bytes are available for reading at this time. The\npollable given by `subscribe` will be ready when more bytes are\navailable.\n\nThis function fails with a `stream-error` when the operation\nencounters an error, giving `last-operation-failed`, or when the\nstream is closed, giving `closed`.\n\nWhen the caller gives a `len` of 0, it represents a request to\nread 0 bytes. If the stream is still open, this call should\nsucceed and return an empty list, or otherwise fail with `closed`.\n\nThe `len` parameter is a `u64`, which could represent a list of u8 which\nis not possible to allocate in wasm32, or not desirable to allocate as\nas a return value by the callee. The callee may return a list of bytes\nless than `len` in size while more bytes are available for reading."
           }
@@ -265,11 +240,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Skip bytes from a stream. Returns number of bytes skipped.\n\nBehaves identical to `read`, except instead of returning a list\nof bytes, returns the number of bytes consumed from the stream."
           }
@@ -285,11 +256,7 @@
               "type": 12
             }
           ],
-          "results": [
-            {
-              "type": 18
-            }
-          ],
+          "result": 18,
           "docs": {
             "contents": "Create a `pollable` which will resolve once either the specified stream\nhas bytes available to read or the other end of the stream has been\nclosed.\nThe created `pollable` is a child resource of the `input-stream`.\nImplementations may trap if the `input-stream` is dropped before\nall derived `pollable`s created with this function are dropped."
           }
@@ -305,11 +272,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Request to flush buffered output, and block until flush completes\nand stream is ready for writing again."
           }
@@ -333,11 +296,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Read from one stream and write to another, with blocking.\n\nThis is similar to `splice`, except that it blocks until the\n`output-stream` is ready for writing, and the `input-stream`\nis ready for reading, before performing the `splice`."
           }
@@ -357,11 +316,7 @@
               "type": 13
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Perform a write of up to 4096 bytes, and then flush the stream. Block\nuntil all of these operations are complete, or an error occurs.\n\nThis is a convenience wrapper around the use of `check-write`,\n`subscribe`, `write`, and `flush`, and is implemented with the\nfollowing pseudo-code:\n\n```text\nlet pollable = this.subscribe();\nwhile !contents.is_empty() {\n// Wait for the stream to become writable\npollable.block();\nlet Ok(n) = this.check-write(); // eliding error handling\nlet len = min(n, contents.len());\nlet (chunk, rest) = contents.split_at(len);\nthis.write(chunk  );            // eliding error handling\ncontents = rest;\n}\nthis.flush();\n// Wait for completion of `flush`\npollable.block();\n// Check for any errors that arose during `flush`\nlet _ = this.check-write();         // eliding error handling\n```"
           }
@@ -381,11 +336,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Perform a write of up to 4096 zeroes, and then flush the stream.\nBlock until all of these operations are complete, or an error\noccurs.\n\nThis is a convenience wrapper around the use of `check-write`,\n`subscribe`, `write-zeroes`, and `flush`, and is implemented with\nthe following pseudo-code:\n\n```text\nlet pollable = this.subscribe();\nwhile num_zeroes != 0 {\n// Wait for the stream to become writable\npollable.block();\nlet Ok(n) = this.check-write(); // eliding error handling\nlet len = min(n, num_zeroes);\nthis.write-zeroes(len);         // eliding error handling\nnum_zeroes -= len;\n}\nthis.flush();\n// Wait for completion of `flush`\npollable.block();\n// Check for any errors that arose during `flush`\nlet _ = this.check-write();         // eliding error handling\n```"
           }
@@ -401,11 +352,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Check readiness for writing. This function never blocks.\n\nReturns the number of bytes permitted for the next call to `write`,\nor an error. Calling `write` with more bytes than this function has\npermitted will trap.\n\nWhen this function returns 0 bytes, the `subscribe` pollable will\nbecome ready when this function will report at least 1 byte, or an\nerror."
           }
@@ -421,11 +368,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Request to flush buffered output. This function never blocks.\n\nThis tells the output-stream that the caller intends any buffered\noutput to be flushed. the output which is expected to be flushed\nis all that has been passed to `write` prior to this call.\n\nUpon calling this function, the `output-stream` will not accept any\nwrites (`check-write` will return `ok(0)`) until the flush has\ncompleted. The `subscribe` pollable will become ready when the\nflush has completed and the stream can accept more writes."
           }
@@ -449,11 +392,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "docs": {
             "contents": "Read from one stream and write to another.\n\nThe behavior of splice is equivelant to:\n1. calling `check-write` on the `output-stream`\n2. calling `read` on the `input-stream` with the smaller of the\n`check-write` permitted length and the `len` provided to `splice`\n3. calling `write` on the `output-stream` with that read data.\n\nAny error reported by the call to `check-write`, `read`, or\n`write` ends the splice and reports that error.\n\nThis function returns the number of bytes transferred; it may be less\nthan `len`."
           }
@@ -469,11 +408,7 @@
               "type": 16
             }
           ],
-          "results": [
-            {
-              "type": 18
-            }
-          ],
+          "result": 18,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the output-stream\nis ready for more writing, or an error has occured. When this\npollable is ready, `check-write` will return `ok(n)` with n>0, or an\nerror.\n\nIf the stream is closed, this pollable is always ready immediately.\n\nThe created `pollable` is a child resource of the `output-stream`.\nImplementations may trap if the `output-stream` is dropped before\nall derived `pollable`s created with this function are dropped."
           }
@@ -493,11 +428,7 @@
               "type": 13
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Perform a write. This function never blocks.\n\nWhen the destination of a `write` is binary data, the bytes from\n`contents` are written verbatim. When the destination of a `write` is\nknown to the implementation to be text, the bytes of `contents` are\ntranscoded from UTF-8 into the encoding of the destination and then\nwritten.\n\nPrecondition: check-write gave permit of Ok(n) and contents has a\nlength of less than or equal to n. Otherwise, this function will trap.\n\nreturns Err(closed) without writing if the stream has closed since\nthe last call to check-write provided a permit."
           }
@@ -517,11 +448,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 17
-            }
-          ],
+          "result": 17,
           "docs": {
             "contents": "Write zeroes to a stream.\n\nThis should be used precisely like `write` with the exact same\npreconditions (must use check-write first), but instead of\npassing a list of bytes, you simply pass the number of zero-bytes\nthat should be written."
           }
@@ -542,11 +469,7 @@
           "name": "get-stdin",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 22
-            }
-          ]
+          "result": 22
         }
       },
       "package": 1
@@ -561,11 +484,7 @@
           "name": "get-stdout",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 23
-            }
-          ]
+          "result": 23
         }
       },
       "package": 1
@@ -580,11 +499,7 @@
           "name": "get-stderr",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 24
-            }
-          ]
+          "result": 24
         }
       },
       "package": 1
@@ -601,11 +516,7 @@
           "name": "now",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 26
-            }
-          ],
+          "result": 26,
           "docs": {
             "contents": "Read the current value of the clock.\n\nThe clock is monotonic, therefore calling this function repeatedly will\nproduce a sequence of non-decreasing values."
           }
@@ -614,11 +525,7 @@
           "name": "resolution",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 27
-            }
-          ],
+          "result": 27,
           "docs": {
             "contents": "Query the resolution of the clock. Returns the duration of time\ncorresponding to a clock tick."
           }
@@ -632,11 +539,7 @@
               "type": 26
             }
           ],
-          "results": [
-            {
-              "type": 29
-            }
-          ],
+          "result": 29,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the specified instant\noccured."
           }
@@ -650,11 +553,7 @@
               "type": 27
             }
           ],
-          "results": [
-            {
-              "type": 29
-            }
-          ],
+          "result": 29,
           "docs": {
             "contents": "Create a `pollable` which will resolve once the given duration has\nelapsed, starting at the time at which this function was called.\noccured."
           }
@@ -675,11 +574,7 @@
           "name": "now",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 28
-            }
-          ],
+          "result": 28,
           "docs": {
             "contents": "Read the current value of the clock.\n\nThis clock is not monotonic, therefore calling this function repeatedly\nwill not necessarily produce a sequence of non-decreasing values.\n\nThe returned timestamps represent the number of seconds since\n1970-01-01T00:00:00Z, also known as [POSIX's Seconds Since the Epoch],\nalso known as [Unix Time].\n\nThe nanoseconds field of the output is always less than 1000000000.\n\n[POSIX's Seconds Since the Epoch]: https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xbd_chap04.html#tag_21_04_16\n[Unix Time]: https://en.wikipedia.org/wiki/Unix_time"
           }
@@ -688,11 +583,7 @@
           "name": "resolution",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 28
-            }
-          ],
+          "result": 28,
           "docs": {
             "contents": "Query the resolution of the clock.\n\nThe nanoseconds field of the output is always less than 1000000000."
           }
@@ -716,11 +607,7 @@
               "type": "u64"
             }
           ],
-          "results": [
-            {
-              "type": 30
-            }
-          ],
+          "result": 30,
           "docs": {
             "contents": "Return `len` cryptographically-secure random or pseudo-random bytes.\n\nThis function must produce data at least as cryptographically secure and\nfast as an adequately seeded cryptographically-secure pseudo-random\nnumber generator (CSPRNG). It must not block, from the perspective of\nthe calling program, under any circumstances, including on the first\nrequest and on requests for numbers of bytes. The returned data must\nalways be unpredictable.\n\nThis function must always return fresh data. Deterministic environments\nmust omit this function, rather than implementing it with deterministic\ndata."
           }
@@ -729,11 +616,7 @@
           "name": "get-random-u64",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u64"
-            }
-          ],
+          "result": "u64",
           "docs": {
             "contents": "Return a cryptographically-secure random or pseudo-random `u64` value.\n\nThis function returns the same type of data as `get-random-bytes`,\nrepresented as a `u64`."
           }
@@ -783,11 +666,7 @@
             "constructor": 51
           },
           "params": [],
-          "results": [
-            {
-              "type": 70
-            }
-          ],
+          "result": 70,
           "docs": {
             "contents": "Construct an empty HTTP Fields.\n\nThe resulting `fields` is mutable."
           }
@@ -811,11 +690,7 @@
               "type": 50
             }
           ],
-          "results": [
-            {
-              "type": 66
-            }
-          ],
+          "result": 66,
           "docs": {
             "contents": "Append a value for a key. Does not change or delete any existing\nvalues for that key.\n\nFails with `header-error.immutable` if the `fields` are immutable.\n\nFails with `header-error.invalid-syntax` if the `field-key` or\n`field-value` are syntactically invalid."
           }
@@ -831,11 +706,7 @@
               "type": 65
             }
           ],
-          "results": [
-            {
-              "type": 70
-            }
-          ],
+          "result": 70,
           "docs": {
             "contents": "Make a deep copy of the Fields. Equivelant in behavior to calling the\n`fields` constructor on the return value of `entries`. The resulting\n`fields` is mutable."
           }
@@ -855,11 +726,7 @@
               "type": 49
             }
           ],
-          "results": [
-            {
-              "type": 66
-            }
-          ],
+          "result": 66,
           "docs": {
             "contents": "Delete all values for a key. Does nothing if no values for the key\nexist.\n\nFails with `header-error.immutable` if the `fields` are immutable.\n\nFails with `header-error.invalid-syntax` if the `field-key` is\nsyntactically invalid."
           }
@@ -875,11 +742,7 @@
               "type": 65
             }
           ],
-          "results": [
-            {
-              "type": 68
-            }
-          ],
+          "result": 68,
           "docs": {
             "contents": "Retrieve the full set of keys and values in the Fields. Like the\nconstructor, the list represents each key-value pair.\n\nThe outer list represents each key-value pair in the Fields. Keys\nwhich have multiple values are represented by multiple entries in this\nlist with the same key."
           }
@@ -899,11 +762,7 @@
               "type": 49
             }
           ],
-          "results": [
-            {
-              "type": 69
-            }
-          ],
+          "result": 69,
           "docs": {
             "contents": "Get all of the values corresponding to a key. If the key is not present\nin this `fields` or is syntactically invalid, an empty list is returned.\nHowever, if the key is present but empty, this is represented by a list\nwith one or more empty field-values present."
           }
@@ -923,11 +782,7 @@
               "type": 49
             }
           ],
-          "results": [
-            {
-              "type": "bool"
-            }
-          ],
+          "result": "bool",
           "docs": {
             "contents": "Returns `true` when the key is present in this `fields`. If the key is\nsyntactically invalid, `false` is returned."
           }
@@ -951,11 +806,7 @@
               "type": 69
             }
           ],
-          "results": [
-            {
-              "type": 66
-            }
-          ],
+          "result": 66,
           "docs": {
             "contents": "Set all of the values for a key. Clears any existing values for that\nkey, if they have been set.\n\nFails with `header-error.immutable` if the `fields` are immutable.\n\nFails with `header-error.invalid-syntax` if the `field-key` or any of\nthe `field-value`s are syntactically invalid."
           }
@@ -971,11 +822,7 @@
               "type": 68
             }
           ],
-          "results": [
-            {
-              "type": 71
-            }
-          ],
+          "result": 71,
           "docs": {
             "contents": "Construct an HTTP Fields.\n\nThe resulting `fields` is mutable.\n\nThe list represents each key-value pair in the Fields. Keys\nwhich have multiple values are represented by multiple entries in this\nlist with the same key.\n\nThe tuple is a pair of the field key, represented as a string, and\nValue, represented as a list of bytes.\n\nAn error result will be returned if any `field-key` or `field-value` is\nsyntactically invalid, or if a field is forbidden."
           }
@@ -991,11 +838,7 @@
               "type": 72
             }
           ],
-          "results": [
-            {
-              "type": 38
-            }
-          ],
+          "result": 38,
           "docs": {
             "contents": "Returns the authority from the request, if it was present."
           }
@@ -1011,11 +854,7 @@
               "type": 72
             }
           ],
-          "results": [
-            {
-              "type": 74
-            }
-          ],
+          "result": 74,
           "docs": {
             "contents": "Gives the `incoming-body` associated with this request. Will only\nreturn success at most once, and subsequent calls will return error."
           }
@@ -1031,11 +870,7 @@
               "type": 72
             }
           ],
-          "results": [
-            {
-              "type": 116
-            }
-          ],
+          "result": 116,
           "docs": {
             "contents": "Get the `headers` associated with the request.\n\nThe returned `headers` resource is immutable: `set`, `append`, and\n`delete` operations will fail with `header-error.immutable`.\n\nThe `headers` returned are a child resource: it must be dropped before\nthe parent `incoming-request` is dropped. Dropping this\n`incoming-request` before all children are dropped will trap."
           }
@@ -1051,11 +886,7 @@
               "type": 72
             }
           ],
-          "results": [
-            {
-              "type": 36
-            }
-          ],
+          "result": 36,
           "docs": {
             "contents": "Returns the method of the incoming request."
           }
@@ -1071,11 +902,7 @@
               "type": 72
             }
           ],
-          "results": [
-            {
-              "type": 38
-            }
-          ],
+          "result": 38,
           "docs": {
             "contents": "Returns the path with query parameters from the request, as a string."
           }
@@ -1091,11 +918,7 @@
               "type": 72
             }
           ],
-          "results": [
-            {
-              "type": 75
-            }
-          ],
+          "result": 75,
           "docs": {
             "contents": "Returns the protocol scheme from the request."
           }
@@ -1111,11 +934,7 @@
               "type": 116
             }
           ],
-          "results": [
-            {
-              "type": 117
-            }
-          ],
+          "result": 117,
           "docs": {
             "contents": "Construct a new `outgoing-request` with a default `method` of `GET`, and\n`none` values for `path-with-query`, `scheme`, and `authority`.\n\n* `headers` is the HTTP Headers for the Request.\n\nIt is possible to construct, or manipulate with the accessor functions\nbelow, an `outgoing-request` with an invalid combination of `scheme`\nand `authority`, or `headers` which are not permitted to be sent.\nIt is the obligation of the `outgoing-handler.handle` implementation\nto reject invalid constructions of `outgoing-request`."
           }
@@ -1131,11 +950,7 @@
               "type": 76
             }
           ],
-          "results": [
-            {
-              "type": 38
-            }
-          ],
+          "result": 38,
           "docs": {
             "contents": "Get the HTTP Authority for the Request. A value of `none` may be used\nwith Related Schemes which do not require an Authority. The HTTP and\nHTTPS schemes always require an authority."
           }
@@ -1151,11 +966,7 @@
               "type": 76
             }
           ],
-          "results": [
-            {
-              "type": 78
-            }
-          ],
+          "result": 78,
           "docs": {
             "contents": "Returns the resource corresponding to the outgoing Body for this\nRequest.\n\nReturns success on the first call: the `outgoing-body` resource for\nthis `outgoing-request` can be retrieved at most once. Subsequent\ncalls will return error."
           }
@@ -1171,11 +982,7 @@
               "type": 76
             }
           ],
-          "results": [
-            {
-              "type": 116
-            }
-          ],
+          "result": 116,
           "docs": {
             "contents": "Get the headers associated with the Request.\n\nThe returned `headers` resource is immutable: `set`, `append`, and\n`delete` operations will fail with `header-error.immutable`.\n\nThis headers resource is a child: it must be dropped before the parent\n`outgoing-request` is dropped, or its ownership is transfered to\nanother component by e.g. `outgoing-handler.handle`."
           }
@@ -1191,11 +998,7 @@
               "type": 76
             }
           ],
-          "results": [
-            {
-              "type": 36
-            }
-          ],
+          "result": 36,
           "docs": {
             "contents": "Get the Method for the Request."
           }
@@ -1211,11 +1014,7 @@
               "type": 76
             }
           ],
-          "results": [
-            {
-              "type": 38
-            }
-          ],
+          "result": 38,
           "docs": {
             "contents": "Get the combination of the HTTP Path and Query for the Request.\nWhen `none`, this represents an empty Path and empty Query."
           }
@@ -1231,11 +1030,7 @@
               "type": 76
             }
           ],
-          "results": [
-            {
-              "type": 75
-            }
-          ],
+          "result": 75,
           "docs": {
             "contents": "Get the HTTP Related Scheme for the Request. When `none`, the\nimplementation may choose an appropriate default scheme."
           }
@@ -1255,11 +1050,7 @@
               "type": 38
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the HTTP Authority for the Request. A value of `none` may be used\nwith Related Schemes which do not require an Authority. The HTTP and\nHTTPS schemes always require an authority. Fails if the string given is\nnot a syntactically valid uri authority."
           }
@@ -1279,11 +1070,7 @@
               "type": 36
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the Method for the Request. Fails if the string present in a\n`method.other` argument is not a syntactically valid method."
           }
@@ -1303,11 +1090,7 @@
               "type": 38
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the combination of the HTTP Path and Query for the Request.\nWhen `none`, this represents an empty Path and empty Query. Fails is the\nstring given is not a syntactically valid path and query uri component."
           }
@@ -1327,11 +1110,7 @@
               "type": 75
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the HTTP Related Scheme for the Request. When `none`, the\nimplementation may choose an appropriate default scheme. Fails if the\nstring given is not a syntactically valid uri scheme."
           }
@@ -1342,11 +1121,7 @@
             "constructor": 56
           },
           "params": [],
-          "results": [
-            {
-              "type": 118
-            }
-          ],
+          "result": 118,
           "docs": {
             "contents": "Construct a default `request-options` value."
           }
@@ -1362,11 +1137,7 @@
               "type": 80
             }
           ],
-          "results": [
-            {
-              "type": 81
-            }
-          ],
+          "result": 81,
           "docs": {
             "contents": "The timeout for receiving subsequent chunks of bytes in the Response\nbody stream."
           }
@@ -1382,11 +1153,7 @@
               "type": 80
             }
           ],
-          "results": [
-            {
-              "type": 81
-            }
-          ],
+          "result": 81,
           "docs": {
             "contents": "The timeout for the initial connect to the HTTP Server."
           }
@@ -1402,11 +1169,7 @@
               "type": 80
             }
           ],
-          "results": [
-            {
-              "type": 81
-            }
-          ],
+          "result": 81,
           "docs": {
             "contents": "The timeout for receiving the first byte of the Response body."
           }
@@ -1426,11 +1189,7 @@
               "type": 81
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the timeout for receiving subsequent chunks of bytes in the Response\nbody stream. An error return value indicates that this timeout is not\nsupported."
           }
@@ -1450,11 +1209,7 @@
               "type": 81
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the timeout for the initial connect to the HTTP Server. An error\nreturn value indicates that this timeout is not supported."
           }
@@ -1474,11 +1229,7 @@
               "type": 81
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the timeout for receiving the first byte of the Response body. An\nerror return value indicates that this timeout is not supported."
           }
@@ -1498,7 +1249,6 @@
               "type": 83
             }
           ],
-          "results": [],
           "docs": {
             "contents": "Set the value of the `response-outparam` to either send a response,\nor indicate an error.\n\nThis method consumes the `response-outparam` to ensure that it is\ncalled at most once. If it is never called, the implementation\nwill respond with an error.\n\nThe user may provide an `error` to `response` to allow the\nimplementation determine how to respond with an HTTP error response."
           }
@@ -1514,11 +1264,7 @@
               "type": 84
             }
           ],
-          "results": [
-            {
-              "type": 74
-            }
-          ],
+          "result": 74,
           "docs": {
             "contents": "Returns the incoming body. May be called at most once. Returns error\nif called additional times."
           }
@@ -1534,11 +1280,7 @@
               "type": 84
             }
           ],
-          "results": [
-            {
-              "type": 116
-            }
-          ],
+          "result": 116,
           "docs": {
             "contents": "Returns the headers from the incoming response.\n\nThe returned `headers` resource is immutable: `set`, `append`, and\n`delete` operations will fail with `header-error.immutable`.\n\nThis headers resource is a child: it must be dropped before the parent\n`incoming-response` is dropped."
           }
@@ -1554,11 +1296,7 @@
               "type": 84
             }
           ],
-          "results": [
-            {
-              "type": 58
-            }
-          ],
+          "result": 58,
           "docs": {
             "contents": "Returns the status code from the incoming response."
           }
@@ -1574,11 +1312,7 @@
               "type": 85
             }
           ],
-          "results": [
-            {
-              "type": 87
-            }
-          ],
+          "result": 87,
           "docs": {
             "contents": "Returns the contents of the body, as a stream of bytes.\n\nReturns success on first call: the stream representing the contents\ncan be retrieved at most once. Subsequent calls will return error.\n\nThe returned `input-stream` resource is a child: it must be dropped\nbefore the parent `incoming-body` is dropped, or consumed by\n`incoming-body.finish`.\n\nThis invariant ensures that the implementation can determine whether\nthe user is consuming the contents of the body, waiting on the\n`future-trailers` to be ready, or neither. This allows for network\nbackpressure is to be applied when the user is consuming the body,\nand for that backpressure to not inhibit delivery of the trailers if\nthe user does not read the entire body."
           }
@@ -1594,11 +1328,7 @@
               "type": 73
             }
           ],
-          "results": [
-            {
-              "type": 120
-            }
-          ],
+          "result": 120,
           "docs": {
             "contents": "Takes ownership of `incoming-body`, and returns a `future-trailers`.\nThis function will trap if the `input-stream` child is still alive."
           }
@@ -1614,11 +1344,7 @@
               "type": 88
             }
           ],
-          "results": [
-            {
-              "type": 93
-            }
-          ],
+          "result": 93,
           "docs": {
             "contents": "Returns the contents of the trailers, or an error which occured,\nonce the future is ready.\n\nThe outer `option` represents future readiness. Users can wait on this\n`option` to become `some` using the `subscribe` method.\n\nThe outer `result` is used to retrieve the trailers or error at most\nonce. It will be success on the first call in which the outer option\nis `some`, and error on subsequent calls.\n\nThe inner `result` represents that either the HTTP Request or Response\nbody, as well as any trailers, were received successfully, or that an\nerror occured receiving them. The optional `trailers` indicates whether\nor not trailers were present in the body.\n\nWhen some `trailers` are returned by this method, the `trailers`\nresource is immutable, and a child. Use of the `set`, `append`, or\n`delete` methods will return an error, and the resource must be\ndropped before the parent `future-trailers` is dropped."
           }
@@ -1634,11 +1360,7 @@
               "type": 88
             }
           ],
-          "results": [
-            {
-              "type": 121
-            }
-          ],
+          "result": 121,
           "docs": {
             "contents": "Returns a pollable which becomes ready when either the trailers have\nbeen received, or an error has occured. When this pollable is ready,\nthe `get` method will return `some`."
           }
@@ -1654,11 +1376,7 @@
               "type": 116
             }
           ],
-          "results": [
-            {
-              "type": 82
-            }
-          ],
+          "result": 82,
           "docs": {
             "contents": "Construct an `outgoing-response`, with a default `status-code` of `200`.\nIf a different `status-code` is needed, it must be set via the\n`set-status-code` method.\n\n* `headers` is the HTTP Headers for the Response."
           }
@@ -1674,11 +1392,7 @@
               "type": 94
             }
           ],
-          "results": [
-            {
-              "type": 78
-            }
-          ],
+          "result": 78,
           "docs": {
             "contents": "Returns the resource corresponding to the outgoing Body for this Response.\n\nReturns success on the first call: the `outgoing-body` resource for\nthis `outgoing-response` can be retrieved at most once. Subsequent\ncalls will return error."
           }
@@ -1694,11 +1408,7 @@
               "type": 94
             }
           ],
-          "results": [
-            {
-              "type": 116
-            }
-          ],
+          "result": 116,
           "docs": {
             "contents": "Get the headers associated with the Request.\n\nThe returned `headers` resource is immutable: `set`, `append`, and\n`delete` operations will fail with `header-error.immutable`.\n\nThis headers resource is a child: it must be dropped before the parent\n`outgoing-request` is dropped, or its ownership is transfered to\nanother component by e.g. `outgoing-handler.handle`."
           }
@@ -1718,11 +1428,7 @@
               "type": 58
             }
           ],
-          "results": [
-            {
-              "type": 79
-            }
-          ],
+          "result": 79,
           "docs": {
             "contents": "Set the HTTP Status Code for the Response. Fails if the status-code\ngiven is not a valid http status code."
           }
@@ -1738,11 +1444,7 @@
               "type": 94
             }
           ],
-          "results": [
-            {
-              "type": 58
-            }
-          ],
+          "result": 58,
           "docs": {
             "contents": "Get the HTTP Status Code for the Response."
           }
@@ -1758,11 +1460,7 @@
               "type": 95
             }
           ],
-          "results": [
-            {
-              "type": 97
-            }
-          ],
+          "result": 97,
           "docs": {
             "contents": "Returns a stream for writing the body contents.\n\nThe returned `output-stream` is a child resource: it must be dropped\nbefore the parent `outgoing-body` resource is dropped (or finished),\notherwise the `outgoing-body` drop or `finish` will trap.\n\nReturns success on the first call: the `output-stream` resource for\nthis `outgoing-body` may be retrieved at most once. Subsequent calls\nwill return error."
           }
@@ -1782,11 +1480,7 @@
               "type": 90
             }
           ],
-          "results": [
-            {
-              "type": 98
-            }
-          ],
+          "result": 98,
           "docs": {
             "contents": "Finalize an outgoing body, optionally providing trailers. This must be\ncalled to signal that the response is complete. If the `outgoing-body`\nis dropped without calling `outgoing-body.finalize`, the implementation\nshould treat the body as corrupted.\n\nFails if the body's `outgoing-request` or `outgoing-response` was\nconstructed with a Content-Length header, and the contents written\nto the body (via `write`) does not match the value given in the\nContent-Length."
           }
@@ -1802,11 +1496,7 @@
               "type": 99
             }
           ],
-          "results": [
-            {
-              "type": 103
-            }
-          ],
+          "result": 103,
           "docs": {
             "contents": "Returns the incoming HTTP Response, or an error, once one is ready.\n\nThe outer `option` represents future readiness. Users can wait on this\n`option` to become `some` using the `subscribe` method.\n\nThe outer `result` is used to retrieve the response or error at most\nonce. It will be success on the first call in which the outer option\nis `some`, and error on subsequent calls.\n\nThe inner `result` represents that either the incoming HTTP Response\nstatus and headers have recieved successfully, or that an error\noccured. Errors may also occur while consuming the response body,\nbut those will be reported by the `incoming-body` and its\n`output-stream` child."
           }
@@ -1822,11 +1512,7 @@
               "type": 99
             }
           ],
-          "results": [
-            {
-              "type": 121
-            }
-          ],
+          "result": 121,
           "docs": {
             "contents": "Returns a pollable which becomes ready when either the Response has\nbeen received, or an error has occured. When this pollable is ready,\nthe `get` method will return `some`."
           }
@@ -1840,11 +1526,7 @@
               "type": 104
             }
           ],
-          "results": [
-            {
-              "type": 105
-            }
-          ],
+          "result": 105,
           "docs": {
             "contents": "Attempts to extract a http-related `error` from the wasi:io `error`\nprovided.\n\nStream operations which return\n`wasi:io/stream/stream-error::last-operation-failed` have a payload of\ntype `wasi:io/error/error` with more information about the operation\nthat failed. This payload can be passed through to this function to see\nif there's http-related information about the error to return.\n\nNote that this function is fallible because not all io-errors are\nhttp-related errors."
           }
@@ -1875,7 +1557,6 @@
               "type": 123
             }
           ],
-          "results": [],
           "docs": {
             "contents": "This function is invoked with an incoming HTTP Request, and a resource\n`response-outparam` which provides the capability to reply with an HTTP\nResponse. The response is sent by calling the `response-outparam.set`\nmethod, which allows execution to continue after the response has been\nsent. This enables both streaming to the response body, and performing other\nwork.\n\nThe implementor of this function must write a response to the\n`response-outparam` before returning, or else the caller will respond\nwith an error on its behalf."
           }
@@ -1908,11 +1589,7 @@
               "type": 113
             }
           ],
-          "results": [
-            {
-              "type": 115
-            }
-          ],
+          "result": 115,
           "docs": {
             "contents": "This function is invoked with an outgoing HTTP Request, and it returns\na resource `future-incoming-response` which represents an HTTP Response\nwhich may arrive in the future.\n\nThe `options` argument accepts optional parameters for the HTTP\nprotocol's transport layer.\n\nThis function may return an error if the `outgoing-request` is invalid\nor not allowed to be made. Otherwise, protocol errors are reported\nthrough the `future-incoming-response`."
           }

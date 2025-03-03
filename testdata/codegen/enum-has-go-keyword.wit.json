@@ -34,11 +34,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": "string"
-            }
-          ]
+          "result": "string"
         }
       },
       "package": 0

@@ -24,11 +24,7 @@
           "name": "f",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         }
       },
       "package": 0

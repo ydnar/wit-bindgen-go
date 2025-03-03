@@ -35,8 +35,7 @@
               "name": "self",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0
@@ -55,8 +54,7 @@
               "name": "r",
               "type": 3
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

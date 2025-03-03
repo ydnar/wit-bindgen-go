@@ -38,8 +38,7 @@
               "name": "x",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         },
         "list-u16-param": {
           "name": "list-u16-param",
@@ -49,8 +48,7 @@
               "name": "x",
               "type": 9
             }
-          ],
-          "results": []
+          ]
         },
         "list-u32-param": {
           "name": "list-u32-param",
@@ -60,8 +58,7 @@
               "name": "x",
               "type": 10
             }
-          ],
-          "results": []
+          ]
         },
         "list-u64-param": {
           "name": "list-u64-param",
@@ -71,8 +68,7 @@
               "name": "x",
               "type": 11
             }
-          ],
-          "results": []
+          ]
         },
         "list-s8-param": {
           "name": "list-s8-param",
@@ -82,8 +78,7 @@
               "name": "x",
               "type": 12
             }
-          ],
-          "results": []
+          ]
         },
         "list-s16-param": {
           "name": "list-s16-param",
@@ -93,8 +88,7 @@
               "name": "x",
               "type": 13
             }
-          ],
-          "results": []
+          ]
         },
         "list-s32-param": {
           "name": "list-s32-param",
@@ -104,8 +98,7 @@
               "name": "x",
               "type": 14
             }
-          ],
-          "results": []
+          ]
         },
         "list-s64-param": {
           "name": "list-s64-param",
@@ -115,8 +108,7 @@
               "name": "x",
               "type": 15
             }
-          ],
-          "results": []
+          ]
         },
         "list-f32-param": {
           "name": "list-f32-param",
@@ -126,8 +118,7 @@
               "name": "x",
               "type": 16
             }
-          ],
-          "results": []
+          ]
         },
         "list-f64-param": {
           "name": "list-f64-param",
@@ -137,108 +128,67 @@
               "name": "x",
               "type": 17
             }
-          ],
-          "results": []
+          ]
         },
         "list-u8-ret": {
           "name": "list-u8-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "list-u16-ret": {
           "name": "list-u16-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 9
-            }
-          ]
+          "result": 9
         },
         "list-u32-ret": {
           "name": "list-u32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         },
         "list-u64-ret": {
           "name": "list-u64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 11
-            }
-          ]
+          "result": 11
         },
         "list-s8-ret": {
           "name": "list-s8-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 12
-            }
-          ]
+          "result": 12
         },
         "list-s16-ret": {
           "name": "list-s16-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         },
         "list-s32-ret": {
           "name": "list-s32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 14
-            }
-          ]
+          "result": 14
         },
         "list-s64-ret": {
           "name": "list-s64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 15
-            }
-          ]
+          "result": 15
         },
         "list-f32-ret": {
           "name": "list-f32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 16
-            }
-          ]
+          "result": 16
         },
         "list-f64-ret": {
           "name": "list-f64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 17
-            }
-          ]
+          "result": 17
         },
         "tuple-list": {
           "name": "tuple-list",
@@ -249,11 +199,7 @@
               "type": 19
             }
           ],
-          "results": [
-            {
-              "type": 21
-            }
-          ]
+          "result": 21
         },
         "string-list-arg": {
           "name": "string-list-arg",
@@ -263,18 +209,13 @@
               "name": "a",
               "type": 22
             }
-          ],
-          "results": []
+          ]
         },
         "string-list-ret": {
           "name": "string-list-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 22
-            }
-          ]
+          "result": 22
         },
         "tuple-string-list": {
           "name": "tuple-string-list",
@@ -285,11 +226,7 @@
               "type": 24
             }
           ],
-          "results": [
-            {
-              "type": 26
-            }
-          ]
+          "result": 26
         },
         "string-list": {
           "name": "string-list",
@@ -300,11 +237,7 @@
               "type": 22
             }
           ],
-          "results": [
-            {
-              "type": 22
-            }
-          ]
+          "result": 22
         },
         "record-list": {
           "name": "record-list",
@@ -315,11 +248,7 @@
               "type": 27
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "record-list-reverse": {
           "name": "record-list-reverse",
@@ -330,11 +259,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 27
-            }
-          ]
+          "result": 27
         },
         "variant-list": {
           "name": "variant-list",
@@ -345,11 +270,7 @@
               "type": 28
             }
           ],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
+          "result": 5
         },
         "load-store-everything": {
           "name": "load-store-everything",
@@ -360,11 +281,7 @@
               "type": 8
             }
           ],
-          "results": [
-            {
-              "type": 8
-            }
-          ]
+          "result": 8
         }
       },
       "package": 0

@@ -40,18 +40,13 @@
               "name": "x",
               "type": 11
             }
-          ],
-          "results": []
+          ]
         },
         "oint-result": {
           "name": "oint-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 11
-            }
-          ]
+          "result": 11
         },
         "o1-arg": {
           "name": "o1-arg",
@@ -61,18 +56,13 @@
               "name": "x",
               "type": 6
             }
-          ],
-          "results": []
+          ]
         },
         "o1-result": {
           "name": "o1-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 6
-            }
-          ]
+          "result": 6
         },
         "o2-arg": {
           "name": "o2-arg",
@@ -82,18 +72,13 @@
               "name": "x",
               "type": 7
             }
-          ],
-          "results": []
+          ]
         },
         "o2-result": {
           "name": "o2-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 7
-            }
-          ]
+          "result": 7
         },
         "o3-arg": {
           "name": "o3-arg",
@@ -103,18 +88,13 @@
               "name": "x",
               "type": 8
             }
-          ],
-          "results": []
+          ]
         },
         "o3-result": {
           "name": "o3-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 8
-            }
-          ]
+          "result": 8
         },
         "o4-arg": {
           "name": "o4-arg",
@@ -124,18 +104,13 @@
               "name": "x",
               "type": 10
             }
-          ],
-          "results": []
+          ]
         },
         "o4-result": {
           "name": "o4-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         }
       },
       "package": 0

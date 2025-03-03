@@ -47,11 +47,7 @@
             "constructor": 0
           },
           "params": [],
-          "results": [
-            {
-              "type": 7
-            }
-          ]
+          "result": 7
         },
         "[method]res.do": {
           "name": "[method]res.do",
@@ -63,8 +59,7 @@
               "name": "self",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0
@@ -93,8 +88,7 @@
               "name": "r",
               "type": 8
             }
-          ],
-          "results": []
+          ]
         },
         "report-rec": {
           "name": "report-rec",
@@ -104,8 +98,7 @@
               "name": "r",
               "type": 6
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

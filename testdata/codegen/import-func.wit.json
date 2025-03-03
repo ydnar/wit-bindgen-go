@@ -7,8 +7,7 @@
           "function": {
             "name": "foo",
             "kind": "freestanding",
-            "params": [],
-            "results": []
+            "params": []
           }
         },
         "foo1": {
@@ -16,11 +15,7 @@
             "name": "foo1",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": "string"
-              }
-            ]
+            "result": "string"
           }
         },
         "foo2": {
@@ -32,8 +27,7 @@
                 "name": "x",
                 "type": "string"
               }
-            ],
-            "results": []
+            ]
           }
         },
         "foo3": {
@@ -46,11 +40,7 @@
                 "type": 0
               }
             ],
-            "results": [
-              {
-                "type": 2
-              }
-            ]
+            "result": 2
           }
         }
       },

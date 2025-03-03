@@ -8,11 +8,7 @@
             "name": "f2",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": "f32"
-              }
-            ]
+            "result": "f32"
           }
         }
       },
@@ -22,11 +18,7 @@
             "name": "f3",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": "s64"
-              }
-            ]
+            "result": "s64"
           }
         },
         "example": {
@@ -49,11 +41,7 @@
           "name": "f1",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "s32"
-            }
-          ]
+          "result": "s32"
         },
         "[constructor]r": {
           "name": "[constructor]r",
@@ -66,11 +54,7 @@
               "type": "f64"
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "[method]r.get-a": {
           "name": "[method]r.get-a",
@@ -83,11 +67,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": "f64"
-            }
-          ]
+          "result": "f64"
         },
         "[method]r.set-a": {
           "name": "[method]r.set-a",
@@ -103,8 +83,7 @@
               "name": "a",
               "type": "f64"
             }
-          ],
-          "results": []
+          ]
         },
         "[static]r.add": {
           "name": "[static]r.add",
@@ -121,11 +100,7 @@
               "type": "f64"
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         }
       },
       "package": 0

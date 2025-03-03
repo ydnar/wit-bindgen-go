@@ -41,8 +41,7 @@
                 "name": "level",
                 "type": 42
               }
-            ],
-            "results": []
+            ]
           }
         },
         "inline": {
@@ -62,11 +61,7 @@
                 "type": 40
               }
             ],
-            "results": [
-              {
-                "type": 40
-              }
-            ]
+            "result": 40
           }
         },
         "f1": {
@@ -83,11 +78,7 @@
                 "type": 47
               }
             ],
-            "results": [
-              {
-                "type": 48
-              }
-            ]
+            "result": 48
           }
         },
         "re-named": {
@@ -104,11 +95,7 @@
                 "type": 50
               }
             ],
-            "results": [
-              {
-                "type": 39
-              }
-            ],
+            "result": 39,
             "docs": {
               "contents": "t2 has been renamed with `use self.types-interface.{t2 as t2-renamed}`"
             }
@@ -128,11 +115,7 @@
                 "type": 43
               }
             ],
-            "results": [
-              {
-                "type": 54
-              }
-            ]
+            "result": 54
           }
         },
         "interface-0": {
@@ -187,11 +170,7 @@
               "type": 23
             }
           ],
-          "results": [
-            {
-              "type": 24
-            }
-          ]
+          "result": 24
         }
       },
       "docs": {
@@ -210,11 +189,7 @@
           "name": "f1",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 31
-            }
-          ],
+          "result": 31,
           "docs": {
             "contents": "Comment for export function"
           }
@@ -228,11 +203,7 @@
               "type": 33
             }
           ],
-          "results": [
-            {
-              "type": 34
-            }
-          ]
+          "result": 34
         },
         "continue": {
           "name": "continue",
@@ -247,11 +218,7 @@
               "type": 34
             }
           ],
-          "results": [
-            {
-              "type": 38
-            }
-          ]
+          "result": 38
         }
       },
       "package": 0
@@ -269,11 +236,7 @@
               "type": 44
             }
           ],
-          "results": [
-            {
-              "type": 45
-            }
-          ],
+          "result": 45,
           "docs": {
             "contents": "Comment for import inline function"
           }

@@ -52,11 +52,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": 4
-            }
-          ]
+          "result": 4
         }
       },
       "package": 0
@@ -79,8 +75,7 @@
               "name": "x",
               "type": 14
             }
-          ],
-          "results": []
+          ]
         },
         "stream-u8-param": {
           "name": "stream-u8-param",
@@ -90,8 +85,7 @@
               "name": "x",
               "type": 5
             }
-          ],
-          "results": []
+          ]
         },
         "stream-u16-param": {
           "name": "stream-u16-param",
@@ -101,8 +95,7 @@
               "name": "x",
               "type": 15
             }
-          ],
-          "results": []
+          ]
         },
         "stream-u32-param": {
           "name": "stream-u32-param",
@@ -112,8 +105,7 @@
               "name": "x",
               "type": 16
             }
-          ],
-          "results": []
+          ]
         },
         "stream-u64-param": {
           "name": "stream-u64-param",
@@ -123,8 +115,7 @@
               "name": "x",
               "type": 17
             }
-          ],
-          "results": []
+          ]
         },
         "stream-s8-param": {
           "name": "stream-s8-param",
@@ -134,8 +125,7 @@
               "name": "x",
               "type": 18
             }
-          ],
-          "results": []
+          ]
         },
         "stream-s16-param": {
           "name": "stream-s16-param",
@@ -145,8 +135,7 @@
               "name": "x",
               "type": 19
             }
-          ],
-          "results": []
+          ]
         },
         "stream-s32-param": {
           "name": "stream-s32-param",
@@ -156,8 +145,7 @@
               "name": "x",
               "type": 20
             }
-          ],
-          "results": []
+          ]
         },
         "stream-s64-param": {
           "name": "stream-s64-param",
@@ -167,8 +155,7 @@
               "name": "x",
               "type": 21
             }
-          ],
-          "results": []
+          ]
         },
         "stream-f32-param": {
           "name": "stream-f32-param",
@@ -178,8 +165,7 @@
               "name": "x",
               "type": 22
             }
-          ],
-          "results": []
+          ]
         },
         "stream-f64-param": {
           "name": "stream-f64-param",
@@ -189,118 +175,73 @@
               "name": "x",
               "type": 23
             }
-          ],
-          "results": []
+          ]
         },
         "stream-ret": {
           "name": "stream-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 14
-            }
-          ]
+          "result": 14
         },
         "stream-u8-ret": {
           "name": "stream-u8-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
+          "result": 5
         },
         "stream-u16-ret": {
           "name": "stream-u16-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 15
-            }
-          ]
+          "result": 15
         },
         "stream-u32-ret": {
           "name": "stream-u32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 16
-            }
-          ]
+          "result": 16
         },
         "stream-u64-ret": {
           "name": "stream-u64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 17
-            }
-          ]
+          "result": 17
         },
         "stream-s8-ret": {
           "name": "stream-s8-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 18
-            }
-          ]
+          "result": 18
         },
         "stream-s16-ret": {
           "name": "stream-s16-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 19
-            }
-          ]
+          "result": 19
         },
         "stream-s32-ret": {
           "name": "stream-s32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 20
-            }
-          ]
+          "result": 20
         },
         "stream-s64-ret": {
           "name": "stream-s64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 21
-            }
-          ]
+          "result": 21
         },
         "stream-f32-ret": {
           "name": "stream-f32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 22
-            }
-          ]
+          "result": 22
         },
         "stream-f64-ret": {
           "name": "stream-f64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 23
-            }
-          ]
+          "result": 23
         },
         "tuple-stream": {
           "name": "tuple-stream",
@@ -311,11 +252,7 @@
               "type": 25
             }
           ],
-          "results": [
-            {
-              "type": 27
-            }
-          ]
+          "result": 27
         },
         "string-stream-arg": {
           "name": "string-stream-arg",
@@ -325,18 +262,13 @@
               "name": "a",
               "type": 2
             }
-          ],
-          "results": []
+          ]
         },
         "string-stream-ret": {
           "name": "string-stream-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "tuple-string-stream": {
           "name": "tuple-string-stream",
@@ -347,11 +279,7 @@
               "type": 29
             }
           ],
-          "results": [
-            {
-              "type": 31
-            }
-          ]
+          "result": 31
         },
         "string-stream": {
           "name": "string-stream",
@@ -362,11 +290,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "record-stream": {
           "name": "record-stream",
@@ -377,11 +301,7 @@
               "type": 32
             }
           ],
-          "results": [
-            {
-              "type": 7
-            }
-          ]
+          "result": 7
         },
         "record-stream-reverse": {
           "name": "record-stream-reverse",
@@ -392,11 +312,7 @@
               "type": 7
             }
           ],
-          "results": [
-            {
-              "type": 32
-            }
-          ]
+          "result": 32
         },
         "variant-stream": {
           "name": "variant-stream",
@@ -407,11 +323,7 @@
               "type": 33
             }
           ],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         },
         "load-store-everything": {
           "name": "load-store-everything",
@@ -422,11 +334,7 @@
               "type": 13
             }
           ],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         }
       },
       "package": 0

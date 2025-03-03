@@ -35,8 +35,7 @@
               "name": "x",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         },
         "e2-arg": {
           "name": "e2-arg",
@@ -46,8 +45,7 @@
               "name": "x",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "e1-ret": {
           "name": "e1-ret",
@@ -58,11 +56,7 @@
               "type": 0
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         }
       },
       "package": 0

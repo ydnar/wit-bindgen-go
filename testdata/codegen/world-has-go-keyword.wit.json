@@ -22,11 +22,7 @@
           "name": "hello",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "string"
-            }
-          ]
+          "result": "string"
         }
       },
       "package": 0

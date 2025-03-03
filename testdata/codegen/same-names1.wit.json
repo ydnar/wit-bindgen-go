@@ -7,8 +7,7 @@
           "function": {
             "name": "name1",
             "kind": "freestanding",
-            "params": [],
-            "results": []
+            "params": []
           }
         }
       },

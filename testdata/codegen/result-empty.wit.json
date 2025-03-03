@@ -25,91 +25,55 @@
           "name": "stuff-or-stuff",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "stuff-or-empty": {
           "name": "stuff-or-empty",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "empty-or-stuff": {
           "name": "empty-or-stuff",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 4
-            }
-          ]
+          "result": 4
         },
         "empty-or-empty": {
           "name": "empty-or-empty",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
+          "result": 5
         },
         "stuff-or-absent": {
           "name": "stuff-or-absent",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 6
-            }
-          ]
+          "result": 6
         },
         "absent-or-stuff": {
           "name": "absent-or-stuff",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 7
-            }
-          ]
+          "result": 7
         },
         "empty-or-absent": {
           "name": "empty-or-absent",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 8
-            }
-          ]
+          "result": 8
         },
         "absent-or-empty": {
           "name": "absent-or-empty",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 9
-            }
-          ]
+          "result": 9
         },
         "absent-or-absent": {
           "name": "absent-or-absent",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         }
       },
       "package": 0

@@ -43,11 +43,7 @@
           "name": "my-func",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         }
       },
       "package": 0

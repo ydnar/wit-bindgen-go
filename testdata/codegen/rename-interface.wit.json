@@ -37,11 +37,7 @@
           "name": "a",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         }
       },
       "package": 0

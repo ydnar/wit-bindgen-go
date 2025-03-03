@@ -18,8 +18,7 @@
                 "name": "body",
                 "type": 0
               }
-            ],
-            "results": []
+            ]
           }
         }
       },
@@ -29,11 +28,7 @@
             "name": "func-using-list-tuple-bool-in-return",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": 2
-              }
-            ]
+            "result": 2
           }
         },
         "func-using-tuple-u8-in-return": {
@@ -41,11 +36,7 @@
             "name": "func-using-tuple-u8-in-return",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": 4
-              }
-            ]
+            "result": 4
           }
         }
       },

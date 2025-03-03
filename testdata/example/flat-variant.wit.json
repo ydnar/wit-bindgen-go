@@ -36,8 +36,7 @@
               "name": "f",
               "type": "f64"
             }
-          ],
-          "results": []
+          ]
         },
         "f1": {
           "name": "f1",
@@ -47,8 +46,7 @@
               "name": "v",
               "type": 1
             }
-          ],
-          "results": []
+          ]
         },
         "f2": {
           "name": "f2",
@@ -58,8 +56,7 @@
               "name": "v",
               "type": 4
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

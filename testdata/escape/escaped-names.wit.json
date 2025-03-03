@@ -39,11 +39,7 @@
               "type": 7
             }
           ],
-          "results": [
-            {
-              "type": 9
-            }
-          ]
+          "result": 9
         }
       },
       "package": 0

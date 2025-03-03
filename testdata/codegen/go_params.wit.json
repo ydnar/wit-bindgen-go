@@ -13,11 +13,7 @@
                 "type": "u32"
               }
             ],
-            "results": [
-              {
-                "type": 0
-              }
-            ]
+            "result": 0
           }
         },
         "error-code2": {
@@ -30,11 +26,7 @@
                 "type": "u32"
               }
             ],
-            "results": [
-              {
-                "type": 0
-              }
-            ]
+            "result": 0
           }
         },
         "error-code3": {
@@ -51,11 +43,7 @@
                 "type": 0
               }
             ],
-            "results": [
-              {
-                "type": 1
-              }
-            ]
+            "result": 1
           }
         },
         "error-code4": {
@@ -63,11 +51,7 @@
             "name": "error-code4",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": 1
-              }
-            ]
+            "result": 1
           }
         }
       },

@@ -21,8 +21,7 @@
         "y": {
           "name": "y",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         }
       },
       "package": 0

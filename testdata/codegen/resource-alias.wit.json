@@ -28,11 +28,7 @@
                 "type": 12
               }
             ],
-            "results": [
-              {
-                "type": 12
-              }
-            ]
+            "result": 12
           }
         },
         "interface-0": {
@@ -68,11 +64,7 @@
               "type": "string"
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "[method]x.get": {
           "name": "[method]x.get",
@@ -85,11 +77,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": "string"
-            }
-          ]
+          "result": "string"
         },
         "a": {
           "name": "a",
@@ -100,11 +88,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 4
-            }
-          ]
+          "result": 4
         }
       },
       "package": 0
@@ -130,11 +114,7 @@
               "type": 6
             }
           ],
-          "results": [
-            {
-              "type": 9
-            }
-          ]
+          "result": 9
         }
       },
       "package": 0

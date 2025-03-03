@@ -94,8 +94,7 @@
               "name": "a16",
               "type": "u64"
             }
-          ],
-          "results": []
+          ]
         },
         "big-argument": {
           "name": "big-argument",
@@ -105,8 +104,7 @@
               "name": "x",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

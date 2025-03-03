@@ -36,11 +36,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         }
       },
       "package": 0
@@ -55,11 +51,7 @@
           "name": "use-res",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
+          "result": 5
         }
       },
       "package": 0

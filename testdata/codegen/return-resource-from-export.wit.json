@@ -13,11 +13,7 @@
             "name": "return-resource",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": 1
-              }
-            ]
+            "result": 1
           }
         }
       },

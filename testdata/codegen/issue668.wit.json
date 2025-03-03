@@ -33,11 +33,7 @@
               "type": "u32"
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "[static]resource-b.make": {
           "name": "[static]resource-b.make",
@@ -49,8 +45,7 @@
               "name": "record-a",
               "type": 3
             }
-          ],
-          "results": []
+          ]
         }
       },
       "package": 0

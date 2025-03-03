@@ -135,7 +135,6 @@
           "name": "gated",
           "kind": "freestanding",
           "params": [],
-          "results": [],
           "stability": {
             "unstable": {
               "feature": "not-active"
@@ -146,7 +145,6 @@
           "name": "ungated",
           "kind": "freestanding",
           "params": [],
-          "results": [],
           "stability": {
             "unstable": {
               "feature": "active"
@@ -265,11 +263,7 @@
             "constructor": 10
           },
           "params": [],
-          "results": [
-            {
-              "type": 14
-            }
-          ],
+          "result": 14,
           "stability": {
             "unstable": {
               "feature": "inactive"
@@ -282,7 +276,6 @@
             "static": 10
           },
           "params": [],
-          "results": [],
           "stability": {
             "unstable": {
               "feature": "inactive"
@@ -300,7 +293,6 @@
               "type": 12
             }
           ],
-          "results": [],
           "stability": {
             "unstable": {
               "feature": "inactive"
@@ -313,11 +305,7 @@
             "constructor": 11
           },
           "params": [],
-          "results": [
-            {
-              "type": 15
-            }
-          ],
+          "result": 15,
           "stability": {
             "unstable": {
               "feature": "active"
@@ -330,7 +318,6 @@
             "static": 11
           },
           "params": [],
-          "results": [],
           "stability": {
             "unstable": {
               "feature": "active"
@@ -348,7 +335,6 @@
               "type": 13
             }
           ],
-          "results": [],
           "stability": {
             "unstable": {
               "feature": "active"

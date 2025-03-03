@@ -13,11 +13,7 @@
             "name": "x",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": 0
-              }
-            ]
+            "result": 0
           }
         }
       },

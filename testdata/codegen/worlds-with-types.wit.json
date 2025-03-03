@@ -24,11 +24,7 @@
             "name": "foo",
             "kind": "freestanding",
             "params": [],
-            "results": [
-              {
-                "type": 4
-              }
-            ]
+            "result": 4
           }
         }
       },

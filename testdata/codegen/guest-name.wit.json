@@ -60,11 +60,7 @@
           "name": "x",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         }
       },
       "package": 0
@@ -76,8 +72,7 @@
         "guest": {
           "name": "guest",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         }
       },
       "package": 0
@@ -92,11 +87,7 @@
           "name": "x",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         }
       },
       "package": 0
@@ -111,11 +102,7 @@
           "name": "x",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         }
       },
       "package": 0
@@ -130,11 +117,7 @@
           "name": "x",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         }
       },
       "package": 0
@@ -149,11 +132,7 @@
           "name": "x",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 4
-            }
-          ]
+          "result": 4
         }
       },
       "package": 0

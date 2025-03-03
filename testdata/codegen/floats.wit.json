@@ -32,8 +32,7 @@
               "name": "x",
               "type": "f32"
             }
-          ],
-          "results": []
+          ]
         },
         "f64-param": {
           "name": "f64-param",
@@ -43,28 +42,19 @@
               "name": "x",
               "type": "f64"
             }
-          ],
-          "results": []
+          ]
         },
         "f32-result": {
           "name": "f32-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "f32"
-            }
-          ]
+          "result": "f32"
         },
         "f64-result": {
           "name": "f64-result",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "f64"
-            }
-          ]
+          "result": "f64"
         }
       },
       "package": 0

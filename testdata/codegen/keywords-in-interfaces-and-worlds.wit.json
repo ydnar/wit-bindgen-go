@@ -27,8 +27,7 @@
         "break": {
           "name": "break",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         }
       },
       "package": 0
@@ -40,8 +39,7 @@
         "return": {
           "name": "return",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         }
       },
       "package": 0

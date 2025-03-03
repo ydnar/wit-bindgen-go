@@ -27,8 +27,7 @@
         "f1": {
           "name": "f1",
           "kind": "freestanding",
-          "params": [],
-          "results": []
+          "params": []
         },
         "f2": {
           "name": "f2",
@@ -38,8 +37,7 @@
               "name": "a",
               "type": "u32"
             }
-          ],
-          "results": []
+          ]
         },
         "f3": {
           "name": "f3",
@@ -53,28 +51,19 @@
               "name": "b",
               "type": "u32"
             }
-          ],
-          "results": []
+          ]
         },
         "f4": {
           "name": "f4",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": "u32"
-            }
-          ]
+          "result": "u32"
         },
         "f5": {
           "name": "f5",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "f6": {
           "name": "f6",
@@ -93,11 +82,7 @@
               "type": "u32"
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         }
       },
       "package": 0

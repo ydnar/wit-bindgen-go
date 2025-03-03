@@ -32,18 +32,13 @@
               "name": "l",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         },
         "simple-list2": {
           "name": "simple-list2",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "simple-list3": {
           "name": "simple-list3",
@@ -58,11 +53,7 @@
               "type": 0
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "simple-list4": {
           "name": "simple-list4",
@@ -73,11 +64,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         }
       },
       "package": 0

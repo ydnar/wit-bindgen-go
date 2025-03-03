@@ -41,11 +41,7 @@
               "type": 0
             }
           ],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "roundtrip-flag2": {
           "name": "roundtrip-flag2",
@@ -56,11 +52,7 @@
               "type": 1
             }
           ],
-          "results": [
-            {
-              "type": 1
-            }
-          ]
+          "result": 1
         },
         "roundtrip-flag4": {
           "name": "roundtrip-flag4",
@@ -71,11 +63,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "roundtrip-flag8": {
           "name": "roundtrip-flag8",
@@ -86,11 +74,7 @@
               "type": 3
             }
           ],
-          "results": [
-            {
-              "type": 3
-            }
-          ]
+          "result": 3
         },
         "roundtrip-flag16": {
           "name": "roundtrip-flag16",
@@ -101,11 +85,7 @@
               "type": 4
             }
           ],
-          "results": [
-            {
-              "type": 4
-            }
-          ]
+          "result": 4
         },
         "roundtrip-flag32": {
           "name": "roundtrip-flag32",
@@ -116,11 +96,7 @@
               "type": 5
             }
           ],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
+          "result": 5
         }
       },
       "package": 0

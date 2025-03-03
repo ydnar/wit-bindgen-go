@@ -38,8 +38,7 @@
               "name": "x",
               "type": 9
             }
-          ],
-          "results": []
+          ]
         },
         "future-u8-param": {
           "name": "future-u8-param",
@@ -49,8 +48,7 @@
               "name": "x",
               "type": 0
             }
-          ],
-          "results": []
+          ]
         },
         "future-u16-param": {
           "name": "future-u16-param",
@@ -60,8 +58,7 @@
               "name": "x",
               "type": 10
             }
-          ],
-          "results": []
+          ]
         },
         "future-u32-param": {
           "name": "future-u32-param",
@@ -71,8 +68,7 @@
               "name": "x",
               "type": 11
             }
-          ],
-          "results": []
+          ]
         },
         "future-u64-param": {
           "name": "future-u64-param",
@@ -82,8 +78,7 @@
               "name": "x",
               "type": 12
             }
-          ],
-          "results": []
+          ]
         },
         "future-s8-param": {
           "name": "future-s8-param",
@@ -93,8 +88,7 @@
               "name": "x",
               "type": 13
             }
-          ],
-          "results": []
+          ]
         },
         "future-s16-param": {
           "name": "future-s16-param",
@@ -104,8 +98,7 @@
               "name": "x",
               "type": 14
             }
-          ],
-          "results": []
+          ]
         },
         "future-s32-param": {
           "name": "future-s32-param",
@@ -115,8 +108,7 @@
               "name": "x",
               "type": 15
             }
-          ],
-          "results": []
+          ]
         },
         "future-s64-param": {
           "name": "future-s64-param",
@@ -126,8 +118,7 @@
               "name": "x",
               "type": 16
             }
-          ],
-          "results": []
+          ]
         },
         "future-f32-param": {
           "name": "future-f32-param",
@@ -137,8 +128,7 @@
               "name": "x",
               "type": 17
             }
-          ],
-          "results": []
+          ]
         },
         "future-f64-param": {
           "name": "future-f64-param",
@@ -148,118 +138,73 @@
               "name": "x",
               "type": 18
             }
-          ],
-          "results": []
+          ]
         },
         "future-ret": {
           "name": "future-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 9
-            }
-          ]
+          "result": 9
         },
         "future-u8-ret": {
           "name": "future-u8-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 0
-            }
-          ]
+          "result": 0
         },
         "future-u16-ret": {
           "name": "future-u16-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 10
-            }
-          ]
+          "result": 10
         },
         "future-u32-ret": {
           "name": "future-u32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 11
-            }
-          ]
+          "result": 11
         },
         "future-u64-ret": {
           "name": "future-u64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 12
-            }
-          ]
+          "result": 12
         },
         "future-s8-ret": {
           "name": "future-s8-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 13
-            }
-          ]
+          "result": 13
         },
         "future-s16-ret": {
           "name": "future-s16-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 14
-            }
-          ]
+          "result": 14
         },
         "future-s32-ret": {
           "name": "future-s32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 15
-            }
-          ]
+          "result": 15
         },
         "future-s64-ret": {
           "name": "future-s64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 16
-            }
-          ]
+          "result": 16
         },
         "future-f32-ret": {
           "name": "future-f32-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 17
-            }
-          ]
+          "result": 17
         },
         "future-f64-ret": {
           "name": "future-f64-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 18
-            }
-          ]
+          "result": 18
         },
         "tuple-future": {
           "name": "tuple-future",
@@ -270,11 +215,7 @@
               "type": 20
             }
           ],
-          "results": [
-            {
-              "type": 22
-            }
-          ]
+          "result": 22
         },
         "string-future-arg": {
           "name": "string-future-arg",
@@ -284,18 +225,13 @@
               "name": "a",
               "type": 23
             }
-          ],
-          "results": []
+          ]
         },
         "string-future-ret": {
           "name": "string-future-ret",
           "kind": "freestanding",
           "params": [],
-          "results": [
-            {
-              "type": 23
-            }
-          ]
+          "result": 23
         },
         "tuple-string-future": {
           "name": "tuple-string-future",
@@ -306,11 +242,7 @@
               "type": 25
             }
           ],
-          "results": [
-            {
-              "type": 27
-            }
-          ]
+          "result": 27
         },
         "string-future": {
           "name": "string-future",
@@ -321,11 +253,7 @@
               "type": 23
             }
           ],
-          "results": [
-            {
-              "type": 23
-            }
-          ]
+          "result": 23
         },
         "record-future": {
           "name": "record-future",
@@ -336,11 +264,7 @@
               "type": 28
             }
           ],
-          "results": [
-            {
-              "type": 2
-            }
-          ]
+          "result": 2
         },
         "record-future-reverse": {
           "name": "record-future-reverse",
@@ -351,11 +275,7 @@
               "type": 2
             }
           ],
-          "results": [
-            {
-              "type": 28
-            }
-          ]
+          "result": 28
         },
         "variant-future": {
           "name": "variant-future",
@@ -366,11 +286,7 @@
               "type": 29
             }
           ],
-          "results": [
-            {
-              "type": 5
-            }
-          ]
+          "result": 5
         },
         "load-store-everything": {
           "name": "load-store-everything",
@@ -381,11 +297,7 @@
               "type": 8
             }
           ],
-          "results": [
-            {
-              "type": 8
-            }
-          ]
+          "result": 8
         }
       },
       "package": 0
